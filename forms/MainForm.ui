@@ -28,9 +28,6 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QTableView" name="tableView"/>
-    </item>
-    <item>
      <widget class="QGraphicsView" name="graphicsView"/>
     </item>
     <item>
@@ -43,6 +40,13 @@
       </property>
      </widget>
     </item>
+    <item>
+     <widget class="QDoubleSpinBox" name="doubleSpinBox">
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -51,7 +55,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

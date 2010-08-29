@@ -16,7 +16,10 @@ SOURCES += \
     utils/Ephemeris.cpp \
     utils/TimeLoc.cpp \
     forms/InputForm.cpp \
-    forms/GlyphForm.cpp
+    forms/GlyphForm.cpp \
+    views/OcularScene.cpp \
+    views/ModelledScene.cpp \
+    utils/GlyphManager.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -27,7 +30,11 @@ HEADERS += \
     utils/Ephemeris.h \
     utils/TimeLoc.h \
     forms/InputForm.h \
-    forms/GlyphForm.h
+    forms/GlyphForm.h \
+    views/OcularScene.h \
+    utils/constants.h \
+    views/ModelledScene.h \
+    utils/GlyphManager.h
 
 FORMS += \
     forms/MainForm.ui \
