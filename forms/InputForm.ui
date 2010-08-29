@@ -2,67 +2,220 @@
 <ui version="4.0">
  <class>InputForm</class>
  <widget class="QDialog" name="InputForm">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>652</width>
+    <width>696</width>
     <height>322</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
-   <property name="geometry">
-    <rect>
-     <x>560</x>
-     <y>20</y>
-     <width>81</width>
-     <height>241</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Vertical</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
+  <property name="windowTitle">
+   <string>Input data</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="btnNewChart">
+       <property name="text">
+        <string>NewChart</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" colspan="5">
+      <widget class="QLineEdit" name="editName"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="btnNow">
+       <property name="text">
+        <string>Now</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDateEdit" name="editDate">
+       <property name="displayFormat">
+        <string>dd.MM.yyyy</string>
+       </property>
+       <property name="calendarPopup">
+        <bool>false</bool>
+       </property>
+       <property name="timeSpec">
+        <enum>Qt::LocalTime</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2" colspan="2">
+      <widget class="QComboBox" name="cboEra">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>AC</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>BC</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QTimeEdit" name="editTime">
+       <property name="displayFormat">
+        <string>HH:mm:ss</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="btnHere">
+       <property name="text">
+        <string>Here</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" colspan="5">
+      <widget class="QComboBox" name="comboBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="btnAtlas">
+       <property name="text">
+        <string>Atlas</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="2">
+      <widget class="QLineEdit" name="editLon">
+       <property name="toolTip">
+        <string>Longitude</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3" colspan="2">
+      <widget class="QLineEdit" name="editLat">
+       <property name="toolTip">
+        <string>Latitude</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="5">
+      <widget class="QTimeEdit" name="editUTCOffset">
+       <property name="displayFormat">
+        <string>+HH:mm</string>
+       </property>
+       <property name="timeSpec">
+        <enum>Qt::OffsetFromUTC</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="7">
+      <widget class="QPushButton" name="btnSearch">
+       <property name="text">
+        <string>Search</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="6">
+      <widget class="QPushButton" name="btnCopy">
+       <property name="text">
+        <string>Copy</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="6">
+      <widget class="QPushButton" name="btnPaste">
+       <property name="text">
+        <string>Paste</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="7">
+      <widget class="QPushButton" name="btnOK">
+       <property name="text">
+        <string>OK</string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="7">
+      <widget class="QPushButton" name="btnCancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="6">
+      <widget class="QPushButton" name="btnSearchPoint">
+       <property name="text">
+        <string>Search point</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="6" colspan="2">
+      <widget class="QLineEdit" name="editSearch">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QColumnView" name="columnView"/>
+   </item>
+  </layout>
  </widget>
+ <tabstops>
+  <tabstop>btnNewChart</tabstop>
+  <tabstop>editName</tabstop>
+  <tabstop>btnNow</tabstop>
+  <tabstop>editDate</tabstop>
+  <tabstop>cboEra</tabstop>
+  <tabstop>editTime</tabstop>
+  <tabstop>btnHere</tabstop>
+  <tabstop>comboBox</tabstop>
+  <tabstop>btnAtlas</tabstop>
+  <tabstop>editLon</tabstop>
+  <tabstop>editLat</tabstop>
+  <tabstop>editUTCOffset</tabstop>
+  <tabstop>btnSearch</tabstop>
+ </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>InputForm</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>InputForm</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

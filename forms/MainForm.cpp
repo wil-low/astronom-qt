@@ -26,6 +26,7 @@ MainForm::MainForm(QWidget *parent) :
 	ui->tableView->setModel(model);
 	ui->listView->setModel(model);
 	ui->listView->setModelColumn(0);
+//	ui->graphicsView->setModel(model);
 	/*
 	scene_ = new QGraphicsScene(this);
 	AstroLabel* text = new AstroLabel("Hello");

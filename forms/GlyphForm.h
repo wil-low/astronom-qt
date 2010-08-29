@@ -17,6 +17,9 @@ public:
 
 private:
     Ui::GlyphForm *ui;
+
+private slots:
+	void on_tblGlyphs_cellClicked(int row, int column);
 };
 
 #endif // GLYPHFORM_H

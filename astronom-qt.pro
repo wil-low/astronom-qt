@@ -2,6 +2,10 @@ THD_PARTY = $$PWD/../3d_party
 INCLUDEPATH += $$THD_PARTY/sweph/src $$THD_PARTY/boost_1_42_0
 LIBS += -L$$THD_PARTY/sweph/src -lswe
 
+TRANSLATIONS = \
+	astronom_ru.ts \
+	astronom_uk.ts
+
 SOURCES += \
     main.cpp \
     forms/MainForm.cpp \
@@ -29,3 +33,5 @@ FORMS += \
     forms/MainForm.ui \
     forms/InputForm.ui \
     forms/GlyphForm.ui
+
+OTHER_FILES +=
