@@ -1,0 +1,92 @@
+#ifndef OCULARWHEEL_H
+#define OCULARWHEEL_H
+
+#include <QAbstractItemView>
+
+// zero point of wheel
+enum ZeroPoint {
+	ZERO_ASC = 0,
+	ZERO_ARIES = 1,
+};
+
+enum OcularDimensionType {
+	ODIM_radius = 0,
+	// all lengths in points
+	ODIM_ascArrowR, // main arrow
+	ODIM_zodiacOuterR, // ring of interleaved signs
+	ODIM_zodiac10dgrR,
+	ODIM_zodiac5dgrR,
+	ODIM_zodiac30dgrR,
+	ODIM_innerPlanetLabelR,
+	ODIM_innerPlanetR,
+	ODIM_zodiacInner2R,
+	ODIM_zodiacInnerR,
+	ODIM_aspectR,
+	ODIM_planetFontSize,
+	ODIM_zodiacFontSize,
+	ODIM_degreeFontSize,
+	ODIM_zeroPoint,
+	ODIM_zeroAngle,
+	ODIM_tick10Size,
+	ODIM_tick5Size,
+	ODIM_LAST
+};
+
+struct OcularDimensions {
+};
+
+struct OcularColors {
+	QColor ocularColor;
+	QColor contourColor;
+	QColor mainLineColor;
+	QColor labelColor;
+	QColor fillColor;
+	QColor arrowColor;
+	QColor cuspidColor;
+	QColor tick10Color;
+	QColor innerRColor;
+	QColor planetTickColor;
+	QColor aspectTickColor;
+};
+
+class AstroLabelContainer;
+
+class OcularView : public QAbstractItemView
+{
+	Q_OBJECT
+public:
+	OcularView(QWidget *parent = 0);
+	~OcularView();
+	void recalcDimensions(qreal newRadius);
+	void recalcDimensionsByFactor(qreal factor);
+	void paintEvent(QPaintEvent* event);
+	virtual QRect visualRect(const QModelIndex &index) const;
+	virtual void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
+	virtual QModelIndex indexAt(const QPoint &point) const;
+signals:
+
+public slots:
+	void reconfigure();
+
+protected:
+	virtual QModelIndex moveCursor(CursorAction cursorAction,
+								   Qt::KeyboardModifiers modifiers);
+	virtual int horizontalOffset() const;
+	virtual int verticalOffset() const;
+
+	virtual bool isIndexHidden(const QModelIndex &index) const;
+
+	virtual void setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command);
+	virtual QRegion visualRegionForSelection(const QItemSelection &selection) const;
+
+private:
+	void spreadLabels (int chart, int type, qreal r);
+	void drawLabels(QPainter* painter);
+	void reorderLabels();
+	qreal defaultDimensions_[ODIM_LAST];
+	qreal dimensions_[ODIM_LAST];
+	OcularColors colors_;
+	AstroLabelContainer* labels_;
+};
+
+#endif // OCULARWHEEL_H

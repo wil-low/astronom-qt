@@ -27,7 +27,7 @@ signals:
 private:
     Ui::MainForm *ui;
 	ModelledScene* scene_;
-	QGraphicsView *view_;
+	QWidget* view_;
 	InputForm* input_;
 	PlanetModel* model_;
 

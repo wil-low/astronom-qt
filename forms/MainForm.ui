@@ -28,9 +28,6 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="DraggableGraphicsView" name="graphicsView"/>
-    </item>
-    <item>
      <widget class="QListView" name="listView">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -55,7 +52,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -109,13 +106,6 @@
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>DraggableGraphicsView</class>
-   <extends>QGraphicsView</extends>
-   <header>../views/DraggableGraphicsView.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

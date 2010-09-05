@@ -6,11 +6,9 @@
 
 #include <QtGui>
 
-#include "../widgets/AstroLabel.h"
-#include "../widgets/AspectLabel.h"
 #include "../models/PlanetModel.h"
 #include "../utils/Ephemeris.h"
-#include "../views/OcularScene.h"
+#include "../views/OcularView.h"
 
 MainForm::MainForm(QWidget *parent)
 : QMainWindow(parent)
@@ -27,16 +25,15 @@ MainForm::MainForm(QWidget *parent)
 	model_->setTimeLoc(0, tl);
 	ui->listView->setModel(model_);
 	ui->listView->setModelColumn(0);
-//	ui->graphicsView->setModel(model);
 
-	scene_ = new OcularScene(this);
-
-	scene_->connect(this, SIGNAL(reconfigure()), SLOT(reconfigure()));
+	QAbstractItemView* itemView = new OcularView(ui->centralwidget);
+	view_ = itemView;
+	ui->horizontalLayout->insertWidget(0, view_, 1);
+	itemView->setModel(model_);
+	view_->connect(this, SIGNAL(reconfigure()), SLOT(reconfigure()));
 	emit reconfigure();
-	scene_->setModel(model_);
 
-	ui->graphicsView->setScene(scene_);
-	ui->graphicsView->setRenderHints(QPainter::SmoothPixmapTransform);
+
 	ui->doubleSpinBox->setValue(1);
 /*
 	AstroLabel* text = new AstroLabel("Hello");
@@ -60,7 +57,7 @@ MainForm::~MainForm()
 void MainForm::on_actionInput_data_activated()
 {
 	if (input_->exec() == QDialog::Accepted) {
-		scene_->update();
+//		scene_->update();
 	}
 }
 
@@ -72,7 +69,5 @@ void MainForm::on_actionGlyph_manager_activated()
 
 void MainForm::on_doubleSpinBox_valueChanged(double value)
 {
-	QTransform transform;
-	transform.scale(value, value);
-	ui->graphicsView->setTransform(transform);
+	((OcularView*)view_)->recalcDimensionsByFactor(value);
 }

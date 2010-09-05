@@ -9,7 +9,6 @@ TRANSLATIONS = \
 SOURCES += \
     main.cpp \
     forms/MainForm.cpp \
-    widgets/AstroLabel.cpp \
     widgets/AspectLabel.cpp \
     models/PlanetModel.cpp \
     utils/BodyProps.cpp \
@@ -17,14 +16,17 @@ SOURCES += \
     utils/TimeLoc.cpp \
     forms/InputForm.cpp \
     forms/GlyphForm.cpp \
-    views/OcularScene.cpp \
-    views/ModelledScene.cpp \
     utils/GlyphManager.cpp \
-    views/DraggableGraphicsView.cpp
+    views/DraggableGraphicsView.cpp \
+    utils/DrawHelper.cpp \
+    views/OcularView.cpp \
+    labels/AstroLabelContainer.cpp \
+    labels/AstroLabel.cpp \
+    labels/ZodiacLabel.cpp \
+    CircleSpread/CircleSpread.cpp
 
 HEADERS += \
     forms/MainForm.h \
-    widgets/AstroLabel.h \
     widgets/AspectLabel.h \
     models/PlanetModel.h \
     utils/BodyProps.h \
@@ -32,11 +34,15 @@ HEADERS += \
     utils/TimeLoc.h \
     forms/InputForm.h \
     forms/GlyphForm.h \
-    views/OcularScene.h \
     utils/constants.h \
-    views/ModelledScene.h \
     utils/GlyphManager.h \
-    views/DraggableGraphicsView.h
+    views/DraggableGraphicsView.h \
+    utils/DrawHelper.h \
+    views/OcularView.h \
+    labels/AstroLabelContainer.h \
+    labels/AstroLabel.h \
+    labels/ZodiacLabel.h \
+    CircleSpread/CircleSpread.h
 
 FORMS += \
     forms/MainForm.ui \
