@@ -9,6 +9,8 @@ OcularScene::OcularScene(QObject *parent)
 : ModelledScene(parent)
 , zeroPoint_(ZERO_ARIES)
 , zeroAngle_(180)
+, radius_(377)
+, wheel_(NULL)
 {
 }
 
@@ -46,6 +48,7 @@ void OcularScene::reconfigure()
 	colors_.aspectTickColor = settings.value("aspectTickColor", QColor(0,0,0)).value<QColor>();
 	settings.endGroup();
 
+	createWheel();
 	addZodiacSigns();
 	reorderItems();
 }
@@ -70,13 +73,17 @@ void OcularScene::drawPie(QPainter* painter, qreal radius, qreal startAngle, qre
 const int TICK_10_SIZE = 8;
 const int TICK_5_SIZE = 5;
 
-void OcularScene::drawBackground (QPainter* painter, const QRectF& rect)
+void OcularScene::createWheel ()
 {
-	painter->save();
-//	painter->setRenderHints(QPainter::Antialiasing);
+	if (!wheel_)
+		wheel_ = new QPixmap(radius_ * 2, radius_ * 2);
+	QPainter painter(wheel_);
+	painter.fillRect(wheel_->rect(), QColor(Qt::white));
+	painter.translate(radius_, radius_);
+//	painter.setRenderHints(QPainter::Antialiasing);
 	if (dimensions_.ascArrowR != 0) {
-		painter->setPen(colors_.ocularColor);
-		drawCircle(painter, dimensions_.ascArrowR);
+		painter.setPen(colors_.ocularColor);
+		drawCircle(&painter, dimensions_.ascArrowR);
 	}
 	qreal ang = zeroAngle_;
 	qreal delta_ang = DEG_PER_SIGN;
@@ -85,65 +92,65 @@ void OcularScene::drawBackground (QPainter* painter, const QRectF& rect)
 //		if (!is_resizing_) {
 			ang = zeroAngle_;
 			delta_ang = DEG_PER_SIGN;
-			painter->setBrush(colors_.fillColor);
+			painter.setBrush(colors_.fillColor);
 			for (int sign = 0; sign < 6; ++sign) {
-				drawPie(painter, dimensions_.zodiacOuterR, ang + delta_ang, delta_ang);
+				drawPie(&painter, dimensions_.zodiacOuterR, ang + delta_ang, delta_ang);
 				ang += delta_ang * 2;
 			}
 //		}
-		painter->setPen(colors_.contourColor);
-		painter->setBrush(Qt::transparent);
-		drawCircle(painter, dimensions_.zodiacOuterR);
+		painter.setPen(colors_.contourColor);
+		painter.setBrush(Qt::transparent);
+		drawCircle(&painter, dimensions_.zodiacOuterR);
 	}
 
 	if (dimensions_.zodiac10dgrR != 0) {
-		painter->setPen(colors_.mainLineColor);
-		painter->setBrush(Qt::white);
-		drawCircle(painter, dimensions_.zodiac10dgrR);
+		painter.setPen(colors_.mainLineColor);
+		painter.setBrush(Qt::white);
+		drawCircle(&painter, dimensions_.zodiac10dgrR);
 	}
 	if (dimensions_.zodiac5dgrR != 0) {
-		painter->setPen(colors_.mainLineColor);
-		drawCircle(painter, dimensions_.zodiac5dgrR);
+		painter.setPen(colors_.mainLineColor);
+		drawCircle(&painter, dimensions_.zodiac5dgrR);
 	}
 	if (dimensions_.zodiac30dgrR != 0) {
-		painter->setPen(colors_.mainLineColor);
-		drawCircle(painter, dimensions_.zodiac30dgrR);
+		painter.setPen(colors_.mainLineColor);
+		drawCircle(&painter, dimensions_.zodiac30dgrR);
 	}
 	if (dimensions_.zodiacInner2R != 0) {
 //		if (!is_resizing_) {
 			ang = zeroAngle_;
 			delta_ang = DEG_PER_SIGN;
-			painter->setPen(Qt::transparent);
-			painter->setBrush(colors_.fillColor);
+			painter.setPen(Qt::transparent);
+			painter.setBrush(colors_.fillColor);
 			for (int sign = 0; sign < 6; ++sign) {
-				drawPie(painter, dimensions_.zodiacInner2R, ang + delta_ang, delta_ang);
+				drawPie(&painter, dimensions_.zodiacInner2R, ang + delta_ang, delta_ang);
 				ang += delta_ang * 2;
 //			}
 		}
-		painter->setPen(colors_.mainLineColor);
-		painter->setBrush(Qt::transparent);
-		drawCircle(painter, dimensions_.zodiacInner2R);
+		painter.setPen(colors_.mainLineColor);
+		painter.setBrush(Qt::transparent);
+		drawCircle(&painter, dimensions_.zodiacInner2R);
 	}
 
 	if (dimensions_.zodiacInnerR != 0) {
-		painter->setPen(colors_.mainLineColor);
-		painter->setBrush(Qt::white);
-		drawCircle(painter, dimensions_.zodiacInnerR);
+		painter.setPen(colors_.mainLineColor);
+		painter.setBrush(Qt::white);
+		drawCircle(&painter, dimensions_.zodiacInnerR);
 	}
 /*
 	if (dimensions_.aspectR != 0) {
-		painter->setPen(colors_.mainLineColor);
+		painter.setPen(colors_.mainLineColor);
 		drawCircle(painter, dimensions_.aspectR);
 	}
 */
 
 
-	painter->setPen(colors_.ocularColor);
-	painter->setBrush(Qt::transparent);
-	drawCircle(painter, dimensions_.ascArrowR * 0.06);
+	painter.setPen(colors_.ocularColor);
+	painter.setBrush(Qt::transparent);
+	drawCircle(&painter, dimensions_.ascArrowR * 0.06);
 
 	// Aries line
-	painter->setPen(colors_.arrowColor);
+	painter.setPen(colors_.arrowColor);
 
 	qreal r_aries = dimensions_.zodiacOuterR + 1;
 	ang = zeroAngle_;
@@ -151,7 +158,7 @@ void OcularScene::drawBackground (QPainter* painter, const QRectF& rect)
 	pt[0] = getXYdeg(ang - 1, r_aries * 1.02);
 	pt[1] = getXYdeg(zeroAngle_, r_aries);
 	pt[2] = getXYdeg(ang + 1, r_aries * 1.02);
-	painter->drawPolyline(pt, 3);
+	painter.drawPolyline(pt, 3);
 
 	ang = zeroAngle_;
 	delta_ang = 5;
@@ -168,21 +175,21 @@ void OcularScene::drawBackground (QPainter* painter, const QRectF& rect)
 	for (int tick = 0; tick < 360 / 5; ++tick) {
 		pt[0] = getXYdeg(ang, zinner);
 		if (tick % 6 == 0) { // solid line - sign
-			painter->setPen(pen1);
+			painter.setPen(pen1);
 			pti[0] = getXYdeg(ang, zinner1);
 			pti[1] = getXYdeg(ang, zinner2);
-			painter->drawLines(pti, 1);
-			painter->setPen(pen2);
+			painter.drawLines(pti, 1);
+			painter.setPen(pen2);
 			pt[1] = getXYdeg(ang, zinner + TICK_10_SIZE);
 		}
 		else {
-			painter->setPen(pen1);
+			painter.setPen(pen1);
 			pt[1] = getXYdeg(ang, zinner + TICK_5_SIZE);
 		}
-		painter->drawLines(pt, 1);
+		painter.drawLines(pt, 1);
 		ang += delta_ang;
 	}
-	painter->setPen(colors_.tick10Color);
+	painter.setPen(colors_.tick10Color);
 	ang = zeroAngle_;
 	delta_ang = 10;
 	zinner = dimensions_.zodiac10dgrR;
@@ -190,15 +197,16 @@ void OcularScene::drawBackground (QPainter* painter, const QRectF& rect)
 	for (int tick = 0; tick < 360 / 10; ++tick) {
 		pt[0] = getXYdeg(ang, zinner);
 		pt[1] = getXYdeg(ang, zouter);
-		painter->drawLines(pt, 1);
+		painter.drawLines(pt, 1);
 		ang += delta_ang;
 	}
+
+	addPixmap(*wheel_);
 /*
 	drawAspects(dc);
 	drawPlanetLines (dc);
 	drawHouseLines (dc);
 	drawLabels (dc);*/
-	painter->restore();
 }
 
 

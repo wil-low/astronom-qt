@@ -52,9 +52,9 @@ signals:
 public slots:
 	void reconfigure();
 protected:
-	void drawBackground (QPainter* painter, const QRectF& rect);
 
 private:
+	void createWheel();
 	void drawCircle(QPainter* painter, qreal radius);
 	void drawArc(QPainter* painter, qreal radius, qreal startAngle, qreal spanAngle);
 	void drawPie(QPainter* painter, qreal radius, qreal startAngle, qreal spanAngle);
@@ -65,6 +65,8 @@ private:
 	OcularColors colors_;
 	int zeroAngle_;
 	ZeroPoint zeroPoint_;
+	QPixmap* wheel_;
+	int radius_;
 };
 
 #endif // OCULARSCENE_H

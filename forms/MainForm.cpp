@@ -36,6 +36,7 @@ MainForm::MainForm(QWidget *parent)
 	scene_->setModel(model_);
 
 	ui->graphicsView->setScene(scene_);
+	ui->graphicsView->setRenderHints(QPainter::SmoothPixmapTransform);
 	ui->doubleSpinBox->setValue(1);
 /*
 	AstroLabel* text = new AstroLabel("Hello");

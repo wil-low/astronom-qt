@@ -19,7 +19,8 @@ SOURCES += \
     forms/GlyphForm.cpp \
     views/OcularScene.cpp \
     views/ModelledScene.cpp \
-    utils/GlyphManager.cpp
+    utils/GlyphManager.cpp \
+    views/DraggableGraphicsView.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -34,7 +35,8 @@ HEADERS += \
     views/OcularScene.h \
     utils/constants.h \
     views/ModelledScene.h \
-    utils/GlyphManager.h
+    utils/GlyphManager.h \
+    views/DraggableGraphicsView.h
 
 FORMS += \
     forms/MainForm.ui \
