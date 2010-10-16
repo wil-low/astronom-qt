@@ -1,36 +1,33 @@
 #include "AstroLabel.h"
 #include <QFont>
 #include <QPainter>
+#include "../utils/GlyphManager.h"
 
-AstroLabel::AstroLabel(QWidget* p)
+AstroLabel::AstroLabel(QWidget* parent, int chart_id, const BodyProps& props)
 : rect_(0, 0, 0, 0)
 , font_(NULL)
 , selected_(false)
-, chart_id_(-1)
-, id_(-1)
 , flags_(0)
-, parent_(p)
+, parent_(parent)
 , visible_(true)
+, props_(props)
+, chart_id_(chart_id)
 {
+	setProps(props);
 }
 
 AstroLabel::~AstroLabel(void)
 {
 }
 
-void AstroLabel::setChartId(int id)
+int AstroLabel::id() const
 {
-	chart_id_ = id;
+	return props_.id;
 }
 
 int AstroLabel::chartId() const
 {
 	return chart_id_;
-}
-
-int AstroLabel::id() const
-{
-	return id_;
 }
 
 int AstroLabel::flags() const
@@ -46,12 +43,6 @@ QWidget* AstroLabel::parent() const
 void AstroLabel::setFlags(int flags)
 {
 	flags_ = flags;
-}
-
-void AstroLabel::setId(int id, const QString& text)
-{
-	id_ = id;
-	text_ = text;
 }
 
 void AstroLabel::setFont(QFont* font)
@@ -146,7 +137,7 @@ qreal AstroLabel::visibleAngle() const
 
 body_type_t AstroLabel::type() const
 {
-    return TYPE_LAST;
+	return props_.type;
 }
 
 bool AstroLabel::contains(qreal x, qreal y)
@@ -162,13 +153,19 @@ const QRectF& AstroLabel::rect() const
 QString AstroLabel::toString() const
 {
 	QString s;
-	s.sprintf ("AstroLabel type %d, id %d, angle %.2f", type(), id(), angle());
+	s.sprintf ("AstroLabel type %d, id %d, angle %.2f, visible angle %.2f",
+			   type(), id(), angle(), visibleAngle());
 	return s;
 }
 
 unsigned int AstroLabel::identity() const
 {
 	return (chartId() << 24) + (type() << 16) + (id());
+}
+
+void AstroLabel::setChartId(int chart_id)
+{
+	chart_id_ = chart_id;
 }
 
 void AstroLabel::setVisible(bool visible)
@@ -184,6 +181,7 @@ bool AstroLabel::visible() const
 void AstroLabel::setProps(const BodyProps& props)
 {
 	props_ = props;
+	text_.sprintf("%c", GlyphManager::get_const_instance().getLabel(props_.type, props_.id));
 }
 
 double AstroLabel::prop(BodyProps::body_property p) const

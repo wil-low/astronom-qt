@@ -11,12 +11,12 @@ class QPainter;
 class AstroLabel
 {
 public:
-	AstroLabel(QWidget* p);
+	AstroLabel(QWidget* parent, int chart_id, const BodyProps& props);
 	virtual ~AstroLabel(void);
 
 	virtual qreal angle() const;
 	virtual qreal visibleAngle() const;
-	virtual body_type_t type() const;
+	body_type_t type() const;
 	const QRectF& rect() const;
 	const QString& text() const;
 	int chartId() const;
@@ -53,7 +53,6 @@ protected:
 	QString text_;
     bool selected_;
 	int chart_id_;
-	int id_;
 	int flags_;
 	BodyProps props_;
 	QWidget* parent_;

@@ -2,7 +2,7 @@
 #include "../utils/DrawHelper.h"
 #include "../utils/constants.h"
 #include "../labels/AstroLabelContainer.h"
-#include "../labels/ZodiacLabel.h"
+#include "../labels/LabelFactory.h"
 #include "../utils/GlyphManager.h"
 #include "../CircleSpread/CircleSpread.h"
 #include <QSettings>
@@ -63,16 +63,20 @@ void OcularView::reconfigure()
 
 	recalcDimensions(defaultDimensions_[ODIM_radius]);
 
+	BodyProps props;
+	props.type = TYPE_ZODIAC;
 	for (int i = 0; i < ZODIAC_SIGN_COUNT; ++i) {
-		QString label_text;
-		label_text.sprintf("%c", GlyphManager::get_const_instance().getLabel(TYPE_PLANET, i));
-		ZodiacLabel* label = new ZodiacLabel(i, this);
-		label->setId(i, label_text);
-		label->setFont(GlyphManager::get_const_instance().getFont(12, FF_ASTRO));
-		labels_->insert(label);
+		props.id = i;
+//		QString label_text;
+//		label_text.sprintf("%c", GlyphManager::get_const_instance().getLabel(TYPE_ZODIAC, i));
+		labels_->insert(LabelFactory::construct(this, -1, props));
 	}
 //	createWheel();
 //	addZodiacSigns();
+	BOOST_FOREACH (AstroLabel* label, *labels_) {
+		qDebug() << label->toString();
+	}
+//	return;
 	reorderLabels();
 }
 
@@ -297,6 +301,7 @@ void OcularView::spreadLabels (int chart, int type, qreal r)
 //		FXTRACE((99, "output %d->%.02f\n", (int)sv.ptr_, sv.val_));
 		AstroLabel* label = static_cast<AstroLabel*>(sv.ptr_);
 		label->setVisibleAngle(sv.val_);
+		qDebug() << label->toString();
 	}
 }
 
@@ -323,6 +328,7 @@ void OcularView::reorderLabels()
 //	spreadLabels(1, TYPE_PLANET, rad[TYPE_PLANET]);
 //	spreadLabels(0, TYPE_HOUSE, rad[TYPE_HOUSE]);
 	BOOST_FOREACH (AstroLabel* al, *labels_) {
+		qreal ang = al->visibleAngle();
 		pt = DrawHelper::getXYdeg(dimensions_[ODIM_zeroAngle] + al->visibleAngle(), rad[al->type()]);
 		al->position(pt.x(), pt.y());
 	}
@@ -332,6 +338,26 @@ void OcularView::drawLabels (QPainter* painter)
 {
 	BOOST_FOREACH (AstroLabel* al, *labels_) {
 		al->drawOnParent(painter);
-		qDebug() << "draw " << al->id() << ": " << al->visibleAngle() << al->rect();
+//		qDebug() << "draw " << al->toString() << ", text '" << al->text() << ", " << al->rect();
+	}
+}
+
+void OcularView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+	QAbstractItemView::dataChanged(topLeft, bottomRight);
+	int chart_id = 0;
+	for (int row = 0; row < model()->rowCount(rootIndex()); ++row) {
+		QModelIndex index = model()->index(row, chart_id, rootIndex());
+		BodyProps props = model()->data(index).value<BodyProps>();
+		AstroLabel* label = labels_->find_by_chart_id(chart_id, props.id);
+		bool need_insert = !label;
+		if (!label)
+			label = LabelFactory::construct(this, chart_id, props);
+		label->setProps(props);
+		label->setChartId(chart_id);
+		if (need_insert) {
+			std::pair<AlcIter, bool> result = labels_->insert(label);
+			assert (result.second);
+		}
 	}
 }

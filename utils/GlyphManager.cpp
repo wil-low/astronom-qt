@@ -66,9 +66,11 @@ void GlyphManager::loadFont(font_glyph_t& font, const QString& face)
 	}
 	const char DELIMITER = ' ';
 	QString s = settings_->value("zodiac").toString();
-	int space_count = s.count(DELIMITER);
-	for (int i = 0; i <= space_count; ++i)
-		font.zodiac_signs_.push_back(s.section(DELIMITER, i).toInt());
+	QStringList strList = s.split(DELIMITER);
+	for (int i = 0; i < strList.size(); ++i) {
+		font.zodiac_signs_.push_back(strList[i].toInt());
+	}
+	settings_->endGroup();
 }
 
 char GlyphManager::getLabel(body_type_t type, int id) const
@@ -83,6 +85,7 @@ char GlyphManager::getLabel(body_type_t type, int id) const
 				if (it1 != astrofont_.glyphs_.end())
 				return (*it1).second;
 			} }
+			break;
 		case TYPE_HOUSE:
 			switch ((astro_flag_t)id) {
 				case af_Asc:

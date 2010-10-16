@@ -8,9 +8,8 @@ FXDEFMAP(ZodiacLabel) PlanetLabelMessageMap[]={
 };
 */
 
-ZodiacLabel::ZodiacLabel(int sign, QWidget* p)
-: AstroLabel(p)
-, sign_(sign)
+ZodiacLabel::ZodiacLabel(QWidget* parent, int chart_id, const BodyProps& props)
+: AstroLabel(parent, chart_id, props)
 {
 }
 
@@ -20,15 +19,10 @@ ZodiacLabel::~ZodiacLabel(void)
 
 qreal ZodiacLabel::angle() const
 {
-	return sign_ * DEG_PER_SIGN + DEG_PER_SIGN / 2;
+	return props_.id * DEG_PER_SIGN + DEG_PER_SIGN / 2;
 }
 
 qreal ZodiacLabel::visibleAngle() const
 {
 	return angle();
-}
-
-body_type_t ZodiacLabel::type() const
-{
-    return TYPE_ZODIAC;
 }

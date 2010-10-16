@@ -10,8 +10,9 @@ namespace Ui {
 class QGraphicsScene;
 class QGraphicsView;
 class InputForm;
-class PlanetModel;
-class ModelledScene;
+class QAbstractItemModel;
+class QItemSelectionModel;
+class TimeLoc;
 
 class MainForm : public QMainWindow
 {
@@ -20,17 +21,17 @@ class MainForm : public QMainWindow
 public:
     explicit MainForm(QWidget *parent = 0);
     ~MainForm();
-
+	void setTimeLoc(int chart_index, const TimeLoc & tl);
 signals:
 	void reconfigure();
 
 private:
     Ui::MainForm *ui;
-	ModelledScene* scene_;
 	QWidget* view_;
 	InputForm* input_;
-	PlanetModel* model_;
-
+	void setupModel();
+	QAbstractItemModel *model_;
+	QItemSelectionModel *selectionModel;
 private slots:
 	void on_doubleSpinBox_valueChanged(double );
 	void on_actionGlyph_manager_activated();

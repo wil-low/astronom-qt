@@ -1,5 +1,7 @@
 #ifndef BODYPROPS_H
 #define BODYPROPS_H
+#include <QMetaType>
+#include "constants.h"
 
 class BodyProps
 {
@@ -18,6 +20,9 @@ public:
 	};
 	BodyProps();
 	double prop[bp_Last];
+	body_type_t type;
+	int id;
 };
 
+Q_DECLARE_METATYPE(BodyProps)
 #endif // BODYPROPS_H

@@ -1,4 +1,5 @@
-﻿[ephemeris:mapping]
+﻿[astronom]
+[ephemeris:mapping]
 sun = 0
 moon = 1
 mercury = 2

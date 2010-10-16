@@ -63,6 +63,7 @@ public:
 	virtual QRect visualRect(const QModelIndex &index) const;
 	virtual void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
 	virtual QModelIndex indexAt(const QPoint &point) const;
+	virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 signals:
 
 public slots:
