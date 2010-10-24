@@ -15,12 +15,12 @@ public:
 	void init();
 	void fini();
 
-	char getLabel(body_type_t type, int id) const;
-	char getName(body_type_t type, int id) const;
-	char getDegreeSign(font_face_t face) const;
-	QString getHouseLabel(int id, astro_flag_t hf) const;
+	char label(body_type_t type, int id) const;
+	char name(body_type_t type, int id) const;
+	char degreeSign(font_face_t face) const;
+	QString houseLabel(int id, astro_flag_t hf) const;
 
-	QFont* getFont(int size, font_face_t face) const;
+	QFont* font(int size, font_face_t face) const;
 	static QString& toBackTick (QString& str);
 	static QString& fromBackTick (QString& str);
 private:

@@ -7,4 +7,5 @@ namespace DrawHelper
 	void drawArc(QPainter* painter, qreal radius, qreal startAngle, qreal spanAngle);
 	void drawPie(QPainter* painter, qreal radius, qreal startAngle, qreal spanAngle);
 	QPointF getXYdeg(qreal degree, qreal len);
+	static const double PI = 3.1415926;
 };

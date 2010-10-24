@@ -28,7 +28,7 @@ void GlyphManager::fini()
 	delete settings_;
 }
 
-QFont* GlyphManager::getFont(int size, font_face_t face) const
+QFont* GlyphManager::font(int size, font_face_t face) const
 {
 	QFont* fnt = NULL;
 	const size_font_map& map = ((face == FF_ASTRO) ? astrofont_ : arialfont_).fonts_;
@@ -73,7 +73,7 @@ void GlyphManager::loadFont(font_glyph_t& font, const QString& face)
 	settings_->endGroup();
 }
 
-char GlyphManager::getLabel(body_type_t type, int id) const
+char GlyphManager::label(body_type_t type, int id) const
 {
 	switch (type) {
 		case TYPE_ZODIAC:
@@ -101,7 +101,7 @@ char GlyphManager::getLabel(body_type_t type, int id) const
 	return '?';
 }
 
-char GlyphManager::getDegreeSign(font_face_t face) const
+char GlyphManager::degreeSign(font_face_t face) const
 {
 	if (face == FF_ASTRO)
 		return '9' + 2;
@@ -109,12 +109,12 @@ char GlyphManager::getDegreeSign(font_face_t face) const
 		return '`';
 }
 
-QString GlyphManager::getHouseLabel(int id, astro_flag_t af) const
+QString GlyphManager::houseLabel(int id, astro_flag_t af) const
 {
 	if (af == af_Undef)
 		return QString(HOUSE_NAMES[id - HOUSE_ID_FIRST - 1]);
 	QString s;
-	s.sprintf("%c", getLabel(TYPE_HOUSE, (int)af));
+	s.sprintf("%c", label(TYPE_HOUSE, (int)af));
 	return s;
 }
 

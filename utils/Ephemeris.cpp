@@ -1,8 +1,11 @@
 #include "Ephemeris.h"
+#include <QtDebug>
+
 #include "TimeLoc.h"
 #include "utils/BodyProps.h"
 
 #include <sweodef.h>
+
 extern "C" {
 	double swe_julday(int, int, int, double, int);
 	void swe_revjul(double, int, int*, int*, int*, double*);
@@ -70,8 +73,8 @@ long calc_body (BodyProps& props, int body, long flags, const TimeLoc& time_loc)
 {
 	char serr[256] = "";
 	long result = swe_calc_ut (time_loc.data_[TL_DATE], body, flags|SEFLG_SPEED, props.prop, serr);
-//	if (result < 0 || serr[0] != 0)
-//		FXTRACE((10, "%s: %s\n", __FUNCTION__, serr));
+	if (result < 0 || serr[0] != 0)
+		qDebug() << __FUNCTION__ << ": " << serr;
 	double extra[6];
 	result = swe_calc_ut (time_loc.data_[TL_DATE], body, flags|SEFLG_EQUATORIAL, extra, serr);
 	props.prop[BodyProps::bp_RectAsc] = extra[0];

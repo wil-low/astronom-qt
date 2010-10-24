@@ -84,6 +84,7 @@ private:
 	void spreadLabels (int chart, int type, qreal r);
 	void drawLabels(QPainter* painter);
 	void reorderLabels();
+	void drawPlanetLines(QPainter* painter);
 	qreal defaultDimensions_[ODIM_LAST];
 	qreal dimensions_[ODIM_LAST];
 	OcularColors colors_;

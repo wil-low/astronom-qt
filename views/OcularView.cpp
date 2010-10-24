@@ -219,9 +219,10 @@ void OcularView::paintEvent(QPaintEvent* event)
 	}
 
 	drawLabels(&painter);
+	drawPlanetLines (&painter);
 /*
 	drawAspects(dc);
-	drawPlanetLines (dc);
+
 	drawHouseLines (dc);
 	drawLabels (dc);*/
 }
@@ -289,7 +290,7 @@ void OcularView::spreadLabels (int chart, int type, qreal r)
 		}
 		++it;
 	}
-	delta_width *= 1.2;
+	delta_width *= 0.68;
 	qreal delta_ang = atan (delta_width / r) / DTOR * 2;
 	CircleSpread cspread(input);
 
@@ -316,7 +317,7 @@ void OcularView::reorderLabels()
 			default:
 				font_size = 12;
 		}
-		al->setFont(GlyphManager::get_const_instance().getFont(font_size, FF_ASTRO));
+		al->setFont(GlyphManager::get_const_instance().font(font_size, FF_ASTRO));
 	}
 	qreal rad[TYPE_LAST];
 	rad[TYPE_ZODIAC] = (dimensions_[ODIM_zodiac10dgrR] + dimensions_[ODIM_zodiac5dgrR]) / 2;
@@ -358,6 +359,48 @@ void OcularView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bott
 		if (need_insert) {
 			std::pair<AlcIter, bool> result = labels_->insert(label);
 			assert (result.second);
+		}
+	}
+}
+
+void OcularView::drawPlanetLines(QPainter* painter)
+{
+	double zouter = dimensions_[ODIM_zodiac5dgrR];
+	double zinner = dimensions_[ODIM_innerPlanetLabelR];
+	double rzinner = dimensions_[ODIM_planetFontSize];
+//	painter->setLineWidth(1);
+	QPointF pt[2];
+
+	QString strDegree;
+	QFont* dgrFont = GlyphManager::get_const_instance().font(dimensions_[ODIM_degreeFontSize], FF_ASTRO);
+
+	BOOST_FOREACH (AstroLabel* al, *labels_) {
+		if (al->type() == TYPE_PLANET && al->visible()) {
+			painter->setPen(colors_.planetTickColor);
+			double ang = al->angle() + dimensions_[ODIM_zeroAngle];
+			double angv = al->visibleAngle() + dimensions_[ODIM_zeroAngle];
+			double planet_r = al->rect().width() / 2;
+			pt[0] = DrawHelper::getXYdeg(ang, zouter);
+			pt[1] = DrawHelper::getXYdeg(angv, zinner);
+			double dx = pt[1].x() - pt[0].x(), dy = pt[0].y() - pt[1].y();
+			double ang0 = atan(dy / dx);
+			if (dx < 0)
+				ang0 += DrawHelper::PI;
+			double hyp = sqrt(dx * dx + dy * dy) - planet_r;
+			pt[1].setX(pt[0].x() + cos(ang0) * hyp);
+			pt[1].setY(pt[0].y() - sin(ang0) * hyp);
+			painter->drawLines(pt, 2);
+
+			painter->setPen(Qt::black);
+			painter->setFont(*dgrFont);
+			strDegree.sprintf("%02d%c", ((int)al->angle() % DEG_PER_SIGN) + 1, GlyphManager::get_const_instance().degreeSign(FF_ASTRO));
+			pt[1] = DrawHelper::getXYdeg(angv, zinner - al->rect().height());
+			painter->drawText(pt[1].x(), pt[1].y(), strDegree);
+			if (al->flags() & af_Retrograde) {
+				strDegree = ">";
+				pt[1] = DrawHelper::getXYdeg(angv, zinner - 2 * al->rect().height());
+				painter->drawText(pt[1].x(), pt[1].y(), strDegree); // retrograde
+			}
 		}
 	}
 }

@@ -19,6 +19,7 @@ MainForm::MainForm(QWidget *parent)
 , ui(new Ui::MainForm)
 , input_(new InputForm)
 {
+	Ephemeris::init("d:/prj/amax-hg/Astromaximum/swiss");
 	QFont font("Astronom");
 	QFontInfo fi(font);
 	QString fam = fi.family();
