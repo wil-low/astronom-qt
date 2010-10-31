@@ -7,7 +7,7 @@ class PlanetSelectorDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    explicit PlanetSelectorDelegate(QObject *parent = 0);
+	explicit PlanetSelectorDelegate(QObject *parent, int degree_mode, int fontSize);
 	void paint(QPainter *painter, const QStyleOptionViewItem &option,
 			   const QModelIndex &index) const;
 	QSize sizeHint(const QStyleOptionViewItem &option,
@@ -15,6 +15,10 @@ public:
 signals:
 
 public slots:
+
+private:
+	int degree_mode_;
+	int fontSize_;
 
 };
 

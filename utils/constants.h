@@ -19,7 +19,7 @@ void normAngle(double &a);
 
 enum {
 	HOUSE_ID_ASC = 99998,
-	HOUSE_ID_MC = 99998,
+	HOUSE_ID_MC = 99999,
 	HOUSE_ID_FIRST = 100000,
 };
 

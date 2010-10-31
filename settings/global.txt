@@ -14,6 +14,8 @@ ceres = 17
 pallas = 18
 juno = 19
 vesta = 20
+asc = 99998
+mc = 99999
 
 [ocular]
 bodies = sun moon mercury venus mars jupiter saturn uranus neptun pluto north_node ceres pallas juno vesta

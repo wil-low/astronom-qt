@@ -32,10 +32,13 @@ private:
 	void setupModel();
 	QAbstractItemModel *model_;
 	QItemSelectionModel *selectionModel;
+	void addHouse (int chart_index, int id, qreal angle);
+
 private slots:
 	void on_doubleSpinBox_valueChanged(double );
 	void on_actionGlyph_manager_activated();
 	void on_actionInput_data_activated();
+
 };
 
 #endif // MAINFORM_H

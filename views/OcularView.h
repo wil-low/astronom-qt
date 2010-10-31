@@ -25,11 +25,11 @@ enum OcularDimensionType {
 	ODIM_planetFontSize,
 	ODIM_zodiacFontSize,
 	ODIM_degreeFontSize,
-	ODIM_zeroPoint,
-	ODIM_zeroAngle,
 	ODIM_tick10Size,
 	ODIM_tick5Size,
-	ODIM_LAST
+	ODIM_LAST,
+	ODIM_zeroPoint,
+	ODIM_zeroAngle
 };
 
 struct OcularDimensions {
@@ -85,6 +85,7 @@ private:
 	void drawLabels(QPainter* painter);
 	void reorderLabels();
 	void drawPlanetLines(QPainter* painter);
+	void drawHouseLines(QPainter* painter);
 	qreal defaultDimensions_[ODIM_LAST];
 	qreal dimensions_[ODIM_LAST];
 	OcularColors colors_;

@@ -220,10 +220,10 @@ void OcularView::paintEvent(QPaintEvent* event)
 
 	drawLabels(&painter);
 	drawPlanetLines (&painter);
+	drawHouseLines (&painter);
 /*
 	drawAspects(dc);
 
-	drawHouseLines (dc);
 	drawLabels (dc);*/
 }
 
@@ -365,6 +365,7 @@ void OcularView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bott
 
 void OcularView::drawPlanetLines(QPainter* painter)
 {
+	painter->save();
 	double zouter = dimensions_[ODIM_zodiac5dgrR];
 	double zinner = dimensions_[ODIM_innerPlanetLabelR];
 	double rzinner = dimensions_[ODIM_planetFontSize];
@@ -403,4 +404,86 @@ void OcularView::drawPlanetLines(QPainter* painter)
 			}
 		}
 	}
+	painter->restore();
+}
+
+void OcularView::drawHouseLines(QPainter* painter)
+{
+	painter->save();
+	double zinner = dimensions_[ODIM_zodiacInner2R];
+//	painter->setLineWidth(1);
+//	painter->setBackground(getBackColor());
+	QPointF pt[2];
+
+	QString strDegree;
+	QFont* dgrFont = GlyphManager::get_const_instance().font(dimensions_[ODIM_degreeFontSize], FF_ASTRO);
+
+	BOOST_FOREACH (AstroLabel* al, *labels_) {
+		if (al->type() == TYPE_HOUSE) {
+			double ang = al->angle() + dimensions_[ODIM_zeroAngle];
+			astro_flag_t af = (astro_flag_t)al->flags();
+			pt[0] = DrawHelper::getXYdeg(ang, zinner);
+			if (af == af_Undef) {
+				pt[1] = DrawHelper::getXYdeg(ang, dimensions_[ODIM_zodiac5dgrR]);
+				painter->setPen(colors_.planetTickColor);
+				painter->drawLines(pt, 2);
+			}
+			else {
+				painter->setPen(colors_.arrowColor);
+				switch (af) {
+					case af_Asc:
+					case af_MC: {
+						double r_ascmc = dimensions_[ODIM_ascArrowR];
+						pt[1] = DrawHelper::getXYdeg(ang, r_ascmc);
+						painter->drawLines(pt, 2);
+						pt[0] = DrawHelper::getXYdeg(ang - 1, r_ascmc * 0.98);
+						painter->drawLines(pt, 2);
+						pt[0] = DrawHelper::getXYdeg(ang + 1, r_ascmc * 0.98);
+						painter->drawLines(pt, 2);
+						painter->setPen(Qt::black);
+						painter->setFont(*dgrFont);
+						if (af == af_Asc) {
+							pt[1] = DrawHelper::getXYdeg(ang, r_ascmc * 0.98);
+							strDegree.sprintf("%02d%c",
+								(int)al->angle() % DEG_PER_SIGN + 1,
+								GlyphManager::get_const_instance().degreeSign(FF_ASTRO));
+							painter->drawText(pt[1].x(), pt[1].y() - 1, strDegree);
+							strDegree.sprintf("%02d'",
+								(int)(al->angle() - (int)al->angle()) * 60 + 1);
+//							int th = dgrFont->getTextHeight(strDegree);
+							painter->drawText(pt[1].x(), pt[1].y(), strDegree);
+						}
+						else {
+							pt[1] = DrawHelper::getXYdeg(ang, r_ascmc * 0.96);
+							strDegree.sprintf("%02d%c%02d'",
+								(int)al->angle() % DEG_PER_SIGN + 1,
+								GlyphManager::get_const_instance().degreeSign(FF_ASTRO),
+								(int)(al->angle() - (int)al->angle()) * 60 + 1);
+//							int tw = dgrFont->getTextWidth(strDegree);
+//							int th = dgrFont->getTextHeight(strDegree);
+							painter->drawText(pt[1].x(), pt[1].y(), strDegree);
+						}
+						}
+						break;
+					case af_Dsc: {
+						double r_dsc = dimensions_[ODIM_ascArrowR] * 0.93;
+						double r_circle = dimensions_[ODIM_ascArrowR] * 0.015;
+						pt[1] = DrawHelper::getXYdeg(ang, r_dsc);
+						painter->drawLines(pt, 2);
+						pt[1] = DrawHelper::getXYdeg(ang, r_dsc + r_circle);
+						painter->drawEllipse(pt[1].x() - r_circle, pt[1].y() - r_circle, 2 * r_circle, 2 * r_circle); }
+						break;
+					case af_IC: {
+						double r_ic = dimensions_[ODIM_ascArrowR] * 0.96;
+						pt[1] = DrawHelper::getXYdeg(ang, r_ic);
+						painter->drawLines(pt, 2);
+						pt[0] = DrawHelper::getXYdeg(ang + 2, r_ic);
+						pt[1] = DrawHelper::getXYdeg(ang - 2, r_ic);
+						painter->drawLines(pt, 2); }
+						break;
+				}
+			}
+		}
+	}
+	painter->restore();
 }

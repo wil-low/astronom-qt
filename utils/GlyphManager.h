@@ -15,7 +15,7 @@ public:
 	void init();
 	void fini();
 
-	char label(body_type_t type, int id) const;
+	QString label(body_type_t type, int id) const;
 	char name(body_type_t type, int id) const;
 	char degreeSign(font_face_t face) const;
 	QString houseLabel(int id, astro_flag_t hf) const;

@@ -25,7 +25,10 @@ SOURCES += \
     labels/PlanetLabel.cpp \
     labels/LabelFactory.cpp \
     widgets/PlanetSelector.cpp \
-    widgets/PlanetSelectorDelegate.cpp
+    widgets/PlanetSelectorDelegate.cpp \
+    utils/DMS.cpp \
+    utils/HouseProps.cpp \
+    labels/HouseLabel.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -46,11 +49,15 @@ HEADERS += \
     labels/PlanetLabel.h \
     labels/LabelFactory.h \
     widgets/PlanetSelector.h \
-    widgets/PlanetSelectorDelegate.h
+    widgets/PlanetSelectorDelegate.h \
+    utils/DMS.h \
+    utils/HouseProps.h \
+    labels/HouseLabel.h
 
 FORMS += \
     forms/MainForm.ui \
     forms/InputForm.ui \
-    forms/GlyphForm.ui
+    forms/GlyphForm.ui \
+    forms/form.ui
 
 OTHER_FILES +=

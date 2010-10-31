@@ -73,32 +73,40 @@ void GlyphManager::loadFont(font_glyph_t& font, const QString& face)
 	settings_->endGroup();
 }
 
-char GlyphManager::label(body_type_t type, int id) const
+QString GlyphManager::label(body_type_t type, int id) const
 {
+	QString s("?");
 	switch (type) {
 		case TYPE_ZODIAC:
-			return astrofont_.zodiac_signs_[id];
+			s.sprintf("%c", astrofont_.zodiac_signs_[id]);
+			break;
+		case TYPE_HOUSE:
+			s = "";
 		case TYPE_PLANET: {
 			std::map<int, QString>::const_iterator it = id2planet_.find(id);
 			if (it != id2planet_.end()) {
 				std::map<QString, int>::const_iterator it1 = astrofont_.glyphs_.find((*it).second);
-				if (it1 != astrofont_.glyphs_.end())
-				return (*it1).second;
+				if (it1 != astrofont_.glyphs_.end()) {
+					char c = (*it1).second;
+					s.sprintf("%c", c);
+				}
 			} }
 			break;
-		case TYPE_HOUSE:
+/*		case TYPE_HOUSE:
 			switch ((astro_flag_t)id) {
-				case af_Asc:
-					return 'L';
-				case af_IC:
-					return 'O';
-				case af_Dsc:
-					return 'M';
-				case af_MC:
-					return 'N';
-			}
+			case af_Asc:
+				return 'L';
+			case af_IC:
+				return 'O';
+			case af_Dsc:
+				return 'M';
+			case af_MC:
+				return 'N';
+			default:
+				s = HOUSE_NAMES[id - HOUSE_ID_FIRST];
+			}*/
 	}
-	return '?';
+	return s;
 }
 
 char GlyphManager::degreeSign(font_face_t face) const
@@ -107,15 +115,6 @@ char GlyphManager::degreeSign(font_face_t face) const
 		return '9' + 2;
 	else
 		return '`';
-}
-
-QString GlyphManager::houseLabel(int id, astro_flag_t af) const
-{
-	if (af == af_Undef)
-		return QString(HOUSE_NAMES[id - HOUSE_ID_FIRST - 1]);
-	QString s;
-	s.sprintf("%c", label(TYPE_HOUSE, (int)af));
-	return s;
 }
 
 QString& GlyphManager::toBackTick(QString& str)

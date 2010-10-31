@@ -3,6 +3,7 @@
 
 #include "TimeLoc.h"
 #include "utils/BodyProps.h"
+#include "utils/HouseProps.h"
 
 #include <sweodef.h>
 
@@ -84,15 +85,15 @@ long calc_body (BodyProps& props, int body, long flags, const TimeLoc& time_loc)
 	return result;
 }
 
-/*
+
 long calc_house (HouseProps& props, int method, const TimeLoc& time_loc)
 {
-	long result = swe_houses (time_loc.get(TL_DATE), time_loc.get(TL_LAT), time_loc.get(TL_LON),
+	long result = swe_houses (time_loc.data_[TL_DATE], time_loc.data_[TL_LAT], time_loc.data_[TL_LON],
         method, props.cusps, props.ascmc);
-    props.method = (HouseProps::house_method)method;
-	if (result < 0)
-		FXTRACE((10, "%s: error\n", __FUNCTION__));
+	props.method = (HouseProps::house_method)method;
+	//	if (result < 0)
+//		FXTRACE((10, "%s: error\n", __FUNCTION__));
 	return result;
 }
-*/
+
 }

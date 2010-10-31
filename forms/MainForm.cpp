@@ -9,10 +9,10 @@
 #include "../utils/Ephemeris.h"
 #include "../utils/TimeLoc.h"
 #include "../utils/BodyProps.h"
+#include "../utils/HouseProps.h"
 #include "../views/OcularView.h"
 #include "../models/OcularDelegate.h"
 #include "../widgets/PlanetSelector.h"
-#include "../widgets/PlanetSelectorDelegate.h"
 
 MainForm::MainForm(QWidget *parent)
 : QMainWindow(parent)
@@ -32,10 +32,8 @@ MainForm::MainForm(QWidget *parent)
 	itemView->setModel(model_);
 
 	view_->connect(this, SIGNAL(reconfigure()), SLOT(reconfigure()));
-	QListView* listView = new PlanetSelector(ui->centralwidget);
-	ui->horizontalLayout->insertWidget(1, listView, 1);
-	listView->setModel(model_);
-	listView->setItemDelegate(new PlanetSelectorDelegate(this));
+	PlanetSelector* planetSelector = new PlanetSelector(ui->centralwidget, model_);
+	ui->horizontalLayout->insertWidget(1, planetSelector, 1);
 
 	TimeLoc tl;
 	tl.data_[TL_DATE] = Ephemeris::now();
@@ -85,13 +83,31 @@ void MainForm::setTimeLoc(int chart_index, const TimeLoc & tl)
 //	model_->setHeaderData(chart_index, Qt::Horizontal, QVariant(*tl), Qt::UserRole);
 	model_->removeRows(chart_index, model_->rowCount(QModelIndex()), QModelIndex());
 	int bodies[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 18};
+	int row_count = 0;
 	BodyProps props;
-	for (int i =  0; i < sizeof(bodies) / sizeof(int); ++i) {
-		model_->insertRows(i, 1, QModelIndex());
+	for (int i = 0; i < sizeof(bodies) / sizeof(int); ++i) {
+		model_->insertRows(row_count, 1, QModelIndex());
 		Ephemeris::calc_body (props, bodies[i], 0, tl);
 		props.id = bodies[i];
 		props.type = TYPE_PLANET;
-		model_->setData (model_->index(i, chart_index, QModelIndex()), qVariantFromValue(props));
+		model_->setData (model_->index(row_count, chart_index, QModelIndex()), qVariantFromValue(props));
+		++row_count;
 	}
+	HouseProps houses;
+	Ephemeris::calc_house(houses, HouseProps::hp_Placidus, tl);
+	addHouse(chart_index, HOUSE_ID_ASC, houses.ascmc[0]);
+	addHouse(chart_index, HOUSE_ID_MC, houses.ascmc[1]);
+	for (int i = 0; i < houses.cuspCount(); ++i)
+		addHouse(chart_index, HOUSE_ID_FIRST + i, houses.cusps[i + 1]);
 }
 
+void MainForm::addHouse (int chart_index, int id, qreal angle)
+{
+	int row = model_->rowCount();
+	model_->insertRows(row, 1, QModelIndex());
+	BodyProps hprops;
+	hprops.id = id;
+	hprops.type = TYPE_HOUSE;
+	hprops.prop[BodyProps::bp_Lon] = angle;
+	model_->setData (model_->index(row, chart_index, QModelIndex()), qVariantFromValue(hprops));
+}

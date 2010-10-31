@@ -181,7 +181,7 @@ bool AstroLabel::visible() const
 void AstroLabel::setProps(const BodyProps& props)
 {
 	props_ = props;
-	text_.sprintf("%c", GlyphManager::get_const_instance().label(props_.type, props_.id));
+	text_ = GlyphManager::get_const_instance().label(props_.type, props_.id);
 }
 
 double AstroLabel::prop(BodyProps::body_property p) const
