@@ -9,4 +9,5 @@ public:
 	virtual qreal angle() const;
 	qreal visibleAngle() const;
 	HouseLabel(){}
+	virtual void setProps(const BodyProps& props);
 };

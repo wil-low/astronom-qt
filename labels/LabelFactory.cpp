@@ -4,12 +4,15 @@
 #include "PlanetLabel.h"
 #include "HouseLabel.h"
 
+#include <assert.h>
+
 LabelFactory::LabelFactory()
 {
 }
 
 AstroLabel* LabelFactory::construct(QWidget* parent, int chart_id, const BodyProps& props)
 {
+	assert(props.id != -1 && "id == -1");
 	AstroLabel* label = NULL;
 	switch (props.type) {
 	case TYPE_ZODIAC:

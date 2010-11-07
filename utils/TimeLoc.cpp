@@ -17,6 +17,13 @@ const char* FMT_REX[] = {
 	"(\\d+)`(\\d+)'(\\d+)''([EW])", // LON
 	"(\\d+)`(\\d+)`(\\d+)", // ELV
 };
+
+TimeLoc::TimeLoc()
+{
+	for (int i = TL_DATE; i < TL_LAST; ++i)
+		data_[i] = 0;
+}
+
 /*
 const char FMT_TIME[] = "%02d:%02d:%02d";
 const char FMT_LAT[]  = "%03d`%02d'%02d''%c";

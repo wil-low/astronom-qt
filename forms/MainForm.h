@@ -13,6 +13,7 @@ class InputForm;
 class QAbstractItemModel;
 class QItemSelectionModel;
 class TimeLoc;
+class HouseProps;
 
 class MainForm : public QMainWindow
 {
@@ -32,7 +33,7 @@ private:
 	void setupModel();
 	QAbstractItemModel *model_;
 	QItemSelectionModel *selectionModel;
-	void addHouse (int chart_index, int id, qreal angle);
+	void addHouse (int chart_index, int id, const HouseProps& props);
 
 private slots:
 	void on_doubleSpinBox_valueChanged(double );

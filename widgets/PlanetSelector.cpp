@@ -63,3 +63,8 @@ void PlanetSelector::listViewPressed(const QModelIndex& index)
 		qDebug() << "right click on " << index.row();
 	}
 }
+
+void PlanetSelector::copySelectionModel(QAbstractItemView* itemView)
+{
+	listView_->setSelectionModel(itemView->selectionModel());
+}

@@ -80,8 +80,6 @@ QString GlyphManager::label(body_type_t type, int id) const
 		case TYPE_ZODIAC:
 			s.sprintf("%c", astrofont_.zodiac_signs_[id]);
 			break;
-		case TYPE_HOUSE:
-			s = "";
 		case TYPE_PLANET: {
 			std::map<int, QString>::const_iterator it = id2planet_.find(id);
 			if (it != id2planet_.end()) {
@@ -92,19 +90,19 @@ QString GlyphManager::label(body_type_t type, int id) const
 				}
 			} }
 			break;
-/*		case TYPE_HOUSE:
+		case TYPE_HOUSE:
 			switch ((astro_flag_t)id) {
 			case af_Asc:
-				return 'L';
+				return "L";
 			case af_IC:
-				return 'O';
+				return "O";
 			case af_Dsc:
-				return 'M';
+				return "M";
 			case af_MC:
-				return 'N';
+				return "N";
 			default:
 				s = HOUSE_NAMES[id - HOUSE_ID_FIRST];
-			}*/
+			}
 	}
 	return s;
 }

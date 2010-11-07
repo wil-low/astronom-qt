@@ -22,6 +22,7 @@ enum date_fmt_t {
 class TimeLoc
 {
 public:
+	TimeLoc();
 	double data_[TL_LAST];
 /*
 	static void initRex(char date_sep);

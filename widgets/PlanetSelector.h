@@ -2,10 +2,12 @@
 #define PLANETSELECTOR_H
 
 #include <QWidget>
-#include <QAbstractItemModel>
 
 class QTabBar;
 class QListView;
+class QModelIndex;
+class QAbstractItemModel;
+class QAbstractItemView;
 
 class PlanetSelector : public QWidget
 {
@@ -13,6 +15,7 @@ class PlanetSelector : public QWidget
 public:
 	explicit PlanetSelector(QWidget *parent, QAbstractItemModel* model);
 	~PlanetSelector();
+	void copySelectionModel(QAbstractItemView* itemView);
 signals:
 
 public slots:

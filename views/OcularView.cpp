@@ -7,6 +7,7 @@
 #include "../CircleSpread/CircleSpread.h"
 #include <QSettings>
 #include <QPainter>
+#include <QPaintEvent>
 #include <QDebug>
 #include <boost/foreach.hpp>
 
@@ -14,6 +15,7 @@ OcularView::OcularView(QWidget *parent)
 : QAbstractItemView(parent)
 , labels_(new AstroLabelContainer)
 {
+	setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
 OcularView::~OcularView()
@@ -23,9 +25,7 @@ OcularView::~OcularView()
 
 void OcularView::reconfigure()
 {
-	dimensions_[ODIM_zeroPoint] = ZERO_ARIES;
-	dimensions_[ODIM_zeroAngle] = 180;
-
+	zeroPoint_ = ZERO_ASC;
 	QSettings settings;
 	settings.beginGroup("ocular:dimensions");
 	defaultDimensions_[ODIM_radius] = settings.value("radius", 377).toInt();
@@ -57,27 +57,31 @@ void OcularView::reconfigure()
 	colors_.tick10Color = settings.value("tick10Color", QColor(192,0,255)).value<QColor>();
 	colors_.innerRColor = settings.value("innerRColor", QColor(192,0,255)).value<QColor>();
 	colors_.planetTickColor = settings.value("planetTickColor", QColor(0,192,255)).value<QColor>();
-	colors_.ocularColor = settings.value("ocularColor", QColor(247,240,255)).value<QColor>();
 	colors_.aspectTickColor = settings.value("aspectTickColor", QColor(0,0,0)).value<QColor>();
 	settings.endGroup();
-
-	recalcDimensions(defaultDimensions_[ODIM_radius]);
 
 	BodyProps props;
 	props.type = TYPE_ZODIAC;
 	for (int i = 0; i < ZODIAC_SIGN_COUNT; ++i) {
 		props.id = i;
-//		QString label_text;
-//		label_text.sprintf("%c", GlyphManager::get_const_instance().getLabel(TYPE_ZODIAC, i));
 		labels_->insert(LabelFactory::construct(this, -1, props));
 	}
-//	createWheel();
-//	addZodiacSigns();
 	BOOST_FOREACH (AstroLabel* label, *labels_) {
 		qDebug() << label->toString();
 	}
-//	return;
-	reorderLabels();
+	recalcDimensions(defaultDimensions_[ODIM_radius]);
+	switch (zeroPoint_) {
+		case ZERO_ASC:
+		{
+			AstroLabel* label = labels_->find_by_chart_id(0, HOUSE_ID_ASC);
+			assert (label && "No Asc label found to set zero point");
+			zeroAngle_ = 180 - label->angle();
+		}
+			break;
+		case ZERO_ARIES:
+			zeroAngle_ = 180;
+			break;
+	}
 }
 
 void OcularView::recalcDimensions(qreal newRadius)
@@ -96,6 +100,7 @@ void OcularView::recalcDimensionsByFactor(qreal factor)
 void OcularView::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(viewport());
+//	painter.setClipRegion(event->region());
 	painter.translate(viewport()->width() / 2, viewport()->height() / 2);
 	painter.fillRect(QRectF(-dimensions_[ODIM_radius], -dimensions_[ODIM_radius], dimensions_[ODIM_radius] * 2, dimensions_[ODIM_radius] * 2), QColor(Qt::white));
 //	painter.setRenderHints(QPainter::Antialiasing);
@@ -103,12 +108,12 @@ void OcularView::paintEvent(QPaintEvent* event)
 		painter.setPen(colors_.ocularColor);
 		DrawHelper::drawCircle(&painter, dimensions_[ODIM_ascArrowR]);
 	}
-	qreal ang = dimensions_[ODIM_zeroAngle];
+	qreal ang = zeroAngle_;
 	qreal delta_ang = DEG_PER_SIGN;
 
 	if (dimensions_[ODIM_zodiacOuterR] != 0) {
 //		if (!is_resizing_) {
-			ang = dimensions_[ODIM_zeroAngle];
+			ang = zeroAngle_;
 			delta_ang = DEG_PER_SIGN;
 			painter.setBrush(colors_.fillColor);
 			for (int sign = 0; sign < 6; ++sign) {
@@ -136,7 +141,7 @@ void OcularView::paintEvent(QPaintEvent* event)
 	}
 	if (dimensions_[ODIM_zodiacInner2R] != 0) {
 //		if (!is_resizing_) {
-			ang = dimensions_[ODIM_zeroAngle];
+			ang = zeroAngle_;
 			delta_ang = DEG_PER_SIGN;
 			painter.setPen(Qt::transparent);
 			painter.setBrush(colors_.fillColor);
@@ -170,14 +175,14 @@ void OcularView::paintEvent(QPaintEvent* event)
 	painter.setPen(colors_.arrowColor);
 
 	qreal r_aries = dimensions_[ODIM_zodiacOuterR] + 1;
-	ang = dimensions_[ODIM_zeroAngle];
+	ang = zeroAngle_;
 	QPointF pt[3];
 	pt[0] = DrawHelper::getXYdeg(ang - 1, r_aries * 1.02);
-	pt[1] = DrawHelper::getXYdeg(dimensions_[ODIM_zeroAngle], r_aries);
+	pt[1] = DrawHelper::getXYdeg(zeroAngle_, r_aries);
 	pt[2] = DrawHelper::getXYdeg(ang + 1, r_aries * 1.02);
 	painter.drawPolyline(pt, 3);
 
-	ang = dimensions_[ODIM_zeroAngle];
+	ang = zeroAngle_;
 	delta_ang = 5;
 	qreal zinner = dimensions_[ODIM_zodiac5dgrR];
 	qreal zouter;
@@ -207,7 +212,7 @@ void OcularView::paintEvent(QPaintEvent* event)
 		ang += delta_ang;
 	}
 	painter.setPen(colors_.tick10Color);
-	ang = dimensions_[ODIM_zeroAngle];
+	ang = zeroAngle_;
 	delta_ang = 10;
 	zinner = dimensions_[ODIM_zodiac10dgrR];
 	zouter = dimensions_[ODIM_zodiacOuterR];
@@ -239,6 +244,26 @@ void OcularView::scrollTo(const QModelIndex &index, ScrollHint hint)
 
 QModelIndex OcularView::indexAt(const QPoint &point) const
 {
+	QPoint translatedPoint(point.x() - viewport()->width() / 2, point.y() - viewport()->height() / 2);
+	qDebug() << translatedPoint;
+	AstroLabel* cur_al = NULL;
+	BOOST_FOREACH (AstroLabel* al, *labels_) {
+		if (al->visible() && al->contains(translatedPoint)) {
+			cur_al = al;
+			break;
+		}
+	}
+	if (cur_al) {
+		int chart_id = cur_al->chartId();
+		int id = cur_al->id();
+		int rowCount = model()->rowCount();
+		for (int i = 0; i < rowCount; ++i) {
+			QModelIndex index = model()->index(i, chart_id);
+			const BodyProps& props = model()->data(index).value<BodyProps>();
+			if (props.id == id)
+				return index;
+		}
+	}
 	return QModelIndex();
 }
 
@@ -264,7 +289,7 @@ bool OcularView::isIndexHidden(const QModelIndex &index) const
 
 void OcularView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command)
 {
-
+	//qDebug() << rect;
 }
 
 QRegion OcularView::visualRegionForSelection(const QItemSelection &selection) const
@@ -290,7 +315,7 @@ void OcularView::spreadLabels (int chart, int type, qreal r)
 		}
 		++it;
 	}
-	delta_width *= 0.68;
+	delta_width *= 1;
 	qreal delta_ang = atan (delta_width / r) / DTOR * 2;
 	CircleSpread cspread(input);
 
@@ -330,7 +355,7 @@ void OcularView::reorderLabels()
 //	spreadLabels(0, TYPE_HOUSE, rad[TYPE_HOUSE]);
 	BOOST_FOREACH (AstroLabel* al, *labels_) {
 		qreal ang = al->visibleAngle();
-		pt = DrawHelper::getXYdeg(dimensions_[ODIM_zeroAngle] + al->visibleAngle(), rad[al->type()]);
+		pt = DrawHelper::getXYdeg(zeroAngle_ + al->visibleAngle(), rad[al->type()]);
 		al->position(pt.x(), pt.y());
 	}
 }
@@ -378,8 +403,8 @@ void OcularView::drawPlanetLines(QPainter* painter)
 	BOOST_FOREACH (AstroLabel* al, *labels_) {
 		if (al->type() == TYPE_PLANET && al->visible()) {
 			painter->setPen(colors_.planetTickColor);
-			double ang = al->angle() + dimensions_[ODIM_zeroAngle];
-			double angv = al->visibleAngle() + dimensions_[ODIM_zeroAngle];
+			double ang = al->angle() + zeroAngle_;
+			double angv = al->visibleAngle() + zeroAngle_;
 			double planet_r = al->rect().width() / 2;
 			pt[0] = DrawHelper::getXYdeg(ang, zouter);
 			pt[1] = DrawHelper::getXYdeg(angv, zinner);
@@ -417,10 +442,11 @@ void OcularView::drawHouseLines(QPainter* painter)
 
 	QString strDegree;
 	QFont* dgrFont = GlyphManager::get_const_instance().font(dimensions_[ODIM_degreeFontSize], FF_ASTRO);
-
+	qDebug() << __FUNCTION__;
 	BOOST_FOREACH (AstroLabel* al, *labels_) {
-		if (al->type() == TYPE_HOUSE) {
-			double ang = al->angle() + dimensions_[ODIM_zeroAngle];
+		if (al->type() == TYPE_HOUSE && al->id() >= HOUSE_ID_FIRST) {
+			qDebug() << al->id();
+			double ang = al->angle() + zeroAngle_;
 			astro_flag_t af = (astro_flag_t)al->flags();
 			pt[0] = DrawHelper::getXYdeg(ang, zinner);
 			if (af == af_Undef) {
@@ -444,24 +470,23 @@ void OcularView::drawHouseLines(QPainter* painter)
 						painter->setFont(*dgrFont);
 						if (af == af_Asc) {
 							pt[1] = DrawHelper::getXYdeg(ang, r_ascmc * 0.98);
+							QRectF rect(pt[1], pt[1]);
 							strDegree.sprintf("%02d%c",
 								(int)al->angle() % DEG_PER_SIGN + 1,
 								GlyphManager::get_const_instance().degreeSign(FF_ASTRO));
-							painter->drawText(pt[1].x(), pt[1].y() - 1, strDegree);
+							painter->drawText(rect, Qt::AlignBottom | Qt::TextDontClip, strDegree);
 							strDegree.sprintf("%02d'",
 								(int)(al->angle() - (int)al->angle()) * 60 + 1);
-//							int th = dgrFont->getTextHeight(strDegree);
-							painter->drawText(pt[1].x(), pt[1].y(), strDegree);
+							painter->drawText(rect, Qt::AlignTop | Qt::TextDontClip, strDegree);
 						}
 						else {
 							pt[1] = DrawHelper::getXYdeg(ang, r_ascmc * 0.96);
+							QRectF rect(pt[1], pt[1]);
 							strDegree.sprintf("%02d%c%02d'",
 								(int)al->angle() % DEG_PER_SIGN + 1,
 								GlyphManager::get_const_instance().degreeSign(FF_ASTRO),
 								(int)(al->angle() - (int)al->angle()) * 60 + 1);
-//							int tw = dgrFont->getTextWidth(strDegree);
-//							int th = dgrFont->getTextHeight(strDegree);
-							painter->drawText(pt[1].x(), pt[1].y(), strDegree);
+							painter->drawText(rect, Qt::AlignHCenter | Qt::TextDontClip, strDegree);
 						}
 						}
 						break;
@@ -485,5 +510,22 @@ void OcularView::drawHouseLines(QPainter* painter)
 			}
 		}
 	}
+	qDebug() << "end " <<__FUNCTION__;
 	painter->restore();
+}
+
+void OcularView::currentChanged (const QModelIndex & current, const QModelIndex & previous)
+{
+	selectByIndex(previous, false);
+	selectByIndex(current, true);
+	viewport()->update();
+}
+
+void OcularView::selectByIndex (const QModelIndex & index, bool selected)
+{
+	int chart_id = index.column();
+	BodyProps props = model()->data(index).value<BodyProps>();
+	AstroLabel* label = labels_->find_by_chart_id(chart_id, props.id);
+	if (label)
+		label->setSelected(selected);
 }

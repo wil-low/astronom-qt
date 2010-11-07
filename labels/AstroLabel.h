@@ -38,12 +38,13 @@ public:
 
 	virtual QString toString() const;
 
-	bool contains(qreal x, qreal y);
+	bool contains(const QPoint& point) const;
 	virtual void position(qreal x, qreal y, qreal w = -1, qreal h = -1);
 
     void setVisible(bool visible);
 	bool visible() const;
 
+	void setSelected(bool selected);
 	virtual void drawOnParent(QPainter* painter);
 
 	AstroLabel(){}

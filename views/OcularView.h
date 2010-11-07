@@ -27,9 +27,7 @@ enum OcularDimensionType {
 	ODIM_degreeFontSize,
 	ODIM_tick10Size,
 	ODIM_tick5Size,
-	ODIM_LAST,
-	ODIM_zeroPoint,
-	ODIM_zeroAngle
+	ODIM_LAST
 };
 
 struct OcularDimensions {
@@ -64,6 +62,8 @@ public:
 	virtual void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
 	virtual QModelIndex indexAt(const QPoint &point) const;
 	virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+	virtual void currentChanged (const QModelIndex & current, const QModelIndex & previous);
+
 signals:
 
 public slots:
@@ -86,10 +86,14 @@ private:
 	void reorderLabels();
 	void drawPlanetLines(QPainter* painter);
 	void drawHouseLines(QPainter* painter);
+	void selectByIndex (const QModelIndex & index, bool selected);
+
 	qreal defaultDimensions_[ODIM_LAST];
 	qreal dimensions_[ODIM_LAST];
 	OcularColors colors_;
 	AstroLabelContainer* labels_;
+	ZeroPoint zeroPoint_;
+	qreal zeroAngle_;
 };
 
 #endif // OCULARWHEEL_H

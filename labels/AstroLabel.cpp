@@ -1,6 +1,7 @@
 #include "AstroLabel.h"
 #include <QFont>
 #include <QPainter>
+#include <QDebug>
 #include "../utils/GlyphManager.h"
 
 AstroLabel::AstroLabel(QWidget* parent, int chart_id, const BodyProps& props)
@@ -48,8 +49,8 @@ void AstroLabel::setFlags(int flags)
 void AstroLabel::setFont(QFont* font)
 {
 	font_ = font;
-	rect_.setHeight(30);
-	rect_.setWidth(30);
+	rect_.setHeight(font_->pointSize() * 1.5);
+	rect_.setWidth(font_->pointSize() * 1.5);
 }
 
 QFont* AstroLabel::font() const
@@ -69,10 +70,8 @@ void AstroLabel::drawOnParent(QPainter* painter)
 	painter->save();
 	painter->setFont(*font_);
 //    painter->setClipRectangle (rect_.x, rect_.y, rect_.w, rect_.h);
-//    painter->setForeground(FXRGB(0, 0, 0));
-	painter->drawText(rect_, Qt::AlignCenter, text_);
-//    if (selected_)
-//        onDrawFocus(o, sel, ptr);
+	painter->setPen(selected_? Qt::red : Qt::black);
+	painter->drawText(rect_, Qt::AlignCenter | Qt::TextDontClip, text_);
 	painter->restore();
 }
 
@@ -140,9 +139,10 @@ body_type_t AstroLabel::type() const
 	return props_.type;
 }
 
-bool AstroLabel::contains(qreal x, qreal y)
+bool AstroLabel::contains(const QPoint& point) const
 {
-    return rect_.contains(x, y);
+	//qDebug() << toString() << rect_ << ", " << point;
+	return rect_.contains(point);
 }
 
 const QRectF& AstroLabel::rect() const
@@ -176,6 +176,11 @@ void AstroLabel::setVisible(bool visible)
 bool AstroLabel::visible() const
 {
 	return visible_;
+}
+
+void AstroLabel::setSelected(bool selected)
+{
+	selected_ = selected;
 }
 
 void AstroLabel::setProps(const BodyProps& props)

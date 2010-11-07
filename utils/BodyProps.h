@@ -22,6 +22,7 @@ public:
 	double prop[bp_Last];
 	body_type_t type;
 	int id;
+	int userData;
 };
 
 Q_DECLARE_METATYPE(BodyProps)
