@@ -73,7 +73,7 @@ void OcularView::reconfigure()
 	switch (zeroPoint_) {
 		case ZERO_ASC:
 		{
-			AstroLabel* label = labels_->find_by_chart_id(0, HOUSE_ID_ASC);
+			AstroLabel* label = labels_->find_by_chart_id(0, HOUSE_ID_FIRST);
 			assert (label && "No Asc label found to set zero point");
 			zeroAngle_ = 180 - label->angle();
 		}
@@ -445,7 +445,7 @@ void OcularView::drawHouseLines(QPainter* painter)
 	qDebug() << __FUNCTION__;
 	BOOST_FOREACH (AstroLabel* al, *labels_) {
 		if (al->type() == TYPE_HOUSE && al->id() >= HOUSE_ID_FIRST) {
-			qDebug() << al->id();
+			qDebug() << al->id() << " flags " << al->flags();
 			double ang = al->angle() + zeroAngle_;
 			astro_flag_t af = (astro_flag_t)al->flags();
 			pt[0] = DrawHelper::getXYdeg(ang, zinner);

@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>696</width>
+    <width>544</width>
     <height>322</height>
    </rect>
   </property>
@@ -78,13 +78,6 @@
        </item>
       </widget>
      </item>
-     <item row="1" column="4">
-      <widget class="QTimeEdit" name="editTime">
-       <property name="displayFormat">
-        <string>HH:mm:ss</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="0">
       <widget class="QPushButton" name="btnHere">
        <property name="text">
@@ -112,14 +105,14 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1" colspan="2">
+     <item row="3" column="1">
       <widget class="QLineEdit" name="editLon">
        <property name="toolTip">
         <string>Longitude</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="3" colspan="2">
+     <item row="3" column="2" colspan="3">
       <widget class="QLineEdit" name="editLat">
        <property name="toolTip">
         <string>Latitude</string>
@@ -194,6 +187,13 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="4" colspan="2">
+      <widget class="QTimeEdit" name="editTime">
+       <property name="displayFormat">
+        <string>HH:mm:ss</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -207,7 +207,6 @@
   <tabstop>btnNow</tabstop>
   <tabstop>editDate</tabstop>
   <tabstop>cboEra</tabstop>
-  <tabstop>editTime</tabstop>
   <tabstop>btnHere</tabstop>
   <tabstop>comboBox</tabstop>
   <tabstop>btnAtlas</tabstop>

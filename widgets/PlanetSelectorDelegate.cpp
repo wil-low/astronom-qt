@@ -30,24 +30,24 @@ void PlanetSelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
 	switch (degree_mode_) {
 		case dm_Absolute:
 			dms.calculate(props.prop[BodyProps::bp_Lon]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg, gm.degreeSign(FF_ARIAL), dms.min, dms.sec);
+			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), gm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
 			break;
 		case dm_Longitude:
 			dms.calculate(props.prop[BodyProps::bp_Lon]);
-			text[1].sprintf("%2d%c%02d\'%02d\"", dms.zod_deg, gm.degreeSign(FF_ARIAL), dms.min, dms.sec);
-			text[2] = gm.label(TYPE_ZODIAC, dms.zodiac);
+			text[1].sprintf("%2d%c%02d\'%02d\"", dms.zod_deg(), gm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
+			text[2] = gm.label(TYPE_ZODIAC, dms.zodiac());
 			break;
 		case dm_RectAsc:
 			dms.calculate(props.prop[BodyProps::bp_RectAsc]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg, gm.degreeSign(FF_ARIAL), dms.min, dms.sec);
+			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), gm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
 			break;
 		case dm_OblAsc:
 			dms.calculate(props.prop[BodyProps::bp_OblAsc]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg, gm.degreeSign(FF_ARIAL), dms.min, dms.sec);
+			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), gm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
 			break;
 		case dm_LatDecl:
 			dms.calculate(props.prop[BodyProps::bp_Lat]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg, gm.degreeSign(FF_ARIAL), dms.min, dms.sec);
+			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), gm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
 			break;
 	}
 	GlyphManager::fromBackTick(text[1]);

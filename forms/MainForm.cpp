@@ -10,6 +10,7 @@
 #include "../utils/TimeLoc.h"
 #include "../utils/BodyProps.h"
 #include "../utils/HouseProps.h"
+#include "../utils/GlyphManager.h"
 #include "../views/OcularView.h"
 #include "../models/OcularDelegate.h"
 #include "../widgets/PlanetSelector.h"
@@ -27,7 +28,12 @@ MainForm::MainForm(QWidget *parent)
 	QFont font("Astronom");
 	QFontInfo fi(font);
 	QString fam = fi.family();
+
 	ui->setupUi(this);
+	houseActionGroup_ = new QActionGroup(this);
+	assert (connect(houseActionGroup_, SIGNAL(triggered(QAction*)), this, SLOT(houseMenuTriggered(QAction*))) &&
+			"houseMenu connect failed");
+
 	model_ = new QStandardItemModel(10, 2, this);
 
 	QAbstractItemView* itemView = new OcularView(ui->centralwidget);
@@ -35,17 +41,18 @@ MainForm::MainForm(QWidget *parent)
 	ui->horizontalLayout->insertWidget(0, view_, 4);
 	itemView->setModel(model_);
 
-	view_->connect(this, SIGNAL(reconfigure()), SLOT(reconfigure()));
+	connect(this, SIGNAL(reconfigure()), view_, SLOT(reconfigure()));
 	PlanetSelector* planetSelector = new PlanetSelector(ui->centralwidget, model_);
 	planetSelector->copySelectionModel(itemView);
 
 	ui->horizontalLayout->insertWidget(1, planetSelector, 1);
 
-	TimeLoc tl;
-	tl.data_[TL_DATE] = Ephemeris::now();
-	tl.data_[TL_LAT] = 45;
-	tl.data_[TL_LON] = 34;
-	setTimeLoc(0, tl);
+	loadHouseMenu();
+	timeLoc[0].data_[TL_DATETIME] = Ephemeris::now();
+	timeLoc[0].data_[TL_LAT] = 45;
+	timeLoc[0].data_[TL_LON] = 34;
+
+	houseMenuTriggered(houseActionGroup_->checkedAction());
 	emit reconfigure();
 
 	ui->doubleSpinBox->setValue(1);
@@ -71,7 +78,9 @@ MainForm::~MainForm()
 void MainForm::on_actionInput_data_activated()
 {
 	if (input_->exec() == QDialog::Accepted) {
-//		scene_->update();
+		timeLoc[0] = input_->toTimeLoc();
+		setTimeLoc(0);
+		emit reconfigure();
 	}
 }
 
@@ -86,11 +95,12 @@ void MainForm::on_doubleSpinBox_valueChanged(double value)
 	((OcularView*)view_)->recalcDimensionsByFactor(value);
 }
 
-void MainForm::setTimeLoc(int chart_index, const TimeLoc & tl)
+void MainForm::setTimeLoc(int chart_index)
 {
-//	model_->setHeaderData(chart_index, Qt::Horizontal, QVariant(*tl), Qt::UserRole);
+	const TimeLoc& tl = timeLoc[chart_index];
+	model_->setHeaderData(chart_index, Qt::Horizontal, QVariant(&tl), Qt::UserRole);
 	model_->removeRows(chart_index, model_->rowCount(QModelIndex()), QModelIndex());
-	int bodies[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 17, 18};
+	int bodies[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18};
 	int row_count = 0;
 	BodyProps props;
 	for (int i = 0; i < sizeof(bodies) / sizeof(int); ++i) {
@@ -102,23 +112,48 @@ void MainForm::setTimeLoc(int chart_index, const TimeLoc & tl)
 		++row_count;
 	}
 	HouseProps houses;
-	Ephemeris::calc_house(houses, HouseProps::hp_Placidus, tl);
-	addHouse(chart_index, HOUSE_ID_ASC, houses);
-	addHouse(chart_index, HOUSE_ID_MC, houses);
-	for (int i = 0; i < houses.cuspCount(); ++i)
-		addHouse(chart_index, HOUSE_ID_FIRST + i, houses);
+	Ephemeris::calc_house(houses, tl);
+	int cusp_count = tl.cuspCount();
+//	addHouse(chart_index, HOUSE_ID_ASC, houses);
+//	addHouse(chart_index, HOUSE_ID_MC, houses);
+	for (int i = 0; i < tl.cuspCount(); ++i)
+		addHouse(chart_index, HOUSE_ID_FIRST + i, houses, cusp_count);
 }
 
-void MainForm::addHouse (int chart_index, int id, const HouseProps& props)
+void MainForm::addHouse (int chart_index, int id, const HouseProps& props, int cusp_count)
 {
 	int row = model_->rowCount();
 	model_->insertRows(row, 1, QModelIndex());
 	BodyProps hprops;
 	hprops.id = id;
 	hprops.type = TYPE_HOUSE;
-	hprops.userData = props.cuspCount();
+	hprops.userData = cusp_count;
 	hprops.prop[BodyProps::bp_Lon] = (id >= HOUSE_ID_FIRST) ?
 									 props.cusps[id - HOUSE_ID_FIRST + 1] :
 									 props.ascmc[id - HOUSE_ID_ASC];
 	model_->setData (model_->index(row, chart_index, QModelIndex()), qVariantFromValue(hprops));
+}
+
+void MainForm::loadHouseMenu()
+{
+	GlyphManager::StringPairVector houses = GlyphManager::get_const_instance().houseMethod();
+	ui->menuHouses->clear();
+	for (int i = 0; i < houses.size(); ++i) {
+		QAction* action = new QAction(tr(houses[i].second.toAscii()), this);
+		action->setCheckable(true);
+		action->setShortcut(QKeySequence(houses[i].first));
+		houseActionGroup_->addAction(action);
+		ui->menuHouses->addAction(action);
+		if (i == 0)
+			action->setChecked(true);
+	}
+}
+
+void MainForm::houseMenuTriggered(QAction* action)
+{
+	if (action) {
+		timeLoc[0].method_ = (const TimeLoc::house_method)action->shortcut().toString().toAscii().data()[0];
+		setTimeLoc(0);
+		view_->viewport()->update();
+	}
 }

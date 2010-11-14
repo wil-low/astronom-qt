@@ -17,6 +17,14 @@ vesta = 20
 asc = 99998
 mc = 99999
 
+[house:method]
+P = Placidus
+K = Koch
+O = Porphyrius
+R = Regiomontanus
+C = Campanus
+A = Equal
+
 [ocular]
 bodies = sun moon mercury venus mars jupiter saturn uranus neptun pluto north_node ceres pallas juno vesta
 

@@ -1,9 +1,8 @@
 #pragma once
-#include <map>
 #include <boost/serialization/singleton.hpp>
 #include "../utils/constants.h"
+#include <map>
 #include <vector>
-#include <QStringList>
 
 class QString;
 class QFont;
@@ -12,6 +11,8 @@ class QSettings;
 class GlyphManager : public boost::serialization::singleton<GlyphManager>
 {
 public:
+	typedef std::pair<QString, QString> StringPair;
+	typedef std::vector<StringPair> StringPairVector;
 	void init();
 	void fini();
 
@@ -23,6 +24,8 @@ public:
 	QFont* font(int size, font_face_t face) const;
 	static QString& toBackTick (QString& str);
 	static QString& fromBackTick (QString& str);
+
+	const StringPairVector& houseMethod() const;
 private:
 	typedef std::map<int, QFont*> size_font_map;
 	struct font_glyph_t {
@@ -33,6 +36,7 @@ private:
 	};
 	std::map<QString, int> planet2id_;
 	std::map<int, QString> id2planet_;
+	StringPairVector house_method_;
 	void clearFonts(font_glyph_t& font);
 	void loadFont(font_glyph_t& font, const QString& face);
 	font_glyph_t astrofont_;

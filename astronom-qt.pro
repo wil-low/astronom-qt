@@ -28,7 +28,8 @@ SOURCES += \
     widgets/PlanetSelectorDelegate.cpp \
     utils/DMS.cpp \
     utils/HouseProps.cpp \
-    labels/HouseLabel.cpp
+    labels/HouseLabel.cpp \
+    utils/Chart.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -52,7 +53,8 @@ HEADERS += \
     widgets/PlanetSelectorDelegate.h \
     utils/DMS.h \
     utils/HouseProps.h \
-    labels/HouseLabel.h
+    labels/HouseLabel.h \
+    utils/Chart.h
 
 FORMS += \
     forms/MainForm.ui \

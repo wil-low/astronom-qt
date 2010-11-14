@@ -32,7 +32,7 @@ GlyphForm::~GlyphForm()
 void GlyphForm::on_tblGlyphs_cellClicked(int row, int column)
 {
 	QString s;
-	int cellNumber = row + 16 * column;
+	int cellNumber = 16 * row + column;
 	s.sprintf("0x%X (%d)", cellNumber, cellNumber);
 	ui->lblCharCode->setText(s);
 }

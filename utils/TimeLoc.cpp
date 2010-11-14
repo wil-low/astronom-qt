@@ -19,11 +19,19 @@ const char* FMT_REX[] = {
 };
 
 TimeLoc::TimeLoc()
+: method_(hp_Undef)
 {
-	for (int i = TL_DATE; i < TL_LAST; ++i)
+	for (int i = TL_DATETIME; i < TL_LAST; ++i)
 		data_[i] = 0;
 }
 
+int TimeLoc::cuspCount() const
+{
+	if (method_ == hp_Undef)
+		return 0;
+	else
+		return (method_ == hp_Gaquelin ? 36 : 12);
+}
 /*
 const char FMT_TIME[] = "%02d:%02d:%02d";
 const char FMT_LAT[]  = "%03d`%02d'%02d''%c";

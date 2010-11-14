@@ -15,6 +15,9 @@ const double DENOMINATOR = 10000.0;
 const double STABLESPEED=6./60/60;
 
 const char UNNAMED_DOC[] = "<Celestial>";
+
+const int MAX_CHART_COUNT = 3;
+
 void normAngle(double &a);
 
 enum {
@@ -54,7 +57,7 @@ enum astro_flag_t {
 };
 
 static const char* HOUSE_NAMES[] = {
-	"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"
+	"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI"
 };
 
 #endif // CONSTANTS_H

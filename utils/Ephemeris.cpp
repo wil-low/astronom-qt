@@ -73,11 +73,11 @@ void revjul (double julday, int *y, int *m, int *d, int *h, int *min, int *s, in
 long calc_body (BodyProps& props, int body, long flags, const TimeLoc& time_loc)
 {
 	char serr[256] = "";
-	long result = swe_calc_ut (time_loc.data_[TL_DATE], body, flags|SEFLG_SPEED, props.prop, serr);
+	long result = swe_calc_ut (time_loc.data_[TL_DATETIME], body, flags|SEFLG_SPEED, props.prop, serr);
 	if (result < 0 || serr[0] != 0)
 		qDebug() << __FUNCTION__ << ": " << serr;
 	double extra[6];
-	result = swe_calc_ut (time_loc.data_[TL_DATE], body, flags|SEFLG_EQUATORIAL, extra, serr);
+	result = swe_calc_ut (time_loc.data_[TL_DATETIME], body, flags|SEFLG_EQUATORIAL, extra, serr);
 	props.prop[BodyProps::bp_RectAsc] = extra[0];
 	props.prop[BodyProps::bp_Declination] = extra[1];
 //	if (result < 0 || serr[0] != 0)
@@ -86,11 +86,10 @@ long calc_body (BodyProps& props, int body, long flags, const TimeLoc& time_loc)
 }
 
 
-long calc_house (HouseProps& props, int method, const TimeLoc& time_loc)
+long calc_house (HouseProps& props, const TimeLoc& time_loc)
 {
-	long result = swe_houses (time_loc.data_[TL_DATE], time_loc.data_[TL_LAT], time_loc.data_[TL_LON],
-        method, props.cusps, props.ascmc);
-	props.method = (HouseProps::house_method)method;
+	long result = swe_houses (time_loc.data_[TL_DATETIME], time_loc.data_[TL_LAT], time_loc.data_[TL_LON],
+		time_loc.method_, props.cusps, props.ascmc);
 	//	if (result < 0)
 //		FXTRACE((10, "%s: error\n", __FUNCTION__));
 	return result;

@@ -4,8 +4,7 @@
 #include <QString>
 
 enum timeloc_t {
-	TL_DATE = 0,
-	TL_TIME,
+	TL_DATETIME = 0,
 	TL_TZ,
 	TL_LAT,
 	TL_LON,
@@ -24,6 +23,17 @@ class TimeLoc
 public:
 	TimeLoc();
 	double data_[TL_LAST];
+	enum house_method {
+		hp_Undef = '?',
+		hp_Placidus = 'P',
+		hp_Koch = 'K',
+		hp_Regiomontanus = 'R',
+		hp_Campanus = 'C',
+		hp_Equal = 'E',
+		hp_Gaquelin = 'G',
+	};
+	int cuspCount() const;
+	house_method method_;
 /*
 	static void initRex(char date_sep);
 	TimeLoc();

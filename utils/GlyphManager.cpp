@@ -1,5 +1,6 @@
 #include "GlyphManager.h"
 #include <QString>
+#include <QStringList>
 #include <QSettings>
 #include <QFont>
 
@@ -22,6 +23,13 @@ void GlyphManager::init()
 		int id = settings_->value(name).toInt();
 		planet2id_[name] = id;
 		id2planet_[id] = name;
+	}
+	settings_->endGroup();
+	settings_->beginGroup("house:method");
+	list = settings_->childKeys();
+	for (int i = 0; i < list.size(); ++i) {
+		QString name = list.at(i);
+		house_method_.push_back(StringPair(name, settings_->value(name).toString()));
 	}
 }
 
@@ -95,7 +103,7 @@ QString GlyphManager::label(body_type_t type, int id) const
 			} }
 			break;
 		case TYPE_HOUSE:
-			switch ((astro_flag_t)id) {
+/*			switch ((astro_flag_t)) {
 			case af_Asc:
 				return "L";
 			case af_IC:
@@ -104,9 +112,9 @@ QString GlyphManager::label(body_type_t type, int id) const
 				return "M";
 			case af_MC:
 				return "N";
-			default:
+			default:*/
 				s = HOUSE_NAMES[id - HOUSE_ID_FIRST];
-			}
+			//}
 	}
 	return s;
 }
@@ -127,4 +135,9 @@ QString& GlyphManager::toBackTick(QString& str)
 QString& GlyphManager::fromBackTick(QString& str)
 {
 	return str.replace(BACKTICK_STR, DEG_STR);
+}
+
+const GlyphManager::StringPairVector& GlyphManager::houseMethod() const
+{
+	return house_method_;
 }
