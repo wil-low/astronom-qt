@@ -8,7 +8,11 @@ const QString BACKTICK_STR("`");
 
 void GlyphManager::init()
 {
+#ifdef __linux
+	settings_ = new QSettings("/home/willow/prj/astronom-qt/settings/global.txt", QSettings::IniFormat);
+#else
 	settings_ = new QSettings("D:/prj/astronom-qt/settings/global.txt", QSettings::IniFormat);
+#endif
 	loadFont(astrofont_, "Astronom");
 	loadFont(arialfont_, "Arial");
 	settings_->beginGroup("ephemeris:mapping");
