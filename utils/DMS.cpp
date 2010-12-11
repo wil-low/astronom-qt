@@ -41,7 +41,7 @@ void DMS::calculate (double angle)
 	angle *= 60;
 	sec_ = int(angle);
 	angle = deg_ / DEG_PER_SIGN;
-	zodiac_ = int(angle_);
+	zodiac_ = int(angle);
 	zod_deg_ = int(deg_ - zodiac_ * DEG_PER_SIGN);
 }
 

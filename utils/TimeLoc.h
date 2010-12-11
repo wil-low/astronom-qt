@@ -1,6 +1,7 @@
 #ifndef TIMELOC_H
 #define TIMELOC_H
 
+#include <QMetaType>
 #include <QString>
 
 enum timeloc_t {
@@ -66,5 +67,6 @@ private:
 //	static FXRex rex_[TL_LAST];
 	*/
 };
+Q_DECLARE_METATYPE(TimeLoc)
 
 #endif

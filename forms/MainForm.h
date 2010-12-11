@@ -2,6 +2,8 @@
 #define MAINFORM_H
 
 #include <QMainWindow>
+#include "../utils/TimeLoc.h"
+#include "../utils/constants.h"
 
 namespace Ui {
     class MainForm;
@@ -15,9 +17,6 @@ class InputForm;
 class QAbstractItemModel;
 class QItemSelectionModel;
 class QAbstractScrollArea;
-#include "../utils/TimeLoc.h"
-#include "../utils/constants.h"
-class HouseProps;
 
 class MainForm : public QMainWindow
 {
@@ -29,6 +28,7 @@ public:
 	void setTimeLoc(int chart_index);
 signals:
 	void reconfigure();
+	void timeloc_changed();
 
 private:
     Ui::MainForm *ui;
@@ -37,7 +37,6 @@ private:
 	void setupModel();
 	QAbstractItemModel *model_;
 	QItemSelectionModel *selectionModel;
-	void addHouse (int chart_index, int id, const HouseProps& props, int cusp_count);
 	void loadHouseMenu();
 	QActionGroup* houseActionGroup_;
 	TimeLoc timeLoc[MAX_CHART_COUNT];

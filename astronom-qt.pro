@@ -29,7 +29,13 @@ SOURCES += \
     utils/DMS.cpp \
     utils/HouseProps.cpp \
     labels/HouseLabel.cpp \
-    utils/Chart.cpp
+    utils/Chart.cpp \
+    models/PlanetSelectorFilterProxyModel.cpp \
+    widgets/HouseSelectorDelegate.cpp \
+    widgets/HouseSelector.cpp \
+    models/HouseSelectorFilterProxyModel.cpp \
+    widgets/BaseSelector.cpp \
+    models/ModelHelper.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -54,7 +60,13 @@ HEADERS += \
     utils/DMS.h \
     utils/HouseProps.h \
     labels/HouseLabel.h \
-    utils/Chart.h
+    utils/Chart.h \
+    models/PlanetSelectorFilterProxyModel.h \
+    widgets/HouseSelectorDelegate.h \
+    widgets/HouseSelector.h \
+    models/HouseSelectorFilterProxyModel.h \
+    widgets/BaseSelector.h \
+    models/ModelHelper.h
 
 FORMS += \
     forms/MainForm.ui \
