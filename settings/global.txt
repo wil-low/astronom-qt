@@ -23,7 +23,7 @@ K = Koch
 O = Porphyrius
 R = Regiomontanus
 C = Campanus
-A = Equal
+A = Equal (Asc)
 
 [ocular]
 bodies = sun moon mercury venus mars jupiter saturn uranus neptun pluto north_node ceres pallas juno vesta

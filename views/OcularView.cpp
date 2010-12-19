@@ -34,6 +34,8 @@ void OcularView::reconfigure()
 	defaultDimensions_[ODIM_zodiac10dgrR] = settings.value("zodiac10dgrR", 291).toInt();
 	defaultDimensions_[ODIM_zodiac5dgrR] = settings.value("zodiac5dgrR", 262).toInt();
 	defaultDimensions_[ODIM_innerPlanetLabelR] = settings.value("innerPlanetLabelR", 234).toInt();
+	defaultDimensions_[ODIM_innerPlanetDegreeLabelR] = settings.value("innerPlanetDegreeLabelR", 212).toInt();
+	defaultDimensions_[ODIM_innerPlanetRetrogradeLabelR] = settings.value("innerPlanetRetrogradeLabelR", 195).toInt();
 	defaultDimensions_[ODIM_zodiac30dgrR] = settings.value("zodiac30dgrR", 0).toInt();
 	defaultDimensions_[ODIM_innerPlanetR] = settings.value("innerPlanetR", 248).toInt();
 	defaultDimensions_[ODIM_zodiacInner2R] = settings.value("zodiacInner2R", 147).toInt();
@@ -245,7 +247,6 @@ void OcularView::scrollTo(const QModelIndex &index, ScrollHint hint)
 QModelIndex OcularView::indexAt(const QPoint &point) const
 {
 	QPoint translatedPoint(point.x() - viewport()->width() / 2, point.y() - viewport()->height() / 2);
-	qDebug() << translatedPoint;
 	AstroLabel* cur_al = NULL;
 	BOOST_FOREACH (AstroLabel* al, *labels_) {
 		if (al->visible() && al->contains(translatedPoint)) {
@@ -284,7 +285,9 @@ int OcularView::verticalOffset() const
 
 bool OcularView::isIndexHidden(const QModelIndex &index) const
 {
-	return false;
+	AstroLabel* label = findByIndex(index);
+	if (label)
+		return !label->visible();
 }
 
 void OcularView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command)
@@ -310,12 +313,14 @@ void OcularView::spreadLabels (int chart, int type, qreal r)
 		if ((*it)->visible()) {
 			(*it)->setVisibleAngle((*it)->angle());
 			input.push_back(SpreadValue((*it)->angle(), *it));
-			delta_width = (*it)->rect().width() / 2;
+			qreal width = (*it)->rect().width() / 2;
+			if (delta_width < width)
+				delta_width = width;
 //			FXTRACE((90, "%s\n", (*it)->toString().text()));
 		}
 		++it;
 	}
-	delta_width *= 1;
+	delta_width *= 1.2;
 	qreal delta_ang = atan (delta_width / r) / DTOR * 2;
 	CircleSpread cspread(input);
 
@@ -375,12 +380,14 @@ void OcularView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bott
 	for (int row = 0; row < model()->rowCount(rootIndex()); ++row) {
 		QModelIndex index = model()->index(row, chart_id, rootIndex());
 		BodyProps props = model()->data(index).value<BodyProps>();
+		bool isVisible = index.data(Qt::VisibilityRole).toBool();
 		AstroLabel* label = labels_->find_by_chart_id(chart_id, props.id);
 		bool need_insert = !label;
 		if (!label)
 			label = LabelFactory::construct(this, chart_id, props);
 		label->setProps(props);
 		label->setChartId(chart_id);
+		label->setVisible(isVisible);
 		if (need_insert) {
 			std::pair<AlcIter, bool> result = labels_->insert(label);
 			assert (result.second);
@@ -393,7 +400,8 @@ void OcularView::drawPlanetLines(QPainter* painter)
 	painter->save();
 	double zouter = dimensions_[ODIM_zodiac5dgrR];
 	double zinner = dimensions_[ODIM_innerPlanetLabelR];
-	double rzinner = dimensions_[ODIM_planetFontSize];
+	double zdegree = dimensions_[ODIM_innerPlanetDegreeLabelR];
+	double zretro = dimensions_[ODIM_innerPlanetRetrogradeLabelR];
 //	painter->setLineWidth(1);
 	QPointF pt[2];
 
@@ -420,12 +428,12 @@ void OcularView::drawPlanetLines(QPainter* painter)
 			painter->setPen(Qt::black);
 			painter->setFont(*dgrFont);
 			strDegree.sprintf("%02d%c", ((int)al->angle() % DEG_PER_SIGN) + 1, GlyphManager::get_const_instance().degreeSign(FF_ASTRO));
-			pt[1] = DrawHelper::getXYdeg(angv, zinner - al->rect().height());
-			painter->drawText(pt[1].x(), pt[1].y(), strDegree);
+			pt[1] = DrawHelper::getXYdeg(angv, zdegree);
+			DrawHelper::drawCenteredText(painter, pt[1], strDegree);
 			if (al->flags() & af_Retrograde) {
 				strDegree = ">";
-				pt[1] = DrawHelper::getXYdeg(angv, zinner - 2 * al->rect().height());
-				painter->drawText(pt[1].x(), pt[1].y(), strDegree); // retrograde
+				pt[1] = DrawHelper::getXYdeg(angv, zretro);
+				DrawHelper::drawCenteredText(painter, pt[1], strDegree); // retrograde
 			}
 		}
 	}
@@ -442,10 +450,10 @@ void OcularView::drawHouseLines(QPainter* painter)
 
 	QString strDegree;
 	QFont* dgrFont = GlyphManager::get_const_instance().font(dimensions_[ODIM_degreeFontSize], FF_ASTRO);
-	qDebug() << __FUNCTION__;
+//	qDebug() << __FUNCTION__;
 	BOOST_FOREACH (AstroLabel* al, *labels_) {
 		if (al->type() == TYPE_HOUSE && al->id() >= HOUSE_ID_FIRST) {
-			qDebug() << al->id() << " flags " << al->flags();
+			//qDebug() << al->id() << " flags " << al->flags();
 			double ang = al->angle() + zeroAngle_;
 			astro_flag_t af = (astro_flag_t)al->flags();
 			pt[0] = DrawHelper::getXYdeg(ang, zinner);
@@ -511,22 +519,30 @@ void OcularView::drawHouseLines(QPainter* painter)
 			}
 		}
 	}
-	qDebug() << "end " <<__FUNCTION__;
+	//qDebug() << "end " <<__FUNCTION__;
 	painter->restore();
 }
 
 void OcularView::currentChanged (const QModelIndex & current, const QModelIndex & previous)
 {
-	selectByIndex(previous, false);
-	selectByIndex(current, true);
+	AstroLabel* label = findByIndex(previous);
+	if (label)
+		label->setSelected(false);
+	label = findByIndex(current);
+	if (label)
+		label->setSelected(true);
 	viewport()->update();
 }
 
-void OcularView::selectByIndex (const QModelIndex & index, bool selected)
+AstroLabel* OcularView::findByIndex (const QModelIndex & index) const
 {
 	int chart_id = index.column();
 	BodyProps props = model()->data(index).value<BodyProps>();
-	AstroLabel* label = labels_->find_by_chart_id(chart_id, props.id);
-	if (label)
-		label->setSelected(selected);
+	return labels_->find_by_chart_id(chart_id, props.id);
+}
+
+void OcularView::invalidateView()
+{
+	reorderLabels();
+	viewport()->update();
 }

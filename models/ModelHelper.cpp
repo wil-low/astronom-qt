@@ -11,7 +11,7 @@ ModelHelper::ModelHelper(const TimeLoc& tl, QAbstractItemModel* model, int chart
 		model_->removeRows(chart_index, model_->rowCount(QModelIndex()), QModelIndex());
 }
 
-void ModelHelper::insertPlanet(int planet_id)
+void ModelHelper::insertPlanet(int planet_id, bool isVisible)
 {
 	BodyProps props;
 	int row = model_->rowCount();
@@ -19,7 +19,9 @@ void ModelHelper::insertPlanet(int planet_id)
 	Ephemeris::calc_body (props, planet_id, 0, tl_);
 	props.id = planet_id;
 	props.type = TYPE_PLANET;
-	model_->setData (model_->index(row, chart_index_, QModelIndex()), qVariantFromValue(props));
+	QModelIndex index = model_->index(row, chart_index_, QModelIndex());
+	model_->setData (index, qVariantFromValue(props));
+	model_->setData (index, isVisible, Qt::VisibilityRole);
 }
 
 void ModelHelper::insertHouses()
@@ -44,6 +46,8 @@ void ModelHelper::addHouse (int id, const HouseProps& props, int cusp_count)
 	hprops.prop[BodyProps::bp_Lon] = (id >= HOUSE_ID_FIRST) ?
 									 props.cusps[id - HOUSE_ID_FIRST + 1] :
 									 props.ascmc[id - HOUSE_ID_ASC];
-	model_->setData (model_->index(row, chart_index_, QModelIndex()), qVariantFromValue(hprops));
+	QModelIndex index = model_->index(row, chart_index_, QModelIndex());
+	model_->setData (index, qVariantFromValue(hprops));
+	model_->setData (index, true, Qt::VisibilityRole);
 }
 

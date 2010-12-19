@@ -52,9 +52,28 @@ void PlanetSelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
 	}
 	GlyphManager::fromBackTick(text[1]);
 
-	if (option.state & QStyle::State_Selected) {
-		painter->fillRect(option.rect, option.palette.highlight());
-		painter->setPen(option.palette.color(QPalette::HighlightedText));
+	bool isVisible = index.data(Qt::VisibilityRole).toBool();
+	QPalette::ColorGroup cg = isVisible ? QPalette::Active : QPalette::Disabled;
+
+	if (isVisible) {
+		if ((option.state & QStyle::State_Selected)) {
+			painter->fillRect(option.rect, option.palette.brush(cg, QPalette::Highlight));
+			painter->setPen(option.palette.color(cg, QPalette::HighlightedText));
+		}
+		else {
+			painter->fillRect(option.rect, option.palette.brush(cg, QPalette::Base));
+			painter->setPen(option.palette.color(cg, QPalette::WindowText));
+		}
+	}
+	else {
+		if ((option.state & QStyle::State_Selected)) {
+			painter->fillRect(option.rect, option.palette.brush(cg, QPalette::WindowText));
+			painter->setPen(option.palette.color(cg, QPalette::BrightText));
+		}
+		else {
+			painter->fillRect(option.rect, option.palette.brush(cg, QPalette::Base));
+			painter->setPen(option.palette.color(cg, QPalette::WindowText));
+		}
 	}
 
 	QFont& astroFont = *gm.font(fontSize_, FF_ASTRO);
@@ -63,13 +82,10 @@ void PlanetSelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
 	painter->setFont(astroFont);
 	QRectF maxDegreeRect = painter->boundingRect(option.rect, "-000`00'`00\"");
 
-	painter->setFont(props.type == TYPE_HOUSE ? textFont : astroFont);
-
 	QRect rect = option.rect;
 	rect.setX(SIDE_MARGIN);
 
 	painter->drawText(rect, text[0]);
-
 
 	if (!text[1].isEmpty()) {
 		painter->setFont(textFont);

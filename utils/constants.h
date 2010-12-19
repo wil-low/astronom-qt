@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <Qt>
+
 /// Multiplier for degrees to radians
 const double DTOR=0.0174532925199432957692369077;
 
@@ -17,6 +19,10 @@ const double STABLESPEED=6./60/60;
 const char UNNAMED_DOC[] = "<Celestial>";
 
 const int MAX_CHART_COUNT = 3;
+
+namespace Qt {
+	const int VisibilityRole = UserRole + 1;
+};
 
 void normAngle(double &a);
 

@@ -33,7 +33,7 @@ PlanetSelector::PlanetSelector(QWidget *parent, QAbstractItemModel* model)
 	listMain_->setUniformItemSizes(true);
 	listMain_->setModel(new PlanetSelectorMainFilterModel(this, model));
 	connect(this, SIGNAL(invalidateViews()), listMain_->model(), SLOT(invalidate()));
-	connect(listMain_, SIGNAL(pressed(const QModelIndex&)), SLOT(listViewPressed(const QModelIndex&)));
+	connect(listMain_, SIGNAL(pressed(const QModelIndex&)), SLOT(listMainPressed(const QModelIndex&)));
 	layout->addWidget(listMain_);
 
 	listSecondary_ = new QListView(this);
@@ -41,7 +41,7 @@ PlanetSelector::PlanetSelector(QWidget *parent, QAbstractItemModel* model)
 	listSecondary_->setUniformItemSizes(true);
 	listSecondary_->setModel(new PlanetSelectorSecondaryFilterModel(this, model));
 	connect(this, SIGNAL(invalidateViews()), listSecondary_->model(), SLOT(invalidate()));
-	connect(listSecondary_, SIGNAL(pressed(const QModelIndex&)), SLOT(listViewPressed(const QModelIndex&)));
+	connect(listSecondary_, SIGNAL(pressed(const QModelIndex&)), SLOT(listSecondaryPressed(const QModelIndex&)));
 	layout->addWidget(listSecondary_);
 
 	tabChanged(tabBar_->currentIndex());

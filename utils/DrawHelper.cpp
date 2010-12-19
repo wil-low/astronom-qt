@@ -28,4 +28,10 @@ QPointF getXYdeg(qreal degree, qreal len)
 	return QPointF(len * cos(degree * DTOR), -len * sin(degree * DTOR));
 };
 
+void drawCenteredText(QPainter* painter, const QPointF& pt, const QString& str)
+{
+	QFontMetrics fm = painter->fontMetrics();
+	QRectF rect = fm.boundingRect(str);
+	painter->drawText(pt.x() - rect.width() / 2, pt.y() + rect.height() / 2, str);
+}
 }

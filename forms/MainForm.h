@@ -29,6 +29,7 @@ public:
 signals:
 	void reconfigure();
 	void timeloc_changed();
+	void updateCentralView();
 
 private:
     Ui::MainForm *ui;
@@ -46,7 +47,7 @@ private slots:
 	void on_actionGlyph_manager_activated();
 	void on_actionInput_data_activated();
 	void houseMenuTriggered(QAction*);
-
+	void updateViews();
 };
 
 #endif // MAINFORM_H

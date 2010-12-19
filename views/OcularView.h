@@ -18,6 +18,8 @@ enum OcularDimensionType {
 	ODIM_zodiac5dgrR,
 	ODIM_zodiac30dgrR,
 	ODIM_innerPlanetLabelR,
+	ODIM_innerPlanetDegreeLabelR,
+	ODIM_innerPlanetRetrogradeLabelR,
 	ODIM_innerPlanetR,
 	ODIM_zodiacInner2R,
 	ODIM_zodiacInnerR,
@@ -47,6 +49,7 @@ struct OcularColors {
 	QColor aspectTickColor;
 };
 
+class AstroLabel;
 class AstroLabelContainer;
 
 class OcularView : public QAbstractItemView
@@ -68,6 +71,7 @@ signals:
 
 public slots:
 	void reconfigure();
+	void invalidateView();
 
 protected:
 	virtual QModelIndex moveCursor(CursorAction cursorAction,
@@ -86,7 +90,7 @@ private:
 	void reorderLabels();
 	void drawPlanetLines(QPainter* painter);
 	void drawHouseLines(QPainter* painter);
-	void selectByIndex (const QModelIndex & index, bool selected);
+	AstroLabel* findByIndex (const QModelIndex & index) const;
 
 	qreal defaultDimensions_[ODIM_LAST];
 	qreal dimensions_[ODIM_LAST];

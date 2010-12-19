@@ -20,7 +20,8 @@ signals:
 
 public slots:
 	void tabChanged(int index);
-	void listViewPressed(const QModelIndex& index);
+	void listMainPressed(const QModelIndex& index);
+	void listSecondaryPressed(const QModelIndex& index);
 	virtual void timeloc_changed();
 
 protected:
@@ -29,6 +30,7 @@ protected:
 	QListView* listMain_;
 	QListView* listSecondary_;
 	virtual void setDelegate(QListView* listView, int fontSize, int property) = 0;
+	void listViewPressed(QListView* listView, const QModelIndex& index);
 	int listFontSize_;
 };
 

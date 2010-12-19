@@ -49,8 +49,12 @@ void AstroLabel::setFlags(int flags)
 void AstroLabel::setFont(QFont* font)
 {
 	font_ = font;
+	QFontMetrics fm(*font_);
+	rect_ = fm.tightBoundingRect(text_);
+/*
 	rect_.setHeight(font_->pointSize() * 1.5);
 	rect_.setWidth(font_->pointSize() * 1.5);
+*/
 }
 
 QFont* AstroLabel::font() const
@@ -71,7 +75,8 @@ void AstroLabel::drawOnParent(QPainter* painter)
 	painter->setFont(*font_);
 //    painter->setClipRectangle (rect_.x, rect_.y, rect_.w, rect_.h);
 	painter->setPen(selected_? Qt::red : Qt::black);
-	painter->drawText(rect_, Qt::AlignCenter | Qt::TextDontClip, text_);
+	//painter->drawRect(rect_);
+	painter->drawText(rect_, Qt::AlignHCenter | Qt::TextDontClip, text_);
 	painter->restore();
 }
 

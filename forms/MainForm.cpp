@@ -21,7 +21,7 @@
 MainForm::MainForm(QWidget *parent)
 : QMainWindow(parent)
 , ui(new Ui::MainForm)
-, input_(new InputForm)
+, input_(new InputForm(this))
 {
 #ifdef __linux
 	Ephemeris::init("/home/willow/prj/ephem");
@@ -39,7 +39,9 @@ MainForm::MainForm(QWidget *parent)
 
 	model_ = new QStandardItemModel(0, 2, this);
 
-	QAbstractItemView* itemView = new OcularView(ui->centralwidget);
+	OcularView* itemView = new OcularView(ui->centralwidget);
+	connect(this, SIGNAL(updateCentralView()), itemView, SLOT(invalidateView()));
+
 	view_ = itemView;
 	ui->horizontalLayout->insertWidget(0, view_, 4);
 	itemView->setModel(model_);
@@ -58,6 +60,7 @@ MainForm::MainForm(QWidget *parent)
 	PlanetSelector* planetSelector = new PlanetSelector(this, model_);
 //	planetSelector->copySelectionModel(itemView);
 	connect(this, SIGNAL(timeloc_changed()), planetSelector, SLOT(timeloc_changed()));
+	connect(planetSelector, SIGNAL(invalidateViews()), this, SLOT(updateViews()));
 	tabBodyList->addTab(planetSelector, tr("Planets"));
 
 	HouseSelector* houseSelector = new HouseSelector(this, model_);
@@ -122,7 +125,7 @@ void MainForm::setTimeLoc(int chart_index)
 	ModelHelper modelHelper(tl, model_, chart_index, true);
 	int bodies[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18};
 	for (int i = 0; i < sizeof(bodies) / sizeof(int); ++i) {
-		modelHelper.insertPlanet(bodies[i]);
+		modelHelper.insertPlanet(bodies[i], true);
 	}
 	modelHelper.insertHouses();
 
@@ -151,4 +154,9 @@ void MainForm::houseMenuTriggered(QAction* action)
 		setTimeLoc(0);
 		view_->viewport()->update();
 	}
+}
+
+void MainForm::updateViews()
+{
+	emit updateCentralView();
 }
