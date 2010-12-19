@@ -415,7 +415,7 @@ void OcularView::drawPlanetLines(QPainter* painter)
 			double hyp = sqrt(dx * dx + dy * dy) - planet_r;
 			pt[1].setX(pt[0].x() + cos(ang0) * hyp);
 			pt[1].setY(pt[0].y() - sin(ang0) * hyp);
-			painter->drawLines(pt, 2);
+			painter->drawLines(pt, 1);
 
 			painter->setPen(Qt::black);
 			painter->setFont(*dgrFont);
@@ -452,7 +452,7 @@ void OcularView::drawHouseLines(QPainter* painter)
 			if (af == af_Undef) {
 				pt[1] = DrawHelper::getXYdeg(ang, dimensions_[ODIM_zodiac5dgrR]);
 				painter->setPen(colors_.planetTickColor);
-				painter->drawLines(pt, 2);
+				painter->drawLines(pt, 1);
 			}
 			else {
 				painter->setPen(colors_.arrowColor);
@@ -461,11 +461,11 @@ void OcularView::drawHouseLines(QPainter* painter)
 					case af_MC: {
 						double r_ascmc = dimensions_[ODIM_ascArrowR];
 						pt[1] = DrawHelper::getXYdeg(ang, r_ascmc);
-						painter->drawLines(pt, 2);
+						painter->drawLines(pt, 1);
 						pt[0] = DrawHelper::getXYdeg(ang - 1, r_ascmc * 0.98);
-						painter->drawLines(pt, 2);
+						painter->drawLines(pt, 1);
 						pt[0] = DrawHelper::getXYdeg(ang + 1, r_ascmc * 0.98);
-						painter->drawLines(pt, 2);
+						painter->drawLines(pt, 1);
 						painter->setPen(Qt::black);
 						painter->setFont(*dgrFont);
 						if (af == af_Asc) {
@@ -494,17 +494,18 @@ void OcularView::drawHouseLines(QPainter* painter)
 						double r_dsc = dimensions_[ODIM_ascArrowR] * 0.93;
 						double r_circle = dimensions_[ODIM_ascArrowR] * 0.015;
 						pt[1] = DrawHelper::getXYdeg(ang, r_dsc);
-						painter->drawLines(pt, 2);
+						painter->drawLines(pt, 1);
 						pt[1] = DrawHelper::getXYdeg(ang, r_dsc + r_circle);
 						painter->drawEllipse(pt[1].x() - r_circle, pt[1].y() - r_circle, 2 * r_circle, 2 * r_circle); }
 						break;
 					case af_IC: {
 						double r_ic = dimensions_[ODIM_ascArrowR] * 0.96;
 						pt[1] = DrawHelper::getXYdeg(ang, r_ic);
-						painter->drawLines(pt, 2);
+						painter->drawLines(pt, 1);
 						pt[0] = DrawHelper::getXYdeg(ang + 2, r_ic);
 						pt[1] = DrawHelper::getXYdeg(ang - 2, r_ic);
-						painter->drawLines(pt, 2); }
+						painter->drawLines(pt, 1);
+					}
 						break;
 				}
 			}

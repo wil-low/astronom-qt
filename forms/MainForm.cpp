@@ -74,6 +74,7 @@ MainForm::MainForm(QWidget *parent)
 
 	houseMenuTriggered(houseActionGroup_->checkedAction());
 	emit reconfigure();
+	on_doubleSpinBox_valueChanged(1);
 /*
 	AstroLabel* text = new AstroLabel("Hello");
 //	scene_->addItem(text);
