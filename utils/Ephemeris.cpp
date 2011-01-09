@@ -88,11 +88,26 @@ long calc_body (BodyProps& props, int body, long flags, const TimeLoc& time_loc)
 
 long calc_house (HouseProps& props, const TimeLoc& time_loc)
 {
-	long result = swe_houses (time_loc.data_[TL_DATETIME], time_loc.data_[TL_LAT], time_loc.data_[TL_LON],
-		time_loc.method_, props.cusps, props.ascmc);
-	//	if (result < 0)
-//		FXTRACE((10, "%s: error\n", __FUNCTION__));
-	return result;
+	char method = time_loc.method_[0].toAscii();
+	switch (method) {
+	case 'A':
+	case 'C':
+	case 'E':
+	case 'G':
+	case 'K':
+	case 'O':
+	case 'P':
+	case 'R':
+		{
+		long result = swe_houses (time_loc.data_[TL_DATETIME], time_loc.data_[TL_LAT], time_loc.data_[TL_LON],
+			method, props.cusps, props.ascmc);
+		//	if (result < 0)
+		//		FXTRACE((10, "%s: error\n", __FUNCTION__));
+		return result;
+		}
+	}
+	qDebug() << __FUNCTION__ << ": Unsupported house_method " << time_loc.method_;
+	return -1;
 }
 
 }

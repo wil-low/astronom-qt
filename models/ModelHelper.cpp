@@ -51,3 +51,11 @@ void ModelHelper::addHouse (int id, const HouseProps& props, int cusp_count)
 	model_->setData (index, true, Qt::VisibilityRole);
 }
 
+bool ModelHelper::propsByIndex(int idx, int chart_id, BodyProps* bp) const
+{
+	if (idx >= model_->rowCount())
+		return false;
+	QModelIndex index = model_->index(idx, chart_id);
+	*bp = model_->data(index).value<BodyProps>();
+	return true;
+}

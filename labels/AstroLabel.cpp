@@ -2,7 +2,7 @@
 #include <QFont>
 #include <QPainter>
 #include <QDebug>
-#include "../utils/GlyphManager.h"
+#include "../utils/SettingsManager.h"
 
 AstroLabel::AstroLabel(QWidget* parent, int chart_id, const BodyProps& props)
 : rect_(0, 0, 0, 0)
@@ -191,7 +191,7 @@ void AstroLabel::setSelected(bool selected)
 void AstroLabel::setProps(const BodyProps& props)
 {
 	props_ = props;
-	text_ = GlyphManager::get_const_instance().label(props_.type, props_.id);
+	text_ = SettingsManager::get_const_instance().label(props_.type, props_.id);
 }
 
 double AstroLabel::prop(BodyProps::body_property p) const

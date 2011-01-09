@@ -1,6 +1,6 @@
 THD_PARTY = $$PWD/../3d_party
-INCLUDEPATH += $$THD_PARTY/sweph/src $$THD_PARTY/boost_1_42_0
-LIBS += -L$$THD_PARTY/sweph/src -lswe
+INCLUDEPATH += $$THD_PARTY/sweph/src $$THD_PARTY/boost_1_42_0 $$THD_PARTY/lua-5.1.4/src
+LIBS += -L$$THD_PARTY/sweph/src -lswe -L$$THD_PARTY/lua-5.1.4/src -llua
 
 TRANSLATIONS = \
 	astronom_ru.ts \
@@ -14,7 +14,6 @@ SOURCES += \
     utils/TimeLoc.cpp \
     forms/InputForm.cpp \
     forms/GlyphForm.cpp \
-    utils/GlyphManager.cpp \
     utils/DrawHelper.cpp \
     views/OcularView.cpp \
     labels/AstroLabelContainer.cpp \
@@ -35,7 +34,10 @@ SOURCES += \
     widgets/HouseSelector.cpp \
     models/HouseSelectorFilterProxyModel.cpp \
     widgets/BaseSelector.cpp \
-    models/ModelHelper.cpp
+    models/ModelHelper.cpp \
+    utils/SettingsManager.cpp \
+    forms/FormulaForm.cpp \
+    utils/FormulaHelper.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -45,7 +47,6 @@ HEADERS += \
     forms/InputForm.h \
     forms/GlyphForm.h \
     utils/constants.h \
-    utils/GlyphManager.h \
     utils/DrawHelper.h \
     views/OcularView.h \
     labels/AstroLabelContainer.h \
@@ -66,12 +67,16 @@ HEADERS += \
     widgets/HouseSelector.h \
     models/HouseSelectorFilterProxyModel.h \
     widgets/BaseSelector.h \
-    models/ModelHelper.h
+    models/ModelHelper.h \
+    utils/SettingsManager.h \
+    forms/FormulaForm.h \
+    utils/FormulaHelper.h
 
 FORMS += \
     forms/MainForm.ui \
     forms/InputForm.ui \
     forms/GlyphForm.ui \
-    forms/form.ui
+    forms/form.ui \
+    forms/FormulaForm.ui
 
 OTHER_FILES +=

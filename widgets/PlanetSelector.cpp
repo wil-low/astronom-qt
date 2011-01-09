@@ -2,7 +2,7 @@
 #include "PlanetSelectorDelegate.h"
 #include "../models/PlanetSelectorFilterProxyModel.h"
 #include "utils/constants.h"
-#include "../utils/GlyphManager.h"
+#include "../utils/SettingsManager.h"
 #include <QVBoxLayout>
 #include <QTabBar>
 #include <QListView>
@@ -50,7 +50,7 @@ PlanetSelector::PlanetSelector(QWidget *parent, QAbstractItemModel* model)
 void PlanetSelector::setDelegate(QListView* listView, int fontSize, int property)
 {
 	QAbstractItemDelegate* old = listView->itemDelegate();
-	listView->setFont(*GlyphManager::get_const_instance().font(fontSize, FF_ASTRO));
+	listView->setFont(*SettingsManager::get_const_instance().font(fontSize, FF_ASTRO));
 	listView->setItemDelegate(new PlanetSelectorDelegate(this, property, fontSize));
 	delete old;
 }

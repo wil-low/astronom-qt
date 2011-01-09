@@ -5,7 +5,7 @@
 #include "../models/ModelHelper.h"
 
 #include "../utils/constants.h"
-#include "../utils/GlyphManager.h"
+#include "../utils/SettingsManager.h"
 #include "../utils/TimeLoc.h"
 
 #include <QVBoxLayout>
@@ -45,7 +45,7 @@ HouseSelector::HouseSelector(QWidget *parent, QAbstractItemModel* model)
 	layout->addWidget(listMain_);
 
 	tabHouseMode_ = new QTabBar(this);
-	GlyphManager::StringPairVector houses = GlyphManager::get_const_instance().houseMethod();
+	SettingsManager::StringPairVector houses = SettingsManager::get_const_instance().houseMethodVec();
 	for (int i = 0; i < houses.size(); ++i) {
 		tabHouseMode_->addTab(houses[i].first);
 		tabHouseMode_->setTabToolTip(i, houses[i].second.toAscii());
@@ -75,7 +75,7 @@ HouseSelector::~HouseSelector()
 void HouseSelector::setDelegate(QListView* listView, int fontSize, int property)
 {
 	QAbstractItemDelegate* old = listView->itemDelegate();
-	listView->setFont(*GlyphManager::get_const_instance().font(fontSize, FF_ASTRO));
+	listView->setFont(*SettingsManager::get_const_instance().font(fontSize, FF_ASTRO));
 	listView->setItemDelegate(new HouseSelectorDelegate(this, property, fontSize));
 	delete old;
 }
@@ -83,8 +83,7 @@ void HouseSelector::setDelegate(QListView* listView, int fontSize, int property)
 void HouseSelector::houseModeChanged(int index)
 {
 	TimeLoc tl = qVariantValue<TimeLoc>(model_->headerData(0, Qt::Horizontal, Qt::UserRole));
-	TimeLoc::house_method hm = (const TimeLoc::house_method)tabHouseMode_->tabText(index).toAscii().data()[0];
-	tl.method_ = hm;
+	tl.method_ = tabHouseMode_->tabText(index);
 	alternateHouseModel_->setHeaderData(0, Qt::Horizontal, qVariantFromValue(tl), Qt::UserRole);
 	ModelHelper modelHelper(tl, alternateHouseModel_, 0, true);
 	modelHelper.insertHouses();
@@ -94,18 +93,18 @@ void HouseSelector::houseModeChanged(int index)
 void HouseSelector::timeloc_changed()
 {
 	TimeLoc tl = qVariantValue<TimeLoc>(model_->headerData(0, Qt::Horizontal, Qt::UserRole));
-	const GlyphManager::StringPairVector& houses = GlyphManager::get_const_instance().houseMethod();
+	const SettingsManager::StringPairVector& houses = SettingsManager::get_const_instance().houseMethodVec();
 	QString houseModeStr;
-	TimeLoc::house_method hm = TimeLoc::hp_Undef;
+	QString hm;
 	for (int i = 0; i < houses.size(); ++i) {
-		hm = (const TimeLoc::house_method)houses[i].first.toAscii().data()[0];
+		hm = houses[i].first;
 		if (hm == tl.method_) {
 			houseModeStr = houses[i].first;
-			tabBar_->setTabText(0, houseModeStr);
-			tabBar_->setTabToolTip(0, tr(houses[i].second.toAscii().data()));
+			tabBar_->setTabText(0, tr(houses[i].second.toAscii().data()));
+			tabBar_->setTabToolTip(0, houseModeStr);
 			break;
 		}
-		hm = TimeLoc::hp_Undef;
+		hm.clear();
 	}
 	houseModeChanged (tabHouseMode_->currentIndex());
 }

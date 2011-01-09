@@ -1,7 +1,7 @@
 #include "PlanetSelectorDelegate.h"
 #include "../utils/BodyProps.h"
 #include "../utils/DMS.h"
-#include "../utils/GlyphManager.h"
+#include "../utils/SettingsManager.h"
 #include <QPainter>
 #include <QDebug>
 
@@ -22,35 +22,35 @@ void PlanetSelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
 	QString text[3];
 	BodyProps props = qVariantValue<BodyProps>(index.data());
 
-	const GlyphManager& gm = GlyphManager::get_const_instance();
-	text[0] = GlyphManager::get_const_instance().label(props.type, props.id);
+	const SettingsManager& sm = SettingsManager::get_const_instance();
+	text[0] = sm.label(props.type, props.id);
 	text[1] = text[2] = "";
 
 	DMS dms;
 	switch (degree_mode_) {
 		case dm_Absolute:
 			dms.calculate(props.prop[BodyProps::bp_Lon]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), gm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
+			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
 			break;
 		case dm_Longitude:
 			dms.calculate(props.prop[BodyProps::bp_Lon]);
-			text[1].sprintf("%2d%c%02d\'%02d\"", dms.zod_deg(), gm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-			text[2] = gm.label(TYPE_ZODIAC, dms.zodiac());
+			text[1].sprintf("%2d%c%02d\'%02d\"", dms.zod_deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
+			text[2] = sm.label(TYPE_ZODIAC, dms.zodiac());
 			break;
 		case dm_RectAsc:
 			dms.calculate(props.prop[BodyProps::bp_RectAsc]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), gm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
+			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
 			break;
 		case dm_OblAsc:
 			dms.calculate(props.prop[BodyProps::bp_OblAsc]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), gm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
+			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
 			break;
 		case dm_LatDecl:
 			dms.calculate(props.prop[BodyProps::bp_Lat]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), gm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
+			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
 			break;
 	}
-	GlyphManager::fromBackTick(text[1]);
+	SettingsManager::fromBackTick(text[1]);
 
 	bool isVisible = index.data(Qt::VisibilityRole).toBool();
 	QPalette::ColorGroup cg = isVisible ? QPalette::Active : QPalette::Disabled;
@@ -76,8 +76,8 @@ void PlanetSelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
 		}
 	}
 
-	QFont& astroFont = *gm.font(fontSize_, FF_ASTRO);
-	QFont& textFont = *gm.font(fontSize_, FF_ARIAL);
+	QFont& astroFont = *sm.font(fontSize_, FF_ASTRO);
+	QFont& textFont = *sm.font(fontSize_, FF_ARIAL);
 
 	painter->setFont(astroFont);
 	QRectF maxDegreeRect = painter->boundingRect(option.rect, "-000`00'`00\"");

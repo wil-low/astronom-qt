@@ -24,17 +24,8 @@ class TimeLoc
 public:
 	TimeLoc();
 	double data_[TL_LAST];
-	enum house_method {
-		hp_Undef = '?',
-		hp_Placidus = 'P',
-		hp_Koch = 'K',
-		hp_Regiomontanus = 'R',
-		hp_Campanus = 'C',
-		hp_Equal = 'E',
-		hp_Gaquelin = 'G',
-	};
 	int cuspCount() const;
-	house_method method_;
+	QString method_;
 /*
 	static void initRex(char date_sep);
 	TimeLoc();

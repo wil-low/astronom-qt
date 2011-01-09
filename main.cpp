@@ -1,5 +1,5 @@
 #include "forms/MainForm.h"
-#include "utils/GlyphManager.h"
+#include "utils/SettingsManager.h"
 #include <QApplication>
 #include <QSettings>
 #include <QCleanlooksStyle>
@@ -12,7 +12,7 @@ int main(int argc,char *argv[])
 	QCoreApplication::setApplicationName("Astronom");
 	QCoreApplication::setOrganizationName("S&W Axis");
 	QSettings::setDefaultFormat(QSettings::IniFormat);
-	GlyphManager::get_mutable_instance().init();
+	SettingsManager::get_mutable_instance().init();
 	MainForm form;
 	form.showMaximized();
 	// Run the application

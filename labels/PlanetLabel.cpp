@@ -1,5 +1,4 @@
 #include "PlanetLabel.h"
-#include "../utils/GlyphManager.h"
 
 PlanetLabel::PlanetLabel(QWidget* parent, int chart_id, const BodyProps& props)
 : AstroLabel(parent, chart_id, props)

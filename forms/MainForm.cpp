@@ -3,13 +3,15 @@
 
 #include "InputForm.h"
 #include "GlyphForm.h"
+#include "FormulaForm.h"
 
 #include "../models/ModelHelper.h"
 #include "../models/OcularDelegate.h"
 
+#include "../utils/BodyProps.h"
 #include "../utils/Ephemeris.h"
 #include "../utils/TimeLoc.h"
-#include "../utils/GlyphManager.h"
+#include "../utils/SettingsManager.h"
 
 #include "../views/OcularView.h"
 
@@ -101,6 +103,7 @@ void MainForm::on_actionInput_data_activated()
 {
 	if (input_->exec() == QDialog::Accepted) {
 		timeLoc[0] = input_->toTimeLoc();
+		timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
 		setTimeLoc(0);
 		emit reconfigure();
 	}
@@ -135,14 +138,16 @@ void MainForm::setTimeLoc(int chart_index)
 void MainForm::loadHouseMenu()
 {
 	ui->menuHouses->clear();
-	const GlyphManager::StringPairVector& houses = GlyphManager::get_const_instance().houseMethod();
+	const SettingsManager::StringPairVector& houses = SettingsManager::get_const_instance().houseMethodVec();
+	QString hm = SettingsManager::get_const_instance().houseMethod();
 	for (int i = 0; i < houses.size(); ++i) {
 		QAction* action = new QAction(tr(houses[i].second.toAscii()), this);
 		action->setCheckable(true);
 		action->setShortcut(QKeySequence(houses[i].first));
+		action->setData(houses[i].first);
 		houseActionGroup_->addAction(action);
 		ui->menuHouses->addAction(action);
-		if (i == 0)
+		if (hm == houses[i].first)
 			action->setChecked(true);
 	}
 }
@@ -150,7 +155,8 @@ void MainForm::loadHouseMenu()
 void MainForm::houseMenuTriggered(QAction* action)
 {
 	if (action) {
-		timeLoc[0].method_ = (const TimeLoc::house_method)action->shortcut().toString().toAscii().data()[0];
+		SettingsManager::get_mutable_instance().setHouseMethod(action->data().toString());
+		timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
 		setTimeLoc(0);
 		view_->viewport()->update();
 	}
@@ -159,4 +165,17 @@ void MainForm::houseMenuTriggered(QAction* action)
 void MainForm::updateViews()
 {
 	emit updateCentralView();
+}
+
+void MainForm::on_actionFormula_activated()
+{
+	FormulaForm form(this);
+	ModelHelper modelHelper(timeLoc[0], model_, 0, false);
+	BodyProps bp;
+	int index = 0;
+	while (modelHelper.propsByIndex(index++, 0, &bp)) {
+		form.setVariable(SettingsManager::get_const_instance().formulaVariable(bp.type, bp.id),
+			bp.prop[BodyProps::bp_Lon]);
+	}
+	form.exec();
 }

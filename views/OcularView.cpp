@@ -3,7 +3,7 @@
 #include "../utils/constants.h"
 #include "../labels/AstroLabelContainer.h"
 #include "../labels/LabelFactory.h"
-#include "../utils/GlyphManager.h"
+#include "../utils/SettingsManager.h"
 #include "../CircleSpread/CircleSpread.h"
 #include <QSettings>
 #include <QPainter>
@@ -16,6 +16,7 @@ OcularView::OcularView(QWidget *parent)
 , labels_(new AstroLabelContainer)
 {
 	setSelectionMode(QAbstractItemView::SingleSelection);
+	setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 OcularView::~OcularView()
@@ -40,7 +41,7 @@ void OcularView::reconfigure()
 	defaultDimensions_[ODIM_innerPlanetR] = settings.value("innerPlanetR", 248).toInt();
 	defaultDimensions_[ODIM_zodiacInner2R] = settings.value("zodiacInner2R", 147).toInt();
 	defaultDimensions_[ODIM_zodiacInnerR] = settings.value("zodiacInnerR", 141).toInt();
-	defaultDimensions_[ODIM_aspectR] = settings.value("aspectR", 374).toInt();
+	defaultDimensions_[ODIM_aspectR] = settings.value("aspectR", 138).toInt();
 	defaultDimensions_[ODIM_planetFontSize] = settings.value("planetFontSize", 5).toInt();
 	defaultDimensions_[ODIM_zodiacFontSize] = settings.value("zodiacFontSize", 4).toInt();
 	defaultDimensions_[ODIM_degreeFontSize] = settings.value("degreeFontSize", 3).toInt();
@@ -226,6 +227,7 @@ void OcularView::paintEvent(QPaintEvent* event)
 	}
 
 	drawLabels(&painter);
+	drawAspects(&painter);
 	drawPlanetLines (&painter);
 	drawHouseLines (&painter);
 /*
@@ -347,7 +349,7 @@ void OcularView::reorderLabels()
 			default:
 				font_size = 12;
 		}
-		al->setFont(GlyphManager::get_const_instance().font(font_size, FF_ASTRO));
+		al->setFont(SettingsManager::get_const_instance().font(font_size, FF_ASTRO));
 	}
 	qreal rad[TYPE_LAST];
 	rad[TYPE_ZODIAC] = (dimensions_[ODIM_zodiac10dgrR] + dimensions_[ODIM_zodiac5dgrR]) / 2;
@@ -406,7 +408,7 @@ void OcularView::drawPlanetLines(QPainter* painter)
 	QPointF pt[2];
 
 	QString strDegree;
-	QFont* dgrFont = GlyphManager::get_const_instance().font(dimensions_[ODIM_degreeFontSize], FF_ASTRO);
+	QFont* dgrFont = SettingsManager::get_const_instance().font(dimensions_[ODIM_degreeFontSize], FF_ASTRO);
 
 	BOOST_FOREACH (AstroLabel* al, *labels_) {
 		if (al->type() == TYPE_PLANET && al->visible()) {
@@ -427,7 +429,7 @@ void OcularView::drawPlanetLines(QPainter* painter)
 
 			painter->setPen(Qt::black);
 			painter->setFont(*dgrFont);
-			strDegree.sprintf("%02d%c", ((int)al->angle() % DEG_PER_SIGN) + 1, GlyphManager::get_const_instance().degreeSign(FF_ASTRO));
+			strDegree.sprintf("%02d%c", ((int)al->angle() % DEG_PER_SIGN) + 1, SettingsManager::get_const_instance().degreeSign(FF_ASTRO));
 			pt[1] = DrawHelper::getXYdeg(angv, zdegree);
 			DrawHelper::drawCenteredText(painter, pt[1], strDegree);
 			if (al->flags() & af_Retrograde) {
@@ -449,7 +451,7 @@ void OcularView::drawHouseLines(QPainter* painter)
 	QPointF pt[2];
 
 	QString strDegree;
-	QFont* dgrFont = GlyphManager::get_const_instance().font(dimensions_[ODIM_degreeFontSize], FF_ASTRO);
+	QFont* dgrFont = SettingsManager::get_const_instance().font(dimensions_[ODIM_degreeFontSize], FF_ASTRO);
 //	qDebug() << __FUNCTION__;
 	BOOST_FOREACH (AstroLabel* al, *labels_) {
 		if (al->type() == TYPE_HOUSE && al->id() >= HOUSE_ID_FIRST) {
@@ -481,7 +483,7 @@ void OcularView::drawHouseLines(QPainter* painter)
 							QRectF rect(pt[1], pt[1]);
 							strDegree.sprintf("%02d%c",
 								(int)al->angle() % DEG_PER_SIGN + 1,
-								GlyphManager::get_const_instance().degreeSign(FF_ASTRO));
+								SettingsManager::get_const_instance().degreeSign(FF_ASTRO));
 							painter->drawText(rect, Qt::AlignBottom | Qt::TextDontClip, strDegree);
 							strDegree.sprintf("%02d'",
 								(int)(al->angle() - (int)al->angle()) * 60 + 1);
@@ -492,7 +494,7 @@ void OcularView::drawHouseLines(QPainter* painter)
 							QRectF rect(pt[1], pt[1]);
 							strDegree.sprintf("%02d%c%02d'",
 								(int)al->angle() % DEG_PER_SIGN + 1,
-								GlyphManager::get_const_instance().degreeSign(FF_ASTRO),
+								SettingsManager::get_const_instance().degreeSign(FF_ASTRO),
 								(int)(al->angle() - (int)al->angle()) * 60 + 1);
 							painter->drawText(rect, Qt::AlignHCenter | Qt::TextDontClip, strDegree);
 						}
@@ -545,4 +547,22 @@ void OcularView::invalidateView()
 {
 	reorderLabels();
 	viewport()->update();
+}
+
+void OcularView::drawAspects(QPainter* painter)
+{
+	painter->save();
+	QPen pen(colors_.aspectTickColor);
+	pen.setWidth(2);
+	painter->setPen(pen);
+	QPointF pt[2];
+	BOOST_FOREACH (AstroLabel* al, *labels_) {
+		if (al->type() == TYPE_PLANET) {
+			double ang = al->angle() + zeroAngle_;
+			pt[0] = DrawHelper::getXYdeg(ang, dimensions_[ODIM_zodiacInnerR]);
+			pt[1] = DrawHelper::getXYdeg(ang, dimensions_[ODIM_aspectR]);
+			painter->drawLines(pt, 1);
+		}
+	}
+	painter->restore();
 }

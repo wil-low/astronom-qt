@@ -90,6 +90,8 @@ private:
 	void reorderLabels();
 	void drawPlanetLines(QPainter* painter);
 	void drawHouseLines(QPainter* painter);
+	void drawAspects(QPainter* painter);
+
 	AstroLabel* findByIndex (const QModelIndex & index) const;
 
 	qreal defaultDimensions_[ODIM_LAST];
