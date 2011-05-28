@@ -39,9 +39,6 @@ HouseSelector::HouseSelector(QWidget *parent, QAbstractItemModel* model)
 	listMain_ = new QListView(this);
 	listMain_->setEditTriggers(QListView::NoEditTriggers);
 	listMain_->setUniformItemSizes(true);
-	listMain_->setModel(new HouseSelectorMainFilterModel(this, model));
-	connect(this, SIGNAL(invalidateViews()), listMain_->model(), SLOT(invalidate()));
-	connect(listMain_, SIGNAL(pressed(const QModelIndex&)), SLOT(listMainPressed(const QModelIndex&)));
 	layout->addWidget(listMain_);
 
 	tabHouseMode_ = new QTabBar(this);
@@ -58,26 +55,13 @@ HouseSelector::HouseSelector(QWidget *parent, QAbstractItemModel* model)
 	listSecondary_ = new QListView(this);
 	listSecondary_->setEditTriggers(QListView::NoEditTriggers);
 	listSecondary_->setUniformItemSizes(true);
-	listSecondary_->setModel(new HouseSelectorSecondaryFilterModel(this, alternateHouseModel_));
-	connect(this, SIGNAL(invalidateViews()), listSecondary_->model(), SLOT(invalidate()));
-	connect(listSecondary_, SIGNAL(pressed(const QModelIndex&)), SLOT(listSecondaryPressed(const QModelIndex&)));
 	layout->addWidget(listSecondary_);
-
-	tabChanged(tabBar_->currentIndex());
 }
 
 HouseSelector::~HouseSelector()
 {
 	delete tabHouseMode_;
 	delete alternateHouseModel_;
-}
-
-void HouseSelector::setDelegate(QListView* listView, int fontSize, int property)
-{
-	QAbstractItemDelegate* old = listView->itemDelegate();
-	listView->setFont(*SettingsManager::get_const_instance().font(fontSize, FF_ASTRO));
-	listView->setItemDelegate(new HouseSelectorDelegate(this, property, fontSize));
-	delete old;
 }
 
 void HouseSelector::houseModeChanged(int index)
@@ -107,4 +91,19 @@ void HouseSelector::timeloc_changed()
 		hm.clear();
 	}
 	houseModeChanged (tabHouseMode_->currentIndex());
+}
+
+BaseSelectorDelegate* HouseSelector::getDelegate()
+{
+	if (delegate_ == NULL)
+		delegate_ = new HouseSelectorDelegate(this);
+	return delegate_;
+}
+
+QSortFilterProxyModel* HouseSelector::getFilterModel(BaseSelector::model_t modelType)
+{
+	if (modelType == MODEL_MAIN)
+		return new HouseSelectorMainFilterModel(this, model_);
+	else
+		return new HouseSelectorSecondaryFilterModel(this, alternateHouseModel_);
 }

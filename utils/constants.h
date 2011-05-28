@@ -33,6 +33,7 @@ enum {
 };
 
 enum deg_mode {
+	dm_Unknown = -1,
 	dm_Absolute = 0,
 	dm_Longitude,
 	dm_RectAsc,
@@ -43,6 +44,7 @@ enum deg_mode {
 enum body_type_t {
 	TYPE_ZODIAC = 0,
 	TYPE_PLANET,
+	TYPE_ASTEROID,
 	TYPE_HOUSE,
 	TYPE_ASPECT,
 	TYPE_LAST,

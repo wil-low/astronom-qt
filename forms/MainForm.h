@@ -44,7 +44,6 @@ private:
 
 private slots:
 	void on_actionFormula_activated();
- void on_doubleSpinBox_valueChanged(double );
 	void on_actionGlyph_manager_activated();
 	void on_actionInput_data_activated();
 	void houseMenuTriggered(QAction*);

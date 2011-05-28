@@ -3,11 +3,14 @@
 
 #include <QWidget>
 
+class BaseSelectorDelegate;
+
 class QTabBar;
 class QListView;
 class QModelIndex;
 class QAbstractItemModel;
 class QAbstractItemView;
+class QSortFilterProxyModel;
 
 class BaseSelector : public QWidget
 {
@@ -15,6 +18,8 @@ class BaseSelector : public QWidget
 public:
 	explicit BaseSelector(QWidget *parent, QAbstractItemModel* model);
 	~BaseSelector();
+	void setFilterModels();
+
 signals:
 	void invalidateViews();
 
@@ -29,9 +34,23 @@ protected:
 	QTabBar* tabBar_;
 	QListView* listMain_;
 	QListView* listSecondary_;
-	virtual void setDelegate(QListView* listView, int fontSize, int property) = 0;
+
+	virtual BaseSelectorDelegate* getDelegate() = 0;
+	void setDelegate(QListView* listView, int fontSize, int property);
+
+	enum model_t {
+		MODEL_MAIN = 0,
+		MODEL_SECONDARY = 1
+	};
+
+	virtual QSortFilterProxyModel* getFilterModel(model_t modelType) = 0;
+
 	void listViewPressed(QListView* listView, const QModelIndex& index);
 	int listFontSize_;
+	BaseSelectorDelegate* delegate_;
+
+private:
+
 };
 
 #endif // BaseSelector_H

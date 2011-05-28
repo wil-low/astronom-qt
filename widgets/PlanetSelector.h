@@ -1,9 +1,9 @@
 #ifndef PLANETSELECTOR_H
 #define PLANETSELECTOR_H
 
-#include "BaseSelector.h"
+#include "BodySelector.h"
 
-class PlanetSelector : public BaseSelector
+class PlanetSelector : public BodySelector
 {
     Q_OBJECT
 public:
@@ -12,7 +12,7 @@ public:
 public slots:
 
 protected:
-	virtual void setDelegate(QListView* listView, int fontSize, int property);
+	virtual QSortFilterProxyModel* getFilterModel(model_t modelType);
 };
 
 #endif // PLANETSELECTOR_H

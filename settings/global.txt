@@ -1,5 +1,5 @@
 [General]
-house_method=C
+house_method=P
 
 [ephemeris%3Amapping]
 sun=0

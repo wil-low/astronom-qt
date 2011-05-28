@@ -24,7 +24,6 @@ SOURCES += \
     labels/PlanetLabel.cpp \
     labels/LabelFactory.cpp \
     widgets/PlanetSelector.cpp \
-    widgets/PlanetSelectorDelegate.cpp \
     utils/DMS.cpp \
     utils/HouseProps.cpp \
     labels/HouseLabel.cpp \
@@ -37,7 +36,12 @@ SOURCES += \
     models/ModelHelper.cpp \
     utils/SettingsManager.cpp \
     forms/FormulaForm.cpp \
-    utils/FormulaHelper.cpp
+    utils/FormulaHelper.cpp \
+    widgets/AsteroidSelector.cpp \
+    models/AsteroidSelectorFilterProxyModel.cpp \
+    widgets/BodySelector.cpp \
+    widgets/BaseSelectorDelegate.cpp \
+    widgets/BodySelectorDelegate.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -57,7 +61,6 @@ HEADERS += \
     labels/PlanetLabel.h \
     labels/LabelFactory.h \
     widgets/PlanetSelector.h \
-    widgets/PlanetSelectorDelegate.h \
     utils/DMS.h \
     utils/HouseProps.h \
     labels/HouseLabel.h \
@@ -70,7 +73,12 @@ HEADERS += \
     models/ModelHelper.h \
     utils/SettingsManager.h \
     forms/FormulaForm.h \
-    utils/FormulaHelper.h
+    utils/FormulaHelper.h \
+    widgets/AsteroidSelector.h \
+    models/AsteroidSelectorFilterProxyModel.h \
+    widgets/BodySelector.h \
+    widgets/BaseSelectorDelegate.h \
+    widgets/BodySelectorDelegate.h
 
 FORMS += \
     forms/MainForm.ui \

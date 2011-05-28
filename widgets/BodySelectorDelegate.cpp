@@ -1,18 +1,16 @@
-#include "PlanetSelectorDelegate.h"
+#include "BodySelectorDelegate.h"
 #include "../utils/BodyProps.h"
 #include "../utils/DMS.h"
 #include "../utils/SettingsManager.h"
 #include <QPainter>
 #include <QDebug>
 
-PlanetSelectorDelegate::PlanetSelectorDelegate(QObject *parent, int degree_mode, int fontSize)
-: QStyledItemDelegate(parent)
-, degree_mode_(degree_mode)
-, fontSize_(fontSize)
+BodySelectorDelegate::BodySelectorDelegate(QObject *parent)
+: BaseSelectorDelegate(parent)
 {
 }
 
-void PlanetSelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+void BodySelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 		   const QModelIndex &index) const
 {
 	const int SIDE_MARGIN = 10;
@@ -49,6 +47,8 @@ void PlanetSelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
 			dms.calculate(props.prop[BodyProps::bp_Lat]);
 			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
 			break;
+		default:
+			assert (false && "Unknown degree mode");
 	}
 	SettingsManager::fromBackTick(text[1]);
 
@@ -102,8 +102,3 @@ void PlanetSelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
 	painter->restore();
 }
 
-QSize PlanetSelectorDelegate::sizeHint(const QStyleOptionViewItem &option,
-							 const QModelIndex &index) const
-{
-	return QStyledItemDelegate::sizeHint(option, index);
-}

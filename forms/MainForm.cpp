@@ -17,6 +17,7 @@
 
 #include "../widgets/PlanetSelector.h"
 #include "../widgets/HouseSelector.h"
+#include "../widgets/AsteroidSelector.h"
 
 #include <QtGui>
 
@@ -55,31 +56,32 @@ MainForm::MainForm(QWidget *parent)
 	timeLoc[0].data_[TL_LAT] = 45;
 	timeLoc[0].data_[TL_LON] = 34;
 
-	ui->doubleSpinBox->setValue(1);
-
 	QTabWidget* tabBodyList = new QTabWidget(ui->centralwidget);
 
 	PlanetSelector* planetSelector = new PlanetSelector(this, model_);
+	planetSelector->setFilterModels();
 //	planetSelector->copySelectionModel(itemView);
 	connect(this, SIGNAL(timeloc_changed()), planetSelector, SLOT(timeloc_changed()));
 	connect(planetSelector, SIGNAL(invalidateViews()), this, SLOT(updateViews()));
 	tabBodyList->addTab(planetSelector, tr("Planets"));
 
 	HouseSelector* houseSelector = new HouseSelector(this, model_);
+	houseSelector->setFilterModels();
 //	houseSelector->copySelectionModel(itemView);
 	connect(this, SIGNAL(timeloc_changed()), houseSelector, SLOT(timeloc_changed()));
 	tabBodyList->addTab(houseSelector, tr("Houses"));
 
-	planetSelector = new PlanetSelector(ui->centralwidget, model_);
-//	planetSelector->copySelectionModel(itemView);
-	connect(this, SIGNAL(timeloc_changed()), planetSelector, SLOT(timeloc_changed()));
-	tabBodyList->addTab(planetSelector, tr("Asteroids"));
+	AsteroidSelector* asteroidSelector = new AsteroidSelector(this, model_);
+	asteroidSelector->setFilterModels();
+//	AsteroidSelector->copySelectionModel(itemView);
+	connect(this, SIGNAL(timeloc_changed()), asteroidSelector, SLOT(timeloc_changed()));
+	tabBodyList->addTab(asteroidSelector, tr("Asteroids"));
 
 	ui->horizontalLayout->insertWidget(1, tabBodyList, 1);
 
 	houseMenuTriggered(houseActionGroup_->checkedAction());
 	emit reconfigure();
-	on_doubleSpinBox_valueChanged(1);
+	((OcularView*)view_)->recalcDimensionsByFactor(1);
 /*
 	AstroLabel* text = new AstroLabel("Hello");
 //	scene_->addItem(text);
@@ -106,6 +108,7 @@ void MainForm::on_actionInput_data_activated()
 		timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
 		setTimeLoc(0);
 		emit reconfigure();
+		((OcularView*)view_)->recalcDimensionsByFactor(1);
 	}
 }
 
@@ -113,11 +116,6 @@ void MainForm::on_actionGlyph_manager_activated()
 {
 	GlyphForm form;
 	form.exec();
-}
-
-void MainForm::on_doubleSpinBox_valueChanged(double value)
-{
-	((OcularView*)view_)->recalcDimensionsByFactor(value);
 }
 
 void MainForm::setTimeLoc(int chart_index)

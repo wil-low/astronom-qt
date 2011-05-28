@@ -5,10 +5,8 @@
 #include <QPainter>
 #include <QDebug>
 
-HouseSelectorDelegate::HouseSelectorDelegate(QObject *parent, int degree_mode, int fontSize)
-: QStyledItemDelegate(parent)
-, degree_mode_(degree_mode)
-, fontSize_(fontSize)
+HouseSelectorDelegate::HouseSelectorDelegate(QObject *parent)
+: BaseSelectorDelegate(parent)
 {
 }
 
@@ -84,10 +82,4 @@ void HouseSelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 	}
 
 	painter->restore();
-}
-
-QSize HouseSelectorDelegate::sizeHint(const QStyleOptionViewItem &option,
-							 const QModelIndex &index) const
-{
-	return QStyledItemDelegate::sizeHint(option, index);
 }

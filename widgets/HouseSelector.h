@@ -16,7 +16,8 @@ public slots:
 	virtual void timeloc_changed();
 
 protected:
-	virtual void setDelegate(QListView* listView, int fontSize, int property);
+	virtual BaseSelectorDelegate* getDelegate();
+	virtual QSortFilterProxyModel* getFilterModel(model_t modelType);
 
 private:
 	QTabBar* tabHouseMode_;
