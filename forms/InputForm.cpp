@@ -3,6 +3,12 @@
 #include "../utils/Ephemeris.h"
 #include "../utils/DMS.h"
 
+#include <QClipboard>
+#include <QMimeData>
+#include <QMessageBox>
+#include <QTextCodec>
+#include <QRegExp>
+
 InputForm::InputForm(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::InputForm)
@@ -69,4 +75,57 @@ void InputForm::setDateTime(double jday)
 	Ephemeris::revjul (jday, &y, &m, &d, &h, &min, &s);
 	ui->editDate->setDate(QDate(y, m, d));
 	ui->editTime->setTime(QTime(h, min, s));
+}
+
+void InputForm::on_btnCopy_clicked()
+{
+
+}
+
+void InputForm::on_btnPaste_clicked()
+{
+	const QClipboard *clipboard = QApplication::clipboard();
+	const QMimeData *mimeData = clipboard->mimeData();
+
+	if (mimeData->hasImage()) {
+		QMessageBox::warning(this, "Has image", "");
+	}
+	else if (mimeData->hasHtml()) {
+		QMessageBox::warning(this, "Has html", mimeData->text());
+	}
+	else if (mimeData->hasText()) {
+		import(mimeData->text(), IMPORT_ASTROZET);
+	}
+	else {
+		QMessageBox::warning(this, "Unknown data", "");
+	}
+}
+
+bool InputForm::import(const QString& str, InputForm::import_mode_t mode)
+{
+	switch (mode) {
+	case IMPORT_ASTROZET:
+		QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
+		QString decodedStr = codec->toUnicode(str.toAscii());
+		//QMessageBox::warning(this, "Has text", decodedStr);
+		QStringList sections = decodedStr.split(';');
+		ui->editName->setText(sections[0]);
+		QRegExp rx("(\\d+)\.(\\d+)\.(\\d+)");
+		if (rx.indexIn(sections[1]) != -1) {
+			ui->editDate->setDate(QDate(rx.cap(3).toInt(), rx.cap(2).toInt(), rx.cap(1).toInt()));
+		}
+		rx.setPattern("(\\d+):(\\d+):(\\d+)");
+		if (rx.indexIn(sections[2]) != -1) {
+			ui->editTime->setTime(QTime(rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt()));
+		}
+		rx.setPattern("([\+\-]\\d+):(\\d+):(\\d+)");
+		if (rx.indexIn(sections[3]) != -1) {
+			ui->editUTCOffset->setTime(QTime(rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt()));
+		}
+		//ui->cboLocationName->setItemText(sections[4]);
+		ui->editLon->setText(sections[5]);
+		ui->editLat->setText(sections[6]);
+	}
+
+	return true;
 }

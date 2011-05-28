@@ -86,7 +86,7 @@
       </widget>
      </item>
      <item row="2" column="1" colspan="5">
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="cboLocationName">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -208,7 +208,7 @@
   <tabstop>editDate</tabstop>
   <tabstop>cboEra</tabstop>
   <tabstop>btnHere</tabstop>
-  <tabstop>comboBox</tabstop>
+  <tabstop>cboLocationName</tabstop>
   <tabstop>btnAtlas</tabstop>
   <tabstop>editLon</tabstop>
   <tabstop>editLat</tabstop>

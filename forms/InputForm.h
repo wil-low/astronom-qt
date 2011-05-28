@@ -19,11 +19,19 @@ public:
 	const TimeLoc& toTimeLoc ();
 
 private:
+	enum import_mode_t {
+		IMPORT_UNKNOWN = -1,
+		IMPORT_ASTROZET = 0,
+	};
+
 	void setDateTime(double jday);
     Ui::InputForm *ui;
 	TimeLoc tl_;
+	bool import(const QString& str, import_mode_t mode);
 
 private slots:
+	void on_btnCopy_clicked();
+	void on_btnPaste_clicked();
 	void on_btnNow_clicked();
 	void on_btnCancel_clicked();
 	void on_btnOK_clicked();
