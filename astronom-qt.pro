@@ -41,7 +41,9 @@ SOURCES += \
     models/AsteroidSelectorFilterProxyModel.cpp \
     widgets/BodySelector.cpp \
     widgets/BaseSelectorDelegate.cpp \
-    widgets/BodySelectorDelegate.cpp
+    widgets/BodySelectorDelegate.cpp \
+    utils/convertors/BaseConvertor.cpp \
+    utils/convertors/NatalConvertor.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -78,7 +80,9 @@ HEADERS += \
     models/AsteroidSelectorFilterProxyModel.h \
     widgets/BodySelector.h \
     widgets/BaseSelectorDelegate.h \
-    widgets/BodySelectorDelegate.h
+    widgets/BodySelectorDelegate.h \
+    utils/convertors/BaseConvertor.h \
+    utils/convertors/NatalConvertor.h
 
 FORMS += \
     forms/MainForm.ui \
