@@ -27,7 +27,7 @@ private:
 	void setDateTime(double jday);
     Ui::InputForm *ui;
 	TimeLoc tl_;
-	bool import(const QString& str, import_mode_t mode);
+	void import(const QString& str);
 
 private slots:
 	void on_btnCopy_clicked();

@@ -2,6 +2,7 @@
 #include "ui_InputForm.h"
 #include "../utils/Ephemeris.h"
 #include "../utils/DMS.h"
+#include "../utils/convertors/NatalConvertor.h"
 
 #include <QClipboard>
 #include <QMimeData>
@@ -11,7 +12,7 @@
 
 InputForm::InputForm(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::InputForm)
+	ui(new Ui::InputForm)
 {
     ui->setupUi(this);
 	ui->editLat->setInputMask("000°00'00'';_");
@@ -94,38 +95,33 @@ void InputForm::on_btnPaste_clicked()
 		QMessageBox::warning(this, "Has html", mimeData->text());
 	}
 	else if (mimeData->hasText()) {
-		import(mimeData->text(), IMPORT_ASTROZET);
+		import(mimeData->text());
 	}
 	else {
 		QMessageBox::warning(this, "Unknown data", "");
 	}
 }
 
-bool InputForm::import(const QString& str, InputForm::import_mode_t mode)
+void InputForm::import(const QString& str)
 {
-	switch (mode) {
-	case IMPORT_ASTROZET:
-		QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
-		QString decodedStr = codec->toUnicode(str.toAscii());
-		//QMessageBox::warning(this, "Has text", decodedStr);
-		QStringList sections = decodedStr.split(';');
-		ui->editName->setText(sections[0]);
-		QRegExp rx("(\\d+)\.(\\d+)\.(\\d+)");
-		if (rx.indexIn(sections[1]) != -1) {
-			ui->editDate->setDate(QDate(rx.cap(3).toInt(), rx.cap(2).toInt(), rx.cap(1).toInt()));
-		}
-		rx.setPattern("(\\d+):(\\d+):(\\d+)");
-		if (rx.indexIn(sections[2]) != -1) {
-			ui->editTime->setTime(QTime(rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt()));
-		}
-		rx.setPattern("([\+\-]\\d+):(\\d+):(\\d+)");
-		if (rx.indexIn(sections[3]) != -1) {
-			ui->editUTCOffset->setTime(QTime(rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt()));
-		}
-		//ui->cboLocationName->setItemText(sections[4]);
-		ui->editLon->setText(sections[5]);
-		ui->editLat->setText(sections[6]);
+	NatalConvertor convertor(str, BaseConvertor::MODE_ASTROZET);
+	if (convertor.isValid()) {
+		QString str;
+		if (convertor.getString(BaseConvertor::STR_NAME, str))
+			ui->editName->setText(str);
+		QDate date;
+		if (convertor.getDate(BaseConvertor::DT_NATAL_DATE, date))
+			ui->editDate->setDate(date);
+		QTime time;
+		if (convertor.getTime(BaseConvertor::DT_NATAL_TIME, time))
+			ui->editTime->setTime(time);
+		if (convertor.getTime(BaseConvertor::DT_UTC_OFFSET, time))
+			ui->editUTCOffset->setTime(time);
+		//if (convertor.getString(BaseConvertor::STR_LOCATION_NAME, str))
+		//ui->cboLocationName->setItemText(str);
+		if (convertor.getString(BaseConvertor::STR_LONGITUDE, str))
+			ui->editLon->setText(str);
+		if (convertor.getString(BaseConvertor::STR_LATITUDE, str))
+			ui->editLat->setText(str);
 	}
-
-	return true;
 }
