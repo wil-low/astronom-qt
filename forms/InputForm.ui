@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>544</width>
-    <height>322</height>
+    <width>560</width>
+    <height>426</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -35,7 +35,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1" colspan="5">
+     <item row="0" column="1">
       <widget class="QLineEdit" name="editName"/>
      </item>
      <item row="1" column="0">
@@ -45,39 +45,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QDateEdit" name="editDate">
-       <property name="displayFormat">
-        <string>dd.MM.yyyy</string>
-       </property>
-       <property name="calendarPopup">
-        <bool>false</bool>
-       </property>
-       <property name="timeSpec">
-        <enum>Qt::LocalTime</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2" colspan="2">
-      <widget class="QComboBox" name="cboEra">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <item>
-        <property name="text">
-         <string>AC</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>BC</string>
-        </property>
-       </item>
-      </widget>
-     </item>
      <item row="2" column="0">
       <widget class="QPushButton" name="btnHere">
        <property name="text">
@@ -85,7 +52,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1" colspan="5">
+     <item row="2" column="1">
       <widget class="QComboBox" name="cboLocationName">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -98,59 +65,35 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QPushButton" name="btnAtlas">
        <property name="text">
         <string>Atlas</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="editLon">
-       <property name="toolTip">
-        <string>Longitude</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2" colspan="3">
-      <widget class="QLineEdit" name="editLat">
-       <property name="toolTip">
-        <string>Latitude</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="5">
-      <widget class="QTimeEdit" name="editUTCOffset">
-       <property name="displayFormat">
-        <string>+HH:mm</string>
-       </property>
-       <property name="timeSpec">
-        <enum>Qt::OffsetFromUTC</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="7">
+     <item row="4" column="4">
       <widget class="QPushButton" name="btnSearch">
        <property name="text">
         <string>Search</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="6">
+     <item row="0" column="3">
       <widget class="QPushButton" name="btnCopy">
        <property name="text">
         <string>Copy</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="6">
+     <item row="1" column="3">
       <widget class="QPushButton" name="btnPaste">
        <property name="text">
         <string>Paste</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="7">
+     <item row="0" column="4">
       <widget class="QPushButton" name="btnOK">
        <property name="text">
         <string>OK</string>
@@ -163,21 +106,21 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="7">
+     <item row="1" column="4">
       <widget class="QPushButton" name="btnCancel">
        <property name="text">
         <string>Cancel</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="6">
+     <item row="4" column="3">
       <widget class="QPushButton" name="btnSearchPoint">
        <property name="text">
         <string>Search point</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="6" colspan="2">
+     <item row="2" column="3" colspan="2">
       <widget class="QLineEdit" name="editSearch">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -187,12 +130,77 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="4" colspan="2">
-      <widget class="QTimeEdit" name="editTime">
-       <property name="displayFormat">
-        <string>HH:mm:ss</string>
-       </property>
-      </widget>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QDateEdit" name="editDate">
+         <property name="displayFormat">
+          <string>dd.MM.yyyy</string>
+         </property>
+         <property name="calendarPopup">
+          <bool>false</bool>
+         </property>
+         <property name="timeSpec">
+          <enum>Qt::LocalTime</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="cboEra">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <item>
+          <property name="text">
+           <string>AC</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>BC</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTimeEdit" name="editTime">
+         <property name="displayFormat">
+          <string>HH:mm:ss</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLineEdit" name="editLon">
+         <property name="toolTip">
+          <string>Longitude</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="editLat">
+         <property name="toolTip">
+          <string>Latitude</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTimeEdit" name="editUTCOffset">
+         <property name="displayFormat">
+          <string>+HH:mm</string>
+         </property>
+         <property name="timeSpec">
+          <enum>Qt::OffsetFromUTC</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
@@ -205,14 +213,9 @@
   <tabstop>btnNewChart</tabstop>
   <tabstop>editName</tabstop>
   <tabstop>btnNow</tabstop>
-  <tabstop>editDate</tabstop>
-  <tabstop>cboEra</tabstop>
   <tabstop>btnHere</tabstop>
   <tabstop>cboLocationName</tabstop>
   <tabstop>btnAtlas</tabstop>
-  <tabstop>editLon</tabstop>
-  <tabstop>editLat</tabstop>
-  <tabstop>editUTCOffset</tabstop>
   <tabstop>btnSearch</tabstop>
  </tabstops>
  <resources/>
