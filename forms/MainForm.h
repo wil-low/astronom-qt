@@ -41,6 +41,7 @@ private:
 	void loadHouseMenu();
 	QActionGroup* houseActionGroup_;
 	TimeLoc timeLoc[MAX_CHART_COUNT];
+	void applyInputData();
 
 private slots:
 	void on_actionFormula_activated();

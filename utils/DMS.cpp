@@ -78,7 +78,7 @@ double DMS::angle() const
 QString DMS::toMaskedString() const
 {
 	QString s;
-	s.sprintf ("%3d%2d%2d", deg_, min_, sec_);
+	s.sprintf ("%03d%02d%02d", deg_, min_, sec_);
 	return s;
 }
 

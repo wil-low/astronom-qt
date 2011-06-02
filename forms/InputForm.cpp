@@ -7,8 +7,6 @@
 #include <QClipboard>
 #include <QMimeData>
 #include <QMessageBox>
-#include <QTextCodec>
-#include <QRegExp>
 
 InputForm::InputForm(QWidget *parent) :
     QDialog(parent),
@@ -17,9 +15,13 @@ InputForm::InputForm(QWidget *parent) :
     ui->setupUi(this);
 	ui->editLat->setInputMask("000°00'00'';_");
 	ui->editLon->setInputMask("#00°00'00'';_");
-	ui->editLon->setText("0340000");
-	ui->editLat->setText("0450000");
 
+	tl_.name_ = "Sample Name";
+	tl_.location_ = "Sample location";
+	tl_.data_[TL_LAT] = 45;
+	tl_.data_[TL_LON] = 34;
+
+	fromTimeLoc(tl_);
 	on_btnNow_clicked();
 }
 
@@ -47,6 +49,9 @@ void InputForm::on_btnNow_clicked()
 void InputForm::fromTimeLoc (const TimeLoc& tl)
 {
 	tl_ = tl;
+	ui->editName->setText(tl_.name_);
+	//ui->cboLocationName->setText(tl_.location_);
+
 	setDateTime(tl_.data_[TL_DATETIME]);
 
 	DMS dms(tl_.data_[TL_LON]);
@@ -67,6 +72,13 @@ const TimeLoc& InputForm::toTimeLoc ()
 
 	dms.calculate(ui->editLon->text());
 	tl_.data_[TL_LON] = dms.angle();
+	tl_.name_ = ui->editName->text();
+	tl_.location_ = ui->cboLocationName->currentText();
+
+	titleStr_ = ui->editName->text() + ", " + ui->cboLocationName->currentText() + ", " +
+				date.toString(Qt::SystemLocaleShortDate) + " " +
+				time.toString(Qt::SystemLocaleShortDate) + ", " +
+				ui->editLat->text() + " " + ui->editLon->text();
 	return tl_;
 }
 
@@ -124,4 +136,9 @@ void InputForm::import(const QString& str)
 		if (convertor.getString(BaseConvertor::STR_LATITUDE, str))
 			ui->editLat->setText(str);
 	}
+}
+
+const QString& InputForm::titleStr() const
+{
+	return titleStr_;
 }

@@ -52,9 +52,6 @@ MainForm::MainForm(QWidget *parent)
 	connect(this, SIGNAL(reconfigure()), view_, SLOT(reconfigure()));
 
 	loadHouseMenu();
-	timeLoc[0].data_[TL_DATETIME] = Ephemeris::now();
-	timeLoc[0].data_[TL_LAT] = 45;
-	timeLoc[0].data_[TL_LON] = 34;
 
 	QTabWidget* tabBodyList = new QTabWidget(ui->centralwidget);
 
@@ -80,18 +77,7 @@ MainForm::MainForm(QWidget *parent)
 	ui->horizontalLayout->insertWidget(1, tabBodyList, 1);
 
 	houseMenuTriggered(houseActionGroup_->checkedAction());
-	emit reconfigure();
-	((OcularView*)view_)->recalcDimensionsByFactor(1);
-/*
-	AstroLabel* text = new AstroLabel("Hello");
-//	scene_->addItem(text);
-	text->setPos(300, 300);
-	AspectLabel* asp = new AspectLabel;
-	scene_->addItem(asp);
-	view_ = new QGraphicsView(scene_);
-	QHBoxLayout* layout = new QHBoxLayout;
-	layout->addWidget(view_);
-		ui->centralwidget->setLayout(layout);*/
+	applyInputData();
 }
 
 MainForm::~MainForm()
@@ -103,13 +89,18 @@ MainForm::~MainForm()
 
 void MainForm::on_actionInput_data_activated()
 {
-	if (input_->exec() == QDialog::Accepted) {
-		timeLoc[0] = input_->toTimeLoc();
-		timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
-		setTimeLoc(0);
-		emit reconfigure();
-		((OcularView*)view_)->recalcDimensionsByFactor(1);
-	}
+	if (input_->exec() == QDialog::Accepted)
+		applyInputData();
+}
+
+void MainForm::applyInputData()
+{
+	timeLoc[0] = input_->toTimeLoc();
+	setWindowTitle(input_->titleStr() + " - Astronom");
+	timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
+	setTimeLoc(0);
+	emit reconfigure();
+	((OcularView*)view_)->recalcDimensionsByFactor(1);
 }
 
 void MainForm::on_actionGlyph_manager_activated()

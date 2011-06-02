@@ -26,6 +26,8 @@ public:
 	double data_[TL_LAST];
 	int cuspCount() const;
 	QString method_;
+	QString name_;
+	QString location_;
 /*
 	static void initRex(char date_sep);
 	TimeLoc();
@@ -50,8 +52,6 @@ public:
 private:
 	double data_[TL_LAST];
 	QString str_[TL_LAST];
-	QString name_;
-	QString location_;
 
 	static date_fmt_t date_fmt_;
 	static char date_sep_;

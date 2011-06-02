@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>560</width>
+    <width>562</width>
     <height>426</height>
    </rect>
   </property>
@@ -177,16 +177,16 @@
      <item row="4" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLineEdit" name="editLon">
+        <widget class="QLineEdit" name="editLat">
          <property name="toolTip">
-          <string>Longitude</string>
+          <string>Latitude</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="editLat">
+        <widget class="QLineEdit" name="editLon">
          <property name="toolTip">
-          <string>Latitude</string>
+          <string>Longitude</string>
          </property>
         </widget>
        </item>

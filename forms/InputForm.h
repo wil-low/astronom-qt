@@ -17,6 +17,7 @@ public:
     ~InputForm();
 	void fromTimeLoc (const TimeLoc& tl);
 	const TimeLoc& toTimeLoc ();
+	const QString& titleStr() const;
 
 private:
 	enum import_mode_t {
@@ -27,6 +28,7 @@ private:
 	void setDateTime(double jday);
     Ui::InputForm *ui;
 	TimeLoc tl_;
+	QString titleStr_;
 	void import(const QString& str);
 
 private slots:
