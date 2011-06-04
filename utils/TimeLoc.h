@@ -13,12 +13,6 @@ enum timeloc_t {
 	TL_LAST, // do not use, always last
 };
 
-enum date_fmt_t {
-	DF_YMD = 0,
-	DF_DMY,
-	DF_MDY
-};
-
 class TimeLoc
 {
 public:
