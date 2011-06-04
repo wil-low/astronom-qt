@@ -14,6 +14,7 @@ class QGraphicsView;
 class QActionGroup;
 class QAction;
 class InputForm;
+class PersonsForm;
 class QAbstractItemModel;
 class QItemSelectionModel;
 class QAbstractScrollArea;
@@ -35,6 +36,7 @@ private:
     Ui::MainForm *ui;
 	QAbstractScrollArea* view_;
 	InputForm* input_;
+	PersonsForm* persons_;
 	void setupModel();
 	QAbstractItemModel *model_;
 	QItemSelectionModel *selectionModel;
@@ -44,6 +46,7 @@ private:
 	void applyInputData();
 
 private slots:
+	void on_actionPersons_activated();
 	void on_actionFormula_activated();
 	void on_actionGlyph_manager_activated();
 	void on_actionInput_data_activated();

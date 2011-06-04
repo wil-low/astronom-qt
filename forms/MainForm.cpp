@@ -4,6 +4,7 @@
 #include "InputForm.h"
 #include "GlyphForm.h"
 #include "FormulaForm.h"
+#include "PersonsForm.h"
 
 #include "../models/ModelHelper.h"
 #include "../models/OcularDelegate.h"
@@ -25,6 +26,7 @@ MainForm::MainForm(QWidget *parent)
 : QMainWindow(parent)
 , ui(new Ui::MainForm)
 , input_(new InputForm(this))
+, persons_(new PersonsForm(this))
 {
 #ifdef __linux
 	Ephemeris::init("/home/willow/prj/ephem");
@@ -84,6 +86,7 @@ MainForm::~MainForm()
 {
 	delete model_;
 	delete input_;
+	delete persons_;
     delete ui;
 }
 
@@ -167,4 +170,9 @@ void MainForm::on_actionFormula_activated()
 			bp.prop[BodyProps::bp_Lon]);
 	}
 	form.exec();
+}
+
+void MainForm::on_actionPersons_activated()
+{
+	persons_->show();
 }

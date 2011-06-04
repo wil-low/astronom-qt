@@ -1,4 +1,5 @@
 THD_PARTY = $$PWD/../3d_party
+QT += sql
 INCLUDEPATH += $$THD_PARTY/sweph/src $$THD_PARTY/boost_1_42_0 $$THD_PARTY/lua-5.1.4/src
 LIBS += -L$$THD_PARTY/sweph/src -lswe -L$$THD_PARTY/lua-5.1.4/src -llua
 
@@ -45,7 +46,9 @@ SOURCES += \
     utils/convertors/BaseConvertor.cpp \
     utils/convertors/NatalConvertor.cpp \
     utils/validators/CoordValidator.cpp \
-    widgets/CoordLineEdit.cpp
+    widgets/CoordLineEdit.cpp \
+    forms/PersonsForm.cpp \
+    db/DBHelper.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -86,13 +89,16 @@ HEADERS += \
     utils/convertors/BaseConvertor.h \
     utils/convertors/NatalConvertor.h \
     utils/validators/CoordValidator.h \
-    widgets/CoordLineEdit.h
+    widgets/CoordLineEdit.h \
+    forms/PersonsForm.h \
+    db/DBHelper.h
 
 FORMS += \
     forms/MainForm.ui \
     forms/InputForm.ui \
     forms/GlyphForm.ui \
     forms/form.ui \
-    forms/FormulaForm.ui
+    forms/FormulaForm.ui \
+    forms/PersonsForm.ui
 
 OTHER_FILES +=

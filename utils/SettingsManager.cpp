@@ -1,4 +1,5 @@
 #include "SettingsManager.h"
+#include "../db/DBHelper.h"
 #include <QString>
 #include <QStringList>
 #include <QSettings>
@@ -23,6 +24,7 @@ const QString& SettingsManager::settingsPath() const
 
 void SettingsManager::init()
 {
+	DBHelper::get_mutable_instance().initConnections(settingsPath_);
 	settings_ = new QSettings(settingsPath_ + "/global.txt", QSettings::IniFormat);
 	loadFont(astrofont_, "Astronom");
 	loadFont(arialfont_, "Arial");
