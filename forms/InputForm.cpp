@@ -13,8 +13,8 @@ InputForm::InputForm(QWidget *parent) :
 	ui(new Ui::InputForm)
 {
     ui->setupUi(this);
-	ui->editLat->setInputMask("000°00'00'';_");
-	ui->editLon->setInputMask("#00°00'00'';_");
+	ui->editLat->setInputMask("000°00'00\"A;_");
+	ui->editLon->setInputMask("000°00'00\"A;_");
 
 	tl_.name_ = "Sample Name";
 	tl_.location_ = "Sample location";
@@ -54,11 +54,10 @@ void InputForm::fromTimeLoc (const TimeLoc& tl)
 
 	setDateTime(tl_.data_[TL_DATETIME]);
 
-	DMS dms(tl_.data_[TL_LON]);
-	ui->editLon->setText(dms.toMaskedString());
-	dms.calculate(tl_.data_[TL_LAT]);
-	ui->editLat->setText(dms.toMaskedString());
-
+	DMS dmsLat(tl_.data_[TL_LAT], DMS::COORD_LAT);
+	ui->editLat->setText(dmsLat.toMaskedString());
+	DMS dmsLon(tl_.data_[TL_LON], DMS::COORD_LON);
+	ui->editLon->setText(dmsLon.toMaskedString());
 }
 
 const TimeLoc& InputForm::toTimeLoc ()
@@ -67,11 +66,11 @@ const TimeLoc& InputForm::toTimeLoc ()
 	QTime time = ui->editTime->time();
 	tl_.data_[TL_DATETIME] = Ephemeris::julday (date.year(), date.month(), date.day(),
 												time.hour(), time.minute(), time.second());
-	DMS dms(ui->editLat->text());
-	tl_.data_[TL_LAT] = dms.angle();
+	DMS dmsLat(ui->editLat->text(), DMS::COORD_LAT);
+	tl_.data_[TL_LAT] = dmsLat.angle();
 
-	dms.calculate(ui->editLon->text());
-	tl_.data_[TL_LON] = dms.angle();
+	DMS dmsLon(ui->editLon->text(), DMS::COORD_LON);
+	tl_.data_[TL_LON] = dmsLon.angle();
 	tl_.name_ = ui->editName->text();
 	tl_.location_ = ui->cboLocationName->currentText();
 

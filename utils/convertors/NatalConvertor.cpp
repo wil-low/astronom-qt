@@ -2,6 +2,7 @@
 #include <QTextCodec>
 #include <QRegExp>
 #include <QStringList>
+#include <QDebug>
 
 NatalConvertor::NatalConvertor(const QString& input, BaseConvertor::convert_mode_t mode)
 : BaseConvertor()
@@ -28,8 +29,24 @@ NatalConvertor::NatalConvertor(const QString& input, BaseConvertor::convert_mode
 			utcOffset_ = QTime(rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt());
 		}
 		locationName_ = values[4];
-		lonStr_ = values[5];
-		latStr_ = values[6];
+		rx.setPattern("(\\d+)°(\\d+)'(\\d+)\"([NS])");
+		if (rx.indexIn(values[5]) != -1) {
+			latStr_.sprintf("%03d%02d%02d",
+							rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt());
+			latStr_ += rx.cap(4);
+		}
+		else {
+			qDebug() << "Cannot match " << values[5];
+		}
+		rx.setPattern("(\\d+)°(\\d+)'(\\d+)\"([EW])");
+		if (rx.indexIn(values[6]) != -1) {
+			lonStr_.sprintf("%03d%02d%02d",
+							rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt());
+			lonStr_ += rx.cap(4);
+		}
+		else {
+			qDebug() << "Cannot match " << values[6];
+		}
 		isValid_ = true;
 	}
 }
@@ -40,13 +57,17 @@ bool NatalConvertor::getString(string_val_t type, QString& result)
 	if (isValid_) {
 		switch (type) {
 		case STR_NAME:
-			result = name_; isSet = true; break;
+			result = name_; isSet = true;
+			break;
 		case STR_LOCATION_NAME:
-			result = locationName_; isSet = true; break;
+			result = locationName_; isSet = true;
+			break;
 		case STR_LATITUDE:
-			result = latStr_; isSet = true; break;
+			result = latStr_; isSet = true;
+			break;
 		case STR_LONGITUDE:
-			result = lonStr_; isSet = true; break;
+			result = lonStr_; isSet = true;
+			break;
 		}
 	}
 	return isSet;
@@ -58,7 +79,8 @@ bool NatalConvertor::getDate(datetime_val_t type, QDate& result)
 	if (isValid_) {
 		switch (type) {
 		case DT_NATAL_DATE:
-			result = date_; isSet = true; break;
+			result = date_; isSet = true;
+			break;
 		}
 	}
 	return isSet;
@@ -70,9 +92,11 @@ bool NatalConvertor::getTime(datetime_val_t type, QTime& result)
 	if (isValid_) {
 		switch (type) {
 		case DT_NATAL_TIME:
-			result = time_; isSet = true; break;
+			result = time_; isSet = true;
+			break;
 		case DT_UTC_OFFSET:
-			result = utcOffset_; isSet = true; break;
+			result = utcOffset_; isSet = true;
+			break;
 		}
 	}
 	return isSet;
