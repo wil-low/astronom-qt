@@ -31,14 +31,14 @@ void DMS::calculate (const QString& dddmmssl)
 	int d = dddmmssl.left(3).toInt();
 	int m = dddmmssl.mid(3, 2).toInt();
 	int s = dddmmssl.mid(6, 2).toInt();
-	QCharRef letter = dddmmssl.right(1)[0];
+	QString letter = dddmmssl.right(1);
 	switch (coord_type_) {
 	case COORD_LAT:
-		if (letter == 'S')
+		if (letter == "S")
 			d = -d;
 		break;
 	case COORD_LON:
-		if (letter == 'W')
+		if (letter == "W")
 			d = -d;
 		break;
 	}
