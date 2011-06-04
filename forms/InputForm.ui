@@ -177,14 +177,14 @@
      <item row="4" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLineEdit" name="editLat">
+        <widget class="CoordLineEdit" name="editLat">
          <property name="toolTip">
           <string>Latitude</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="editLon">
+        <widget class="CoordLineEdit" name="editLon">
          <property name="toolTip">
           <string>Longitude</string>
          </property>
@@ -209,6 +209,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CoordLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>widgets/CoordLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>btnNewChart</tabstop>
   <tabstop>editName</tabstop>

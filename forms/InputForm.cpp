@@ -13,8 +13,9 @@ InputForm::InputForm(QWidget *parent) :
 	ui(new Ui::InputForm)
 {
     ui->setupUi(this);
-	ui->editLat->setInputMask("000°00'00\"A;_");
-	ui->editLon->setInputMask("000°00'00\"A;_");
+
+	ui->editLat->setCoordType(DMS::COORD_LAT);
+	ui->editLon->setCoordType(DMS::COORD_LON);
 
 	tl_.name_ = "Sample Name";
 	tl_.location_ = "Sample location";

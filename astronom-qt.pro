@@ -43,7 +43,9 @@ SOURCES += \
     widgets/BaseSelectorDelegate.cpp \
     widgets/BodySelectorDelegate.cpp \
     utils/convertors/BaseConvertor.cpp \
-    utils/convertors/NatalConvertor.cpp
+    utils/convertors/NatalConvertor.cpp \
+    utils/validators/CoordValidator.cpp \
+    widgets/CoordLineEdit.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -82,7 +84,9 @@ HEADERS += \
     widgets/BaseSelectorDelegate.h \
     widgets/BodySelectorDelegate.h \
     utils/convertors/BaseConvertor.h \
-    utils/convertors/NatalConvertor.h
+    utils/convertors/NatalConvertor.h \
+    utils/validators/CoordValidator.h \
+    widgets/CoordLineEdit.h
 
 FORMS += \
     forms/MainForm.ui \
