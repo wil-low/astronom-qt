@@ -7,13 +7,23 @@
 const QString DEG_STR("°");
 const QString BACKTICK_STR("`");
 
-void SettingsManager::init()
+SettingsManager::SettingsManager()
 {
 #ifdef __linux
-	settings_ = new QSettings("/home/willow/prj/astronom-qt/settings/global.txt", QSettings::IniFormat);
+	settingsPath_ = "/home/willow/prj/astronom-qt/settings";
 #else
-	settings_ = new QSettings("D:/prj/astronom-qt/settings/global.txt", QSettings::IniFormat);
+	settingsPath_ = "D:/prj/astronom-qt/settings";
 #endif
+}
+
+const QString& SettingsManager::settingsPath() const
+{
+	return settingsPath_;
+}
+
+void SettingsManager::init()
+{
+	settings_ = new QSettings(settingsPath_ + "/global.txt", QSettings::IniFormat);
 	loadFont(astrofont_, "Astronom");
 	loadFont(arialfont_, "Arial");
 	settings_->beginGroup("ephemeris:mapping");

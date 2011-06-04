@@ -3,14 +3,15 @@
 #include "../utils/constants.h"
 #include <map>
 #include <vector>
+#include <QString>
 
-class QString;
 class QFont;
 class QSettings;
 
 class SettingsManager : public boost::serialization::singleton<SettingsManager>
 {
 public:
+	SettingsManager();
 	typedef std::pair<QString, QString> StringPair;
 	typedef std::vector<StringPair> StringPairVector;
 	void init();
@@ -29,8 +30,10 @@ public:
 	const StringPairVector& houseMethodVec() const;
 	QString houseMethod() const;
 	void setHouseMethod(const QString& str);
+	const QString& settingsPath() const;
 
 private:
+	QString settingsPath_;
 	typedef std::map<int, QFont*> size_font_map;
 	struct font_glyph_t {
 		size_font_map fonts_;
