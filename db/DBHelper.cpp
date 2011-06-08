@@ -1,9 +1,10 @@
 #include "DBHelper.h"
+#include "../utils/TimeLoc.h"
 
 #include <QSqlDatabase>
 #include <QSqlQueryModel>
 #include <QSqlError>
-#include <QSqlQueryModel>
+#include <QSqlQuery>
 
 #include <QDebug>
 
@@ -25,7 +26,7 @@ void DBHelper::initConnections (const QString& path)
 		qDebug() << "Database error:" << db.lastError().databaseText() << db.lastError().driverText();
 
 	personListModel_ = new QSqlQueryModel;
-	personListModel_->setQuery("select NAME, DATE_TIME, LOCATION, LATITUDE, LONGITUDE from TIME_LOCATION");
+	personListModel_->setQuery("select ID, NAME, DATE_TIME, TIMEZONE_OFFSET, LOCATION, LATITUDE, LONGITUDE from TIME_LOCATION");
 //	personListModel_->setHeaderData(0, Qt::Horizontal, tr("Name"));
 }
 
@@ -34,3 +35,16 @@ QAbstractItemModel* DBHelper::personListModel() const
 	return personListModel_;
 }
 
+bool DBHelper::timeLoc(int record_id, TimeLoc& result) const
+{
+	QSqlQuery query("select ID, NAME, DATE_TIME, TIMEZONE_OFFSET, LOCATION, LATITUDE, LONGITUDE from TIME_LOCATION WHERE ID = ?");
+	query.bindValue(0, record_id);
+	if (query.exec()) {
+		if (query.next()) {
+			result = TimeLoc(query.value(1).toString(), query.value(2).toString(), query.value(3).toString(),
+							 query.value(4).toString(), query.value(5).toString(), query.value(6).toString());
+			return true;
+		}
+	}
+	return false;
+}

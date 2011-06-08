@@ -10,6 +10,7 @@ class CoordLineEdit : public QLineEdit
 public:
     explicit CoordLineEdit(QWidget *parent = 0);
 	void setCoordType(DMS::coord_t coord_type);
+	QString dbText() const;
 
 signals:
 

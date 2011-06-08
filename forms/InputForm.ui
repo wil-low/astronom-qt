@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>562</width>
+    <width>588</width>
     <height>426</height>
    </rect>
   </property>
@@ -191,14 +191,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QTimeEdit" name="editUTCOffset">
-         <property name="displayFormat">
-          <string>+HH:mm</string>
-         </property>
-         <property name="timeSpec">
-          <enum>Qt::OffsetFromUTC</enum>
-         </property>
-        </widget>
+        <widget class="TimeOffsetEdit" name="editUTCOffset"/>
        </item>
       </layout>
      </item>
@@ -214,6 +207,11 @@
    <class>CoordLineEdit</class>
    <extends>QLineEdit</extends>
    <header>widgets/CoordLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TimeOffsetEdit</class>
+   <extends>QLineEdit</extends>
+   <header>widgets/TimeOffsetEdit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

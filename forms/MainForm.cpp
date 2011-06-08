@@ -78,6 +78,8 @@ MainForm::MainForm(QWidget *parent)
 
 	ui->horizontalLayout->insertWidget(1, tabBodyList, 1);
 
+	connect(persons_, SIGNAL(timeloc_set(const TimeLoc&)), this, SLOT(timeloc_set(const TimeLoc&)));
+
 	houseMenuTriggered(houseActionGroup_->checkedAction());
 	applyInputData();
 }
@@ -99,6 +101,7 @@ void MainForm::on_actionInput_data_activated()
 void MainForm::applyInputData()
 {
 	timeLoc[0] = input_->toTimeLoc();
+	qDebug() << __FUNCTION__ << timeLoc[0];
 	setWindowTitle(input_->titleStr() + " - Astronom");
 	timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
 	setTimeLoc(0);
@@ -175,4 +178,10 @@ void MainForm::on_actionFormula_activated()
 void MainForm::on_actionPersons_activated()
 {
 	persons_->show();
+}
+
+void MainForm::timeloc_set(const TimeLoc& tl)
+{
+	input_->fromTimeLoc(tl);
+	applyInputData();
 }

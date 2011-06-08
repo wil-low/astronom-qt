@@ -1,27 +1,37 @@
 #include "TimeLoc.h"
 #include "Ephemeris.h"
-//#include "utils/GlyphManager.h"
+#include "constants.h"
+#include "DMS.h"
 
-
-const char *FMT_DATE[] = {
-	"%04d%c%02d%c%02d", // YMD
-	"%02d%c%02d%c%04d", // DMY
-	"%02d%c%02d%c%04d", // MDY
-};
-
-const char* FMT_REX[] = {
-	"(\\d+)\\%c(\\d+)\\%c(\\d+)", // DATE
-	"(\\d+):(\\d+):(\\d+)", // TIME
-	"([+-])(\\d+):(\\d+):(\\d+)", // TZ
-	"(\\d+)`(\\d+)'(\\d+)''([NS])", // LAT
-	"(\\d+)`(\\d+)'(\\d+)''([EW])", // LON
-	"(\\d+)`(\\d+)`(\\d+)", // ELV
-};
+#include <QDebug>
+#include <QDateTime>
 
 TimeLoc::TimeLoc()
 {
-	for (int i = TL_DATETIME; i < TL_LAST; ++i)
+	clear();
+}
+
+void TimeLoc::clear()
+{
+	name_.clear();
+	location_.clear();
+	for (int i = TL_DATETIME; i < TL_LAST; ++i) {
 		data_[i] = 0;
+		str_[i].clear();
+	}
+
+}
+
+TimeLoc::TimeLoc(const QString& name, const QString& dateTime, const QString& timezoneOffset,
+				 const QString& location, const QString& latitude, const QString& longitude)
+{
+	clear();
+	name_ = name;
+	location_ = location;
+	str_[TL_DATETIME] = dateTime;
+	str_[TL_TZ] = timezoneOffset;
+	str_[TL_LAT] = latitude;
+	str_[TL_LON] = longitude;
 }
 
 int TimeLoc::cuspCount() const
@@ -31,288 +41,40 @@ int TimeLoc::cuspCount() const
 	else
 		return (method_ == "G" ? 36 : 12);
 }
-/*
-const char FMT_TIME[] = "%02d:%02d:%02d";
-const char FMT_LAT[]  = "%03d`%02d'%02d''%c";
-const char FMT_LON[]  = "%02d`%02d'%02d''%c";
-const char FMT_TZ[]   = "%c%02d:%02d:%02d";
 
-const char sep = ';';
-
-FXRex TimeLoc::rex_[TL_LAST];
-date_fmt_t TimeLoc::date_fmt_ = DF_DMY;
-char TimeLoc::date_sep_;
-
-TimeLoc::TimeLoc()
+void TimeLoc::recalculate(bool fromString)
 {
-	for (int i = TL_DATE; i < TL_LAST; ++i)
-		data_[i] = 0;
-}
+	if (fromString) {
+		QDateTime dateTime = QDateTime::fromString(str_[TL_DATETIME], Qt::ISODate);
+		QDate date(dateTime.date());
+		QTime time(dateTime.time());
+		data_[TL_DATETIME] = Ephemeris::julday (date.year(), date.month(), date.day(),
+													time.hour(), time.minute(), time.second());
+		DMS dms;
+		dms.fromCoord(str_[TL_LAT], DMS::COORD_LAT);
+		data_[TL_LAT] = dms.angle();
+		dms.fromCoord(str_[TL_LON], DMS::COORD_LON);
+		data_[TL_LON] = dms.angle();
+		dms.fromOffset(str_[TL_TZ]);
+		data_[TL_TZ] = dms.angle();
 
-void TimeLoc::initRex(char date_sep)
-{
-	date_sep_ = date_sep;
-	char pattern[100];
-	sprintf (pattern, FMT_REX[TL_DATE], date_sep_, date_sep_);
+		data_[TL_DATETIME] -= data_[TL_TZ];
+	}
+	else {
 
-	FXRex::Error err = rex_[TL_DATE].parse(pattern, FXRex::Capture);
-	if (err != FXRex::ErrOK)
-		FXTRACE((10, "%s: rex TL_DATE %s\n", __FUNCTION__, FXRex::getError(err)));
-	for (int i = TL_TIME; i < TL_LAST; ++i) {
-		err = rex_[i].parse(FMT_REX[i], FXRex::Capture);
-		if (err != FXRex::ErrOK)
-			FXTRACE((10, "%s: date_rex %s\n", __FUNCTION__, FXRex::getError(err)));
 	}
 }
 
-TimeLoc::~TimeLoc()
+QDebug operator<< (QDebug dbg, const TimeLoc& tl)
 {
-}
-
-QString TimeLoc::formatDate (int y, int m, int d)
-{
-	QString res;
-	const char* p_fmt = FMT_DATE[date_fmt_];
-	switch (date_fmt_) {
-		case DF_YMD:
-			res.format(p_fmt, y, date_sep_, m, date_sep_, d);
-			break;
-		case DF_DMY:
-			res.format(p_fmt, d, date_sep_, m, date_sep_, y);
-			break;
-		case DF_MDY:
-			res.format(p_fmt, m, date_sep_, d, date_sep_, y);
-			break;
+	dbg.nospace() << "TimeLoc(" << tl.name_ << ", " << tl.location_ << ", [";
+	for (int i = TL_DATETIME; i < TL_LAST; ++i) {
+		dbg << tl.data_[i] << ", ";
 	}
-	return res;
-}
-
-int TimeLoc::scan (timeloc_t idx, const QString &str, int *out)
-{
-	QString s(str);
-	GlyphManager::toBackTick(s);
-	FXint beg[5], end[5];
-	int value[4];
-	if(rex_[idx].match(s, beg, end, FXRex::Forward, 5)) {
-		value[0] = str.mid(beg[1], end[1] - beg[1]).toInt();
-		value[1] = str.mid(beg[2], end[2] - beg[2]).toInt();
-		value[2] = str.mid(beg[3], end[3] - beg[3]).toInt();
-		value[3] = str.mid(beg[4], end[4] - beg[4]).toInt();
-		if (idx == TL_DATE) {
-			switch (date_fmt_) {
-				case DF_YMD:
-					out[0] = value[0]; out[1] = value[1]; out[2] = value[2];
-					break;
-				case DF_DMY:
-					out[2] = value[0]; out[1] = value[1]; out[0] = value[2];
-					break;
-				case DF_MDY:
-					out[1] = value[0]; out[2] = value[1]; out[0] = value[2];
-					break;
-			}
-		}
-		else {
-			out[0] = value[0]; out[1] = value[1]; out[2] = value[2]; out[3] = value[3];
-		}
-		return 0;
+	dbg << "] [";
+	for (int i = TL_DATETIME; i < TL_LAST; ++i) {
+		dbg << tl.str_[i] << ", ";
 	}
-	return -1;
+	dbg << "]";
+	return dbg.space();
 }
-
-const QString& TimeLoc::getName () const
-{
-	return name_;
-}
-
-const QString& TimeLoc::getLocation () const
-{
-	return location_;
-}
-
-double TimeLoc::get (timeloc_t idx) const
-{
-	return data_[idx];
-}
-
-const QString& TimeLoc::getStr (timeloc_t idx)
-{
-	if (str_[idx].empty()) {
-		QString res;
-		double val = data_[idx];
-		switch (idx) {
-			case TL_DATE:
-			{
-				int y = 0, m = 0, d = 0, h = 0, min = 0, s = 0;
-				Ephemeris::revjul (val, &y, &m, &d, &h, &min, &s);
-				res = formatDate(y, m, d);
-			}
-				break;
-			case TL_TIME:
-			{
-				int y = 0, m = 0, d = 0, h = 0, min = 0, s = 0;
-				Ephemeris::revjul (val, &y, &m, &d, &h, &min, &s);
-				res.format (FMT_TIME, h, min, s);
-			}
-				break;
-			case TL_LAT:
-			{
-				char c = val >= 0 ? 'N' : 'S';
-				int d = val;
-				double m = (val - d) * 60;
-				int s = (m - (int)m) * 60;
-				res.format (FMT_LAT, d, (int)m, s, c);
-				GlyphManager::fromBackTick(res);
-			}
-				break;
-			case TL_LON:
-			{
-				char c = val >= 0 ? 'E' : 'W';
-				int d = val;
-				double m = (val - d) * 60;
-				int s = (m - (int)m) * 60;
-				res.format (FMT_LON, d, (int)m, s, c);
-				GlyphManager::fromBackTick(res);
-			}
-				break;
-			case TL_TZ:
-			{
-				char c = val >= 0 ? '+' : '-';
-				int d = val;
-				double m = (val - d) * 60;
-				int s = (m - (int)m) * 60;
-				res.format (FMT_TZ, c, d, (int)m, s);
-			}
-				break;
-			case TL_ELV:
-				break;
-		}
-		str_[idx] = res;
-	}
-	return str_[idx];
-}
-
-void TimeLoc::setName (const FX::QString& text)
-{
-	name_ = text;
-}
-
-void TimeLoc::setLocation (const FX::QString& text)
-{
-	location_ = text;
-}
-
-void TimeLoc::set (timeloc_t idx, double val)
-{
-	if ((idx == TL_DATE) || (idx == TL_TIME)) {
-		data_[TL_DATE] = data_[TL_TIME] = val;
-		str_[TL_DATE] = str_[TL_TIME] = "";
-		return;
-	}
-	data_[idx] = val;
-	str_[idx].clear();
-}
-
-void TimeLoc::set (timeloc_t idx, FX::QString text, bool recalculate)
-{
-	text.trim();
-	if (recalculate == false) {
-		str_[idx] = text;
-		return;
-	}
-	str_[idx].clear();
-	int out[5];
-	double res = 0;
-	switch (idx) {
-		case TL_DATE:
-		{
-			// format is "2010/05/08 16:50:12"
-			int outtm[5];
-			QString date = text.section(' ', 0);
-			QString time = text.section(' ', 1);
-
-			if (scan (TL_DATE, date, out) == 0 &&
-                scan (TL_TIME, time, outtm) == 0) {
-                    data_[TL_DATE] = data_[TL_TIME] = Ephemeris::julday (out[0], out[1], out[2], outtm[0], outtm[1], outtm[2]);
-                    str_[TL_DATE] = date;
-                    str_[TL_TIME] = time;
-			}
-		}
-		break;
-		case TL_LAT:
-		{
-			GlyphManager::toBackTick(text);
-			if (scan (TL_LAT, text, out) == 0) {
-				res = out[0] + out[1] / 60.L + out[2] / 3600.L;
-				if (out[3] == 'S')
-					res = -res;
-				data_[idx] = res;
-				str_[idx] = text;
-				GlyphManager::fromBackTick(str_[idx]);
-			}
-		}
-		break;
-		case TL_LON:
-		{
-			GlyphManager::toBackTick(text);
-			if (scan (TL_LON, text, out) == 0) {
-				res = out[0] + out[1] / 60.L + out[2] / 3600.L;
-				if (out[3] == 'W')
-					res = -res;
-				data_[idx] = res;
-				str_[idx] = text;
-				GlyphManager::fromBackTick(str_[idx]);
-			}
-		}
-		break;
-		case TL_TZ:
-		{
-			if (scan(TL_TZ, text, out) == 0) {
-				res = (out[1] + out[2] / 60.L + out[3] / 3600.L) / 24.L;
-				if (out[0] == '-')
-				  res = -res;
-				data_[idx] = res;
-				str_[idx] = text;
-			}
-		}
-		break;
-	}
-	if (str_[idx].empty()) {
-		FXTRACE((10, "%s: Cannot set item %d to '%s'\n", __FUNCTION__, idx, text.text()));
-	}
-}
-
-void TimeLoc::serialize(QString& output)
-{
-	output =
-		name_ + sep +
-		getStr(TL_DATE) + sep +
-		getStr(TL_TIME) + sep +
-		getStr(TL_TZ) + sep +
-		location_ + sep +
-		getStr(TL_LAT) + sep +
-		getStr(TL_LON) + sep;
-}
-
-void TimeLoc::deserialize(const QString& input)
-{
-	setName(input.section(sep, 0));
-	set(TL_DATE, input.section(sep, 1), false);
-	set(TL_TIME, input.section(sep, 2), false);
-	set(TL_TZ, input.section(sep, 3), false);
-	setLocation(input.section(sep, 4));
-	set(TL_LAT, input.section(sep, 5), false);
-	set(TL_LON, input.section(sep, 6), false);
-}
-
-void TimeLoc::asTitle(QString& output)
-{
-    output = name_ + " " +
-		getStr(TL_DATE) + " " +
-		getStr(TL_TIME) + " " +
-		getStr(TL_TZ) + ", " +
-		location_ + " " +
-		getStr(TL_LAT) + ", " +
-		getStr(TL_LON);
-}
-
-*/

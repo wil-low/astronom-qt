@@ -3,6 +3,9 @@
 
 #include <QDialog>
 
+class QModelIndex;
+class TimeLoc;
+
 namespace Ui {
     class PersonsForm;
 }
@@ -15,8 +18,14 @@ public:
     explicit PersonsForm(QWidget *parent = 0);
     ~PersonsForm();
 
+signals:
+	void timeloc_set(const TimeLoc&);
+
 private:
     Ui::PersonsForm *ui;
+
+private slots:
+	void on_tvPersonList_doubleClicked(const QModelIndex& index);
 };
 
 #endif // PERSONSFORM_H

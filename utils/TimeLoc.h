@@ -17,41 +17,19 @@ class TimeLoc
 {
 public:
 	TimeLoc();
+	TimeLoc(const QString& name, const QString& dateTime, const QString& timezoneOffset,
+					 const QString& location, const QString& latitude, const QString& longitude);
+	void clear();
+	void recalculate(bool fromString);
+
 	double data_[TL_LAST];
+	QString str_[TL_LAST];
 	int cuspCount() const;
 	QString method_;
 	QString name_;
 	QString location_;
-/*
-	static void initRex(char date_sep);
-	TimeLoc();
-	virtual ~TimeLoc();
-	void set (timeloc_t idx, QString text, bool recalculate = true);
-	void set (timeloc_t idx, double val);
-	void setName (const QString& text);
-	void setLocation (const QString& text);
-
-	double get (timeloc_t idx) const;
-	const QString& getStr (timeloc_t idx);
-	const QString& getName () const;
-	const QString& getLocation () const;
-
-	void serialize(QString& output);
-	void deserialize(const QString& input);
-	void asTitle(QString& output);
-
-	static QString formatDate (int y, int m, int d);
-	static int scan (timeloc_t idx, const QString &str, int *out);
-
-private:
-	double data_[TL_LAST];
-	QString str_[TL_LAST];
-
-	static date_fmt_t date_fmt_;
-	static char date_sep_;
-//	static FXRex rex_[TL_LAST];
-	*/
 };
 Q_DECLARE_METATYPE(TimeLoc)
+QDebug operator<< (QDebug dbg, const TimeLoc& tl);
 
 #endif

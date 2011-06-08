@@ -334,7 +334,7 @@ void OcularView::spreadLabels (int chart, int type, qreal r)
 //		FXTRACE((99, "output %d->%.02f\n", (int)sv.ptr_, sv.val_));
 		AstroLabel* label = static_cast<AstroLabel*>(sv.ptr_);
 		label->setVisibleAngle(sv.val_);
-		qDebug() << label->toString();
+		//qDebug() << label->toString();
 	}
 }
 

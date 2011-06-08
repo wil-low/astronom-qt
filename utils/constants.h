@@ -9,6 +9,8 @@ const double DTOR=0.0174532925199432957692369077;
 /// Multiplier for radians to degrees
 const double RTOD=57.295779513082320876798154814;
 
+const double SECONDS_IN_DAY = 60 * 60 * 24;
+
 const int ZODIAC_SIGN_COUNT = 12;
 const int DEG_PER_SIGN = 30;
 const int LAST_PLANET_ID = 9;

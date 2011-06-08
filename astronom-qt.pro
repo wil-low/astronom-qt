@@ -48,7 +48,9 @@ SOURCES += \
     utils/validators/CoordValidator.cpp \
     widgets/CoordLineEdit.cpp \
     forms/PersonsForm.cpp \
-    db/DBHelper.cpp
+    db/DBHelper.cpp \
+    widgets/TimeOffsetEdit.cpp \
+    utils/validators/TimeOffsetValidator.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -91,7 +93,10 @@ HEADERS += \
     utils/validators/CoordValidator.h \
     widgets/CoordLineEdit.h \
     forms/PersonsForm.h \
-    db/DBHelper.h
+    db/DBHelper.h \
+    db/DBRecord.h \
+    widgets/TimeOffsetEdit.h \
+    utils/validators/TimeOffsetValidator.h
 
 FORMS += \
     forms/MainForm.ui \

@@ -7,6 +7,8 @@
 #include <QClipboard>
 #include <QMimeData>
 #include <QMessageBox>
+#include <QDebug>
+#include <stdio.h>
 
 InputForm::InputForm(QWidget *parent) :
     QDialog(parent),
@@ -19,11 +21,12 @@ InputForm::InputForm(QWidget *parent) :
 
 	tl_.name_ = "Sample Name";
 	tl_.location_ = "Sample location";
-	tl_.data_[TL_LAT] = 45;
-	tl_.data_[TL_LON] = 34;
+	tl_.str_[TL_LAT] = "+0450000";
+	tl_.str_[TL_LON] = "+0340000";
+	tl_.str_[TL_TZ]  = "-032657";
 
-	fromTimeLoc(tl_);
 	on_btnNow_clicked();
+	fromTimeLoc(tl_);
 }
 
 InputForm::~InputForm()
@@ -44,7 +47,8 @@ void InputForm::on_btnCancel_clicked()
 
 void InputForm::on_btnNow_clicked()
 {
-	setDateTime(Ephemeris::now());
+	tl_.str_[TL_DATETIME] = QDateTime::currentDateTime().toString(Qt::ISODate);
+	setDateTime();
 }
 
 void InputForm::fromTimeLoc (const TimeLoc& tl)
@@ -53,41 +57,47 @@ void InputForm::fromTimeLoc (const TimeLoc& tl)
 	ui->editName->setText(tl_.name_);
 	//ui->cboLocationName->setText(tl_.location_);
 
-	setDateTime(tl_.data_[TL_DATETIME]);
+	setDateTime();
 
-	DMS dmsLat(tl_.data_[TL_LAT], DMS::COORD_LAT);
-	ui->editLat->setText(dmsLat.toMaskedString());
-	DMS dmsLon(tl_.data_[TL_LON], DMS::COORD_LON);
-	ui->editLon->setText(dmsLon.toMaskedString());
+	DMS dms;
+	dms.fromCoord(tl_.str_[TL_LAT], DMS::COORD_LAT);
+	ui->editLat->setText(dms.toMaskedString());
+	dms.fromCoord(tl_.str_[TL_LON], DMS::COORD_LON);
+	ui->editLon->setText(dms.toMaskedString());
+	dms.fromOffset(tl_.str_[TL_TZ]);
+	ui->editUTCOffset->setText(dms.toMaskedString());
 }
 
 const TimeLoc& InputForm::toTimeLoc ()
 {
-	QDate date = ui->editDate->date();
-	QTime time = ui->editTime->time();
-	tl_.data_[TL_DATETIME] = Ephemeris::julday (date.year(), date.month(), date.day(),
-												time.hour(), time.minute(), time.second());
-	DMS dmsLat(ui->editLat->text(), DMS::COORD_LAT);
-	tl_.data_[TL_LAT] = dmsLat.angle();
-
-	DMS dmsLon(ui->editLon->text(), DMS::COORD_LON);
-	tl_.data_[TL_LON] = dmsLon.angle();
 	tl_.name_ = ui->editName->text();
 	tl_.location_ = ui->cboLocationName->currentText();
+	QDate date = ui->editDate->date();
+	QTime time = ui->editTime->time();
+	tl_.str_[TL_DATETIME] = QDateTime(date, time).toString(Qt::ISODate);
+	tl_.str_[TL_LAT] = ui->editLat->dbText();
+	tl_.str_[TL_LON] = ui->editLon->dbText();
+	tl_.str_[TL_TZ] = ui->editUTCOffset->dbText();
 
 	titleStr_ = ui->editName->text() + ", " + ui->cboLocationName->currentText() + ", " +
 				date.toString(Qt::SystemLocaleShortDate) + " " +
 				time.toString(Qt::SystemLocaleShortDate) + ", " +
+				ui->editUTCOffset->text() + ", " +
 				ui->editLat->text() + " " + ui->editLon->text();
+	tl_.recalculate(true);
 	return tl_;
 }
 
-void InputForm::setDateTime(double jday)
+void InputForm::setDateTime()
 {
 	int y, m, d, h, min, s;
-	Ephemeris::revjul (jday, &y, &m, &d, &h, &min, &s);
-	ui->editDate->setDate(QDate(y, m, d));
-	ui->editTime->setTime(QTime(h, min, s));
+	if (sscanf(tl_.str_[TL_DATETIME].toAscii().constData(), "%d-%02d-%02dT%02d:%02d:%02d", &y, &m, &d, &h, &min, &s) == 6) {
+		ui->editDate->setDate(QDate(y, m, d));
+		ui->editTime->setTime(QTime(h, min, s));
+	}
+	else {
+		qDebug() << __FUNCTION__ << ": cannot sscanf " << tl_.str_[TL_DATETIME];
+	}
 }
 
 void InputForm::on_btnCopy_clicked()
@@ -127,14 +137,14 @@ void InputForm::import(const QString& str)
 		QTime time;
 		if (convertor.getTime(BaseConvertor::DT_NATAL_TIME, time))
 			ui->editTime->setTime(time);
-		if (convertor.getTime(BaseConvertor::DT_UTC_OFFSET, time))
-			ui->editUTCOffset->setTime(time);
 		//if (convertor.getString(BaseConvertor::STR_LOCATION_NAME, str))
 		//ui->cboLocationName->setItemText(str);
 		if (convertor.getString(BaseConvertor::STR_LONGITUDE, str))
 			ui->editLon->setText(str);
 		if (convertor.getString(BaseConvertor::STR_LATITUDE, str))
 			ui->editLat->setText(str);
+		if (convertor.getString(BaseConvertor::STR_TZ, str))
+			ui->editUTCOffset->setText(str);
 	}
 }
 

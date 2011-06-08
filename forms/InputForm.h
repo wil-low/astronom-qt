@@ -25,8 +25,8 @@ private:
 		IMPORT_ASTROZET = 0,
 	};
 
-	void setDateTime(double jday);
-    Ui::InputForm *ui;
+	void setDateTime();
+	Ui::InputForm *ui;
 	TimeLoc tl_;
 	QString titleStr_;
 	void import(const QString& str);

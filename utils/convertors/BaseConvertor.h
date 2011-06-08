@@ -10,6 +10,7 @@ class BaseConvertor
 public:
 	enum convert_mode_t {
 		MODE_ASTROZET = 0,
+		MODE_INPUT_FORM = 1,
 	};
 
 	enum string_val_t {
@@ -17,6 +18,7 @@ public:
 		STR_LOCATION_NAME,
 		STR_LATITUDE,
 		STR_LONGITUDE,
+		STR_TZ,
 		STR_LAST,
 	};
 
@@ -38,7 +40,7 @@ public:
 	virtual bool getString(string_val_t type, QString& result) {return false;}
 	virtual bool getDate(datetime_val_t type, QDate& result) {return false;}
 	virtual bool getTime(datetime_val_t type, QTime& result) {return false;}
-	virtual bool getCoord(coord_val_t type, double& result) {return false;}
+	virtual bool getDouble(coord_val_t type, double& result) {return false;}
 
 	virtual bool isValid() {return isValid_;}
 
