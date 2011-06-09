@@ -56,28 +56,7 @@ MainForm::MainForm(QWidget *parent)
 
 	loadHouseMenu();
 
-	QTabWidget* tabBodyList = new QTabWidget(ui->centralwidget);
-
-	PlanetSelector* planetSelector = new PlanetSelector(this, model_);
-	planetSelector->setFilterModels();
-//	planetSelector->copySelectionModel(itemView);
-	connect(this, SIGNAL(timeloc_changed()), planetSelector, SLOT(timeloc_changed()));
-	connect(planetSelector, SIGNAL(invalidateViews()), this, SLOT(updateViews()));
-	tabBodyList->addTab(planetSelector, tr("Planets"));
-
-	HouseSelector* houseSelector = new HouseSelector(this, model_);
-	houseSelector->setFilterModels();
-//	houseSelector->copySelectionModel(itemView);
-	connect(this, SIGNAL(timeloc_changed()), houseSelector, SLOT(timeloc_changed()));
-	tabBodyList->addTab(houseSelector, tr("Houses"));
-
-	AsteroidSelector* asteroidSelector = new AsteroidSelector(this, model_);
-	asteroidSelector->setFilterModels();
-//	AsteroidSelector->copySelectionModel(itemView);
-	connect(this, SIGNAL(timeloc_changed()), asteroidSelector, SLOT(timeloc_changed()));
-	tabBodyList->addTab(asteroidSelector, tr("Asteroids"));
-
-	ui->horizontalLayout->insertWidget(1, tabBodyList, 1);
+	createDockWindows();
 
 	connect(persons_, SIGNAL(timeloc_set(const TimeLoc&)), this, SLOT(timeloc_set(const TimeLoc&)));
 
@@ -185,4 +164,34 @@ void MainForm::timeloc_set(const TimeLoc& tl)
 {
 	input_->fromTimeLoc(tl);
 	applyInputData();
+}
+
+void MainForm::createDockWindows()
+{
+	QDockWidget *dock = new QDockWidget(tr("Data"), this);
+	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+	QTabWidget* tabBodyList = new QTabWidget(dock);
+
+	PlanetSelector* planetSelector = new PlanetSelector(this, model_);
+	planetSelector->setFilterModels();
+	//	planetSelector->copySelectionModel(itemView);
+	connect(this, SIGNAL(timeloc_changed()), planetSelector, SLOT(timeloc_changed()));
+	connect(planetSelector, SIGNAL(invalidateViews()), this, SLOT(updateViews()));
+	tabBodyList->addTab(planetSelector, tr("Planets"));
+
+	HouseSelector* houseSelector = new HouseSelector(this, model_);
+	houseSelector->setFilterModels();
+	//	houseSelector->copySelectionModel(itemView);
+	connect(this, SIGNAL(timeloc_changed()), houseSelector, SLOT(timeloc_changed()));
+	tabBodyList->addTab(houseSelector, tr("Houses"));
+
+	AsteroidSelector* asteroidSelector = new AsteroidSelector(this, model_);
+	asteroidSelector->setFilterModels();
+	//	AsteroidSelector->copySelectionModel(itemView);
+	connect(this, SIGNAL(timeloc_changed()), asteroidSelector, SLOT(timeloc_changed()));
+	tabBodyList->addTab(asteroidSelector, tr("Asteroids"));
+
+	dock->setWidget(tabBodyList);
+	addDockWidget(Qt::RightDockWidgetArea, dock);
+	setUnifiedTitleAndToolBarOnMac(true);
 }

@@ -41,6 +41,7 @@ private:
 	QAbstractItemModel *model_;
 	QItemSelectionModel *selectionModel;
 	void loadHouseMenu();
+	void createDockWindows();
 	QActionGroup* houseActionGroup_;
 	TimeLoc timeLoc[MAX_CHART_COUNT];
 	void applyInputData();
