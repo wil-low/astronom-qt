@@ -168,7 +168,7 @@ void MainForm::timeloc_set(const TimeLoc& tl)
 
 void MainForm::createDockWindows()
 {
-	QDockWidget *dock = new QDockWidget(tr("Data"), this);
+	QDockWidget *dock = new QDockWidget(tr("Data dock"), this);
 	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 	QTabWidget* tabBodyList = new QTabWidget(dock);
 
@@ -193,5 +193,6 @@ void MainForm::createDockWindows()
 
 	dock->setWidget(tabBodyList);
 	addDockWidget(Qt::RightDockWidgetArea, dock);
+	ui->menuView->addAction(dock->toggleViewAction());
 	setUnifiedTitleAndToolBarOnMac(true);
 }
