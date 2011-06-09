@@ -29,7 +29,7 @@ PersonsForm::PersonsForm(QWidget *parent) :
 	mapper->addMapping(ui->editLat, model->fieldIndex("LATITUDE"), "dbText");
 	mapper->addMapping(ui->editLon, model->fieldIndex("LONGITUDE"), "dbText");
 	mapper->addMapping(ui->editDateTime, model->fieldIndex("DATE_TIME"));
-	mapper->addMapping(ui->editTimeOffset, model->fieldIndex("TIMEZONE_OFFSET"));
+	mapper->addMapping(ui->editTimeOffset, model->fieldIndex("TIMEZONE_OFFSET"), "dbText");
 
 	connect(ui->lvPersons->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
 			mapper, SLOT(setCurrentModelIndex(QModelIndex)));
@@ -41,7 +41,7 @@ PersonsForm::~PersonsForm()
     delete ui;
 }
 
-void PersonsForm::on_tvPersonList_doubleClicked(const QModelIndex& index)
+void PersonsForm::on_lvPersons_doubleClicked(const QModelIndex& index)
 {
 	TimeLoc tl;
 	QModelIndex idx = index.model()->index(index.row(), 0, ui->tvPersonList->rootIndex());

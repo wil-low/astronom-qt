@@ -25,7 +25,7 @@ private:
     Ui::PersonsForm *ui;
 
 private slots:
-	void on_tvPersonList_doubleClicked(const QModelIndex& index);
+	void on_lvPersons_doubleClicked(const QModelIndex& index);
 };
 
 #endif // PERSONSFORM_H

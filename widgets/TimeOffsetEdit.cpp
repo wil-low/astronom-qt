@@ -14,3 +14,8 @@ QString TimeOffsetEdit::dbText() const
 	txt = txt.mid(0, 3) + txt.mid(4, 2) + txt.mid(7, 2);
 	return txt;
 }
+
+void TimeOffsetEdit::setDbText(const QString& text)
+{
+	setText(text);
+}
