@@ -28,6 +28,7 @@ MainForm::MainForm(QWidget *parent)
 , input_(new InputForm(this))
 , persons_(new PersonsForm(this))
 {
+	//setAttribute(Qt::WA_DeleteOnClose);
 #ifdef __linux
 	Ephemeris::init("/home/willow/prj/ephem");
 #else
@@ -89,7 +90,7 @@ MainForm::~MainForm()
 	delete model_;
 	delete input_;
 	delete persons_;
-    delete ui;
+	delete ui;
 }
 
 void MainForm::on_actionInput_data_activated()

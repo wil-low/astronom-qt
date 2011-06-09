@@ -2,7 +2,7 @@
 #include "../utils/TimeLoc.h"
 
 #include <QSqlDatabase>
-#include <QSqlQueryModel>
+#include <QSqlTableModel>
 #include <QSqlError>
 #include <QSqlQuery>
 
@@ -15,7 +15,8 @@ DBHelper::DBHelper()
 
 DBHelper::~DBHelper()
 {
-	delete personListModel_;
+//	delete personListModel_;
+//	QSqlDatabase::removeDatabase(QSqlDatabase::database().connectionName());
 }
 
 void DBHelper::initConnections (const QString& path)
@@ -25,12 +26,15 @@ void DBHelper::initConnections (const QString& path)
 	if (db.open() == false)
 		qDebug() << "Database error:" << db.lastError().databaseText() << db.lastError().driverText();
 
-	personListModel_ = new QSqlQueryModel;
-	personListModel_->setQuery("select ID, NAME, DATE_TIME, TIMEZONE_OFFSET, LOCATION, LATITUDE, LONGITUDE from TIME_LOCATION");
+	personListModel_ = new QSqlTableModel();
+	personListModel_->setTable("TIME_LOCATION");
+	personListModel_->setEditStrategy(QSqlTableModel::OnManualSubmit);
+	personListModel_->setSort(personListModel_->fieldIndex("NAME"), Qt::AscendingOrder);
+	personListModel_->select();
 //	personListModel_->setHeaderData(0, Qt::Horizontal, tr("Name"));
 }
 
-QAbstractItemModel* DBHelper::personListModel() const
+QSqlTableModel* DBHelper::personListModel() const
 {
 	return personListModel_;
 }

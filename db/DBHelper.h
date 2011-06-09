@@ -3,7 +3,7 @@
 #include <boost/serialization/singleton.hpp>
 class QString;
 class QAbstractItemModel;
-class QSqlQueryModel;
+class QSqlTableModel;
 class QModelIndex;
 class TimeLoc;
 
@@ -13,11 +13,11 @@ public:
     DBHelper();
 	~DBHelper();
 	void initConnections (const QString& path);
-	QAbstractItemModel* personListModel() const;
+	QSqlTableModel* personListModel() const;
 	bool timeLoc(int record_id, TimeLoc& result) const;
 
 private:
-	QSqlQueryModel* personListModel_;
+	QSqlTableModel* personListModel_;
 };
 
 #endif // DBHELPER_H

@@ -4,17 +4,36 @@
 #include "../utils/TimeLoc.h"
 
 #include <QSqlDatabase>
-#include <QSqlQueryModel>
+#include <QSqlTableModel>
 #include <QSqlError>
 
 #include <QDebug>
+#include <QDataWidgetMapper>
 
 PersonsForm::PersonsForm(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PersonsForm)
 {
     ui->setupUi(this);
-	ui->tvPersonList->setModel(DBHelper::get_const_instance().personListModel());
+	ui->editLat->setCoordType(DMS::COORD_LAT);
+	ui->editLon->setCoordType(DMS::COORD_LON);
+
+	QSqlTableModel* model = DBHelper::get_const_instance().personListModel();
+	ui->lvPersons->setModel(model);
+	ui->lvPersons->setModelColumn(1); // NAME
+	ui->tvPersonList->setModel(model);
+
+	QDataWidgetMapper *mapper = new QDataWidgetMapper(this);
+	mapper->setModel(model);
+//	mapper->setItemDelegate(new BookDelegate(this));
+	mapper->addMapping(ui->editLat, model->fieldIndex("LATITUDE"), "dbText");
+	mapper->addMapping(ui->editLon, model->fieldIndex("LONGITUDE"), "dbText");
+	mapper->addMapping(ui->editDateTime, model->fieldIndex("DATE_TIME"));
+	mapper->addMapping(ui->editTimeOffset, model->fieldIndex("TIMEZONE_OFFSET"));
+
+	connect(ui->lvPersons->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+			mapper, SLOT(setCurrentModelIndex(QModelIndex)));
+	ui->lvPersons->setCurrentIndex(model->index(0, 0));
 }
 
 PersonsForm::~PersonsForm()

@@ -26,3 +26,13 @@ QString CoordLineEdit::dbText() const
 	txt = ((letter == "N" || letter == "E") ? "+" : "-") + txt;
 	return txt;
 }
+
+void CoordLineEdit::setDbText(const QString& text)
+{
+	QChar letter = text[0];
+	if (coord_type_ == DMS::COORD_LAT)
+		letter = (letter == '+') ? 'N' : 'S';
+	else if (coord_type_ == DMS::COORD_LON)
+		letter = (letter == '+') ? 'E' : 'W';
+	setText(text.mid(1) + letter);
+}
