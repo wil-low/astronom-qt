@@ -65,16 +65,25 @@ void TimeLoc::recalculate(bool fromString)
 	}
 }
 
+QString TimeLoc::toString() const
+{
+	QString result;
+	QTextStream in(&result);
+	in << "TimeLoc(" << name_ << ", " << location_ << ", [";
+	for (int i = TL_DATETIME; i < TL_LAST; ++i) {
+		in << data_[i] << ", ";
+	}
+	in << "] [";
+	for (int i = TL_DATETIME; i < TL_LAST; ++i) {
+		in << str_[i] << ", ";
+	}
+	in << "]";
+	return result;
+}
+
+
 QDebug operator<< (QDebug dbg, const TimeLoc& tl)
 {
-	dbg.nospace() << "TimeLoc(" << tl.name_ << ", " << tl.location_ << ", [";
-	for (int i = TL_DATETIME; i < TL_LAST; ++i) {
-		dbg << tl.data_[i] << ", ";
-	}
-	dbg << "] [";
-	for (int i = TL_DATETIME; i < TL_LAST; ++i) {
-		dbg << tl.str_[i] << ", ";
-	}
-	dbg << "]";
+	dbg.nospace() << tl.toString();
 	return dbg.space();
 }

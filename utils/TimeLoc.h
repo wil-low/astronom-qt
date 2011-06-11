@@ -21,6 +21,7 @@ public:
 					 const QString& location, const QString& latitude, const QString& longitude);
 	void clear();
 	void recalculate(bool fromString);
+	QString toString() const;
 
 	double data_[TL_LAST];
 	QString str_[TL_LAST];
