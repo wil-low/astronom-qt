@@ -24,8 +24,12 @@ NatalConvertor::NatalConvertor(const QString& input, BaseConvertor::convert_mode
 		if (rx.indexIn(values[2]) != -1) {
 			time_ = QTime(rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt());
 		}
-		rx.setPattern("([\+\-]\\d+):(\\d+):(\\d+)");
+		dateTimeStr_ = QDateTime(date_, time_).toString(Qt::ISODate);
+
+		rx.setPattern("([\+\-]\\d+):(\\d+)(?::(\\d+))?");
 		if (rx.indexIn(values[3]) != -1) {
+			utcOffsetStr_.sprintf("%02d%02d%02d",
+							rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt());
 			utcOffset_ = QTime(rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt());
 		}
 		locationName_ = values[4];
@@ -53,24 +57,31 @@ NatalConvertor::NatalConvertor(const QString& input, BaseConvertor::convert_mode
 
 bool NatalConvertor::getString(string_val_t type, QString& result)
 {
-	bool isSet = false;
+	if (isValid_) {
+		result = getString(type);
+	}
+	return isValid_;
+}
+
+const QString& NatalConvertor::getString(string_val_t type)
+{
 	if (isValid_) {
 		switch (type) {
 		case STR_NAME:
-			result = name_; isSet = true;
-			break;
+			return name_;
 		case STR_LOCATION_NAME:
-			result = locationName_; isSet = true;
-			break;
+			return locationName_;
 		case STR_LATITUDE:
-			result = latStr_; isSet = true;
-			break;
+			return latStr_;
 		case STR_LONGITUDE:
-			result = lonStr_; isSet = true;
-			break;
+			return lonStr_;
+		case STR_DATE_TIME:
+			return dateTimeStr_;
+		case STR_TZ:
+			return utcOffsetStr_;
 		}
 	}
-	return isSet;
+	return "";
 }
 
 bool NatalConvertor::getDate(datetime_val_t type, QDate& result)

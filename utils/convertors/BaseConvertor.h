@@ -19,6 +19,7 @@ public:
 		STR_LATITUDE,
 		STR_LONGITUDE,
 		STR_TZ,
+		STR_DATE_TIME,
 		STR_LAST,
 	};
 

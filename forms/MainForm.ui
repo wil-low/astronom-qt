@@ -51,6 +51,8 @@
     <addaction name="actionInput_data"/>
     <addaction name="actionGlyph_manager"/>
     <addaction name="actionToggle_Chrono"/>
+    <addaction name="separator"/>
+    <addaction name="actionImport"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -104,6 +106,14 @@
    </property>
    <property name="shortcut">
     <string>Alt+F</string>
+   </property>
+  </action>
+  <action name="actionImport">
+   <property name="text">
+    <string>Import...</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
  </widget>

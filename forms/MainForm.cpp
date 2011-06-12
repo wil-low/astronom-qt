@@ -5,6 +5,7 @@
 #include "GlyphForm.h"
 #include "FormulaForm.h"
 #include "PersonsForm.h"
+#include "ImportForm.h"
 
 #include "../models/ModelHelper.h"
 #include "../models/OcularDelegate.h"
@@ -195,4 +196,10 @@ void MainForm::createDockWindows()
 	addDockWidget(Qt::RightDockWidgetArea, dock);
 	ui->menuView->addAction(dock->toggleViewAction());
 	setUnifiedTitleAndToolBarOnMac(true);
+}
+
+void MainForm::on_actionImport_triggered()
+{
+	ImportForm import(this);
+	import.exec();
 }

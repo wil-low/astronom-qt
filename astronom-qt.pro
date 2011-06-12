@@ -50,7 +50,9 @@ SOURCES += \
     forms/PersonsForm.cpp \
     db/DBHelper.cpp \
     widgets/TimeOffsetEdit.cpp \
-    utils/validators/TimeOffsetValidator.cpp
+    utils/validators/TimeOffsetValidator.cpp \
+    forms/ImportForm.cpp \
+    db/ImportDBHelper.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -96,7 +98,11 @@ HEADERS += \
     db/DBHelper.h \
     db/DBRecord.h \
     widgets/TimeOffsetEdit.h \
-    utils/validators/TimeOffsetValidator.h
+    utils/validators/TimeOffsetValidator.h \
+    forms/ImportForm.h \
+    models/ImportModelHelper.h \
+    db/ImportDBHelper.h \
+    db/Statements.h
 
 FORMS += \
     forms/MainForm.ui \
@@ -104,6 +110,7 @@ FORMS += \
     forms/GlyphForm.ui \
     forms/form.ui \
     forms/FormulaForm.ui \
-    forms/PersonsForm.ui
+    forms/PersonsForm.ui \
+    forms/ImportForm.ui
 
 OTHER_FILES +=

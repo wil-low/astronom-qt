@@ -52,3 +52,4 @@ void PersonsForm::on_lvPersons_doubleClicked(const QModelIndex& index)
 		hide();
 	}
 }
+
