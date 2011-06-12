@@ -52,7 +52,8 @@ SOURCES += \
     widgets/TimeOffsetEdit.cpp \
     utils/validators/TimeOffsetValidator.cpp \
     forms/ImportForm.cpp \
-    db/ImportDBHelper.cpp
+    db/ImportDBHelper.cpp \
+    views/SpeculumView.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -102,7 +103,8 @@ HEADERS += \
     forms/ImportForm.h \
     models/ImportModelHelper.h \
     db/ImportDBHelper.h \
-    db/Statements.h
+    db/Statements.h \
+    views/SpeculumView.h
 
 FORMS += \
     forms/MainForm.ui \

@@ -17,7 +17,7 @@ class InputForm;
 class PersonsForm;
 class QAbstractItemModel;
 class QItemSelectionModel;
-class QAbstractScrollArea;
+class QAbstractItemView;
 
 class MainForm : public QMainWindow
 {
@@ -34,24 +34,28 @@ signals:
 
 private:
     Ui::MainForm *ui;
-	QAbstractScrollArea* view_;
+	QAbstractItemView* view_;
 	InputForm* input_;
 	PersonsForm* persons_;
 	void setupModel();
 	QAbstractItemModel *model_;
 	QItemSelectionModel *selectionModel;
 	void loadHouseMenu();
+	void loadCentralViewMenu();
 	void createDockWindows();
 	QActionGroup* houseActionGroup_;
+	QActionGroup* centralViewActionGroup_;
 	TimeLoc timeLoc[MAX_CHART_COUNT];
 	void applyInputData();
+	void changeCentralView(central_view_t type);
 
 private slots:
 	void on_actionImport_triggered();
- void on_actionPersons_activated();
+	void on_actionPersons_activated();
 	void on_actionFormula_activated();
 	void on_actionGlyph_manager_activated();
 	void on_actionInput_data_activated();
+	void centralViewMenuTriggered(QAction*);
 	void houseMenuTriggered(QAction*);
 	void updateViews();
 	void timeloc_set(const TimeLoc&);

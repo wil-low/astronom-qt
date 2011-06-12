@@ -16,6 +16,7 @@
 #include "../utils/SettingsManager.h"
 
 #include "../views/OcularView.h"
+#include "../views/SpeculumView.h"
 
 #include "../widgets/PlanetSelector.h"
 #include "../widgets/HouseSelector.h"
@@ -23,11 +24,14 @@
 
 #include <QtGui>
 
+const central_view_t CENTRAL_VIEW_ON_START = cv_Wheel;
+
 MainForm::MainForm(QWidget *parent)
 : QMainWindow(parent)
 , ui(new Ui::MainForm)
 , input_(new InputForm(this))
 , persons_(new PersonsForm(this))
+, view_(NULL)
 {
 	//setAttribute(Qt::WA_DeleteOnClose);
 #ifdef __linux
@@ -39,13 +43,16 @@ MainForm::MainForm(QWidget *parent)
 	QFontInfo fi(font);
 	QString fam = fi.family();
 
+	model_ = new QStandardItemModel(0, 2, this);
+
 	ui->setupUi(this);
 	houseActionGroup_ = new QActionGroup(this);
 	assert (connect(houseActionGroup_, SIGNAL(triggered(QAction*)), this, SLOT(houseMenuTriggered(QAction*))) &&
 			"houseMenu connect failed");
+	loadCentralViewMenu();
+	changeCentralView(CENTRAL_VIEW_ON_START);
 
-	model_ = new QStandardItemModel(0, 2, this);
-
+/*
 	OcularView* itemView = new OcularView(ui->centralwidget);
 	connect(this, SIGNAL(updateCentralView()), itemView, SLOT(invalidateView()));
 
@@ -54,7 +61,7 @@ MainForm::MainForm(QWidget *parent)
 	itemView->setModel(model_);
 
 	connect(this, SIGNAL(reconfigure()), view_, SLOT(reconfigure()));
-
+*/
 	loadHouseMenu();
 
 	createDockWindows();
@@ -87,7 +94,7 @@ void MainForm::applyInputData()
 	timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
 	setTimeLoc(0);
 	emit reconfigure();
-	((OcularView*)view_)->recalcDimensionsByFactor(1);
+//	((OcularView*)view_)->recalcDimensionsByFactor(1);
 }
 
 void MainForm::on_actionGlyph_manager_activated()
@@ -202,4 +209,60 @@ void MainForm::on_actionImport_triggered()
 {
 	ImportForm import(this);
 	import.exec();
+}
+
+void MainForm::loadCentralViewMenu()
+{
+	static const char* CENTRAL_VIEW_CAPTIONS[] = {
+		"Wheel", // cv_Wheel
+		"Speculum", // cv_Speculum
+	};
+
+	ui->menuView->addSeparator(); //->setText(tr("CentralView"));
+
+	centralViewActionGroup_ = new QActionGroup(this);
+	assert (connect(centralViewActionGroup_, SIGNAL(triggered(QAction*)), this, SLOT(centralViewMenuTriggered(QAction*))) &&
+			"centralViewMenu connect failed");
+	for (int i = 0; i < sizeof(CENTRAL_VIEW_CAPTIONS) / sizeof(CENTRAL_VIEW_CAPTIONS[0]); ++i) {
+		QAction* action = new QAction(tr(CENTRAL_VIEW_CAPTIONS[i]), this);
+		action->setCheckable(true);
+		action->setData(i);
+		centralViewActionGroup_->addAction(action);
+		ui->menuView->addAction(action);
+		if (i == CENTRAL_VIEW_ON_START)
+			action->setChecked(true);
+	}
+
+	ui->menuView->addSeparator();
+}
+
+void MainForm::centralViewMenuTriggered(QAction* action)
+{
+	if (action) {
+		central_view_t type = static_cast<central_view_t>(action->data().toInt());
+		changeCentralView(type);
+	}
+}
+
+void MainForm::changeCentralView(central_view_t type)
+{
+	delete view_;
+	view_ = NULL;
+	switch (type) {
+	case cv_Wheel: {
+		OcularView* itemView = new OcularView(ui->centralwidget);
+		connect(this, SIGNAL(updateCentralView()), itemView, SLOT(invalidateView()));
+		view_ = itemView;
+		break; }
+	case cv_Speculum:
+		SpeculumView* speculumView = new SpeculumView(ui->centralwidget);
+		view_ = speculumView;
+		break;
+	}
+	if (view_) {
+		ui->horizontalLayout->insertWidget(0, view_, 4);
+		view_->setModel(model_);
+		connect(this, SIGNAL(reconfigure()), view_, SLOT(reconfigure()));
+		applyInputData();
+	}
 }
