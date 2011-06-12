@@ -18,9 +18,7 @@
 #include "../views/OcularView.h"
 #include "../views/SpeculumView.h"
 
-#include "../widgets/PlanetSelector.h"
-#include "../widgets/HouseSelector.h"
-#include "../widgets/AsteroidSelector.h"
+#include "../widgets/TabBodyList.h"
 
 #include <QtGui>
 
@@ -181,27 +179,7 @@ void MainForm::createDockWindows()
 {
 	QDockWidget *dock = new QDockWidget(tr("Data dock"), this);
 	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-	QTabWidget* tabBodyList = new QTabWidget(dock);
-
-	PlanetSelector* planetSelector = new PlanetSelector(this, model_);
-	planetSelector->setFilterModels();
-	//	planetSelector->copySelectionModel(itemView);
-	connect(this, SIGNAL(timeloc_changed()), planetSelector, SLOT(timeloc_changed()));
-	connect(planetSelector, SIGNAL(invalidateViews()), this, SLOT(updateViews()));
-	tabBodyList->addTab(planetSelector, tr("Planets"));
-
-	HouseSelector* houseSelector = new HouseSelector(this, model_);
-	houseSelector->setFilterModels();
-	//	houseSelector->copySelectionModel(itemView);
-	connect(this, SIGNAL(timeloc_changed()), houseSelector, SLOT(timeloc_changed()));
-	tabBodyList->addTab(houseSelector, tr("Houses"));
-
-	AsteroidSelector* asteroidSelector = new AsteroidSelector(this, model_);
-	asteroidSelector->setFilterModels();
-	//	AsteroidSelector->copySelectionModel(itemView);
-	connect(this, SIGNAL(timeloc_changed()), asteroidSelector, SLOT(timeloc_changed()));
-	tabBodyList->addTab(asteroidSelector, tr("Asteroids"));
-
+	TabBodyList* tabBodyList = new TabBodyList(dock, this);
 	dock->setWidget(tabBodyList);
 	addDockWidget(Qt::RightDockWidgetArea, dock);
 	ui->menuView->addAction(dock->toggleViewAction());

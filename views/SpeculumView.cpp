@@ -24,3 +24,11 @@ void SpeculumView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bo
 		BodyProps props = model()->data(index).value<BodyProps>();
 	}
 }
+
+void SpeculumView::insertPlanet()
+{
+}
+
+void SpeculumView::insertHouse()
+{
+}

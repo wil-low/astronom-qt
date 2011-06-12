@@ -54,7 +54,9 @@ SOURCES += \
     forms/ImportForm.cpp \
 	db/ImportDBHelper.cpp \
     views/SpeculumView.cpp \
-    widgets/SpeculumItemDelegate.cpp
+    widgets/SpeculumItemDelegate.cpp \
+    utils/BodyHolder.cpp \
+    widgets/TabBodyList.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -106,7 +108,9 @@ HEADERS += \
     db/ImportDBHelper.h \
 	db/Statements.h \
     views/SpeculumView.h \
-    widgets/SpeculumItemDelegate.h
+    widgets/SpeculumItemDelegate.h \
+    utils/BodyHolder.h \
+    widgets/TabBodyList.h
 
 FORMS += \
     forms/MainForm.ui \
