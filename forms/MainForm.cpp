@@ -50,8 +50,6 @@ MainForm::MainForm(QWidget *parent)
 	assert (connect(houseActionGroup_, SIGNAL(triggered(QAction*)), this, SLOT(houseMenuTriggered(QAction*))) &&
 			"houseMenu connect failed");
 	loadCentralViewMenu();
-	changeCentralView(CENTRAL_VIEW_ON_START);
-
 /*
 	OcularView* itemView = new OcularView(ui->centralwidget);
 	connect(this, SIGNAL(updateCentralView()), itemView, SLOT(invalidateView()));
@@ -68,8 +66,8 @@ MainForm::MainForm(QWidget *parent)
 
 	connect(persons_, SIGNAL(timeloc_set(const TimeLoc&)), this, SLOT(timeloc_set(const TimeLoc&)));
 
-	houseMenuTriggered(houseActionGroup_->checkedAction());
-	applyInputData();
+	changeCentralView(CENTRAL_VIEW_ON_START);
+	changeHouseMethod("P");
 }
 
 MainForm::~MainForm()
@@ -138,11 +136,16 @@ void MainForm::loadHouseMenu()
 void MainForm::houseMenuTriggered(QAction* action)
 {
 	if (action) {
-		SettingsManager::get_mutable_instance().setHouseMethod(action->data().toString());
-		timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
-		setTimeLoc(0);
+		changeHouseMethod(action->data().toString());
 		view_->viewport()->update();
 	}
+}
+
+void MainForm::changeHouseMethod(const QString& method)
+{
+	SettingsManager::get_mutable_instance().setHouseMethod(method);
+	timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
+	setTimeLoc(0);
 }
 
 void MainForm::updateViews()
@@ -260,9 +263,11 @@ void MainForm::changeCentralView(central_view_t type)
 		break;
 	}
 	if (view_) {
+		qDebug() << __FUNCTION__ << type;
 		ui->horizontalLayout->insertWidget(0, view_, 4);
-		view_->setModel(model_);
 		connect(this, SIGNAL(reconfigure()), view_, SLOT(reconfigure()));
+		view_->setModel(model_);
 		applyInputData();
+		emit reconfigure();
 	}
 }

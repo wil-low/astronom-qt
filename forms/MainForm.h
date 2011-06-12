@@ -48,7 +48,7 @@ private:
 	TimeLoc timeLoc[MAX_CHART_COUNT];
 	void applyInputData();
 	void changeCentralView(central_view_t type);
-
+	void changeHouseMethod(const QString& method);
 private slots:
 	void on_actionImport_triggered();
 	void on_actionPersons_activated();

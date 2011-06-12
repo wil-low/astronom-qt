@@ -6,3 +6,8 @@ SpeculumView::SpeculumView(QWidget *parent) :
 	setSelectionMode(QAbstractItemView::SingleSelection);
 	setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
+
+void SpeculumView::reconfigure()
+{
+
+}
