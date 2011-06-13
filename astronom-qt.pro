@@ -100,11 +100,9 @@ HEADERS += \
     widgets/CoordLineEdit.h \
     forms/PersonsForm.h \
     db/DBHelper.h \
-    db/DBRecord.h \
     widgets/TimeOffsetEdit.h \
     utils/validators/TimeOffsetValidator.h \
     forms/ImportForm.h \
-    models/ImportModelHelper.h \
     db/ImportDBHelper.h \
 	db/Statements.h \
     views/SpeculumView.h \
