@@ -1,7 +1,6 @@
 #ifndef OCULARWHEEL_H
 #define OCULARWHEEL_H
 
-#include "../utils/BodyHolder.h"
 #include <QAbstractItemView>
 
 // zero point of wheel
@@ -53,7 +52,7 @@ struct OcularColors {
 class AstroLabel;
 class AstroLabelContainer;
 
-class OcularView : public QAbstractItemView, public BodyHolder
+class OcularView : public QAbstractItemView
 {
 	Q_OBJECT
 public:
@@ -67,8 +66,6 @@ public:
 	virtual QModelIndex indexAt(const QPoint &point) const;
 	virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 	virtual void currentChanged (const QModelIndex & current, const QModelIndex & previous);
-	virtual void insertPlanet() {};
-	virtual void insertHouse() {};
 
 signals:
 

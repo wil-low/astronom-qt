@@ -9,8 +9,6 @@ class SpeculumView : public QTableView
 public:
     explicit SpeculumView(QWidget *parent = 0);
 	virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-	virtual void insertPlanet();
-	virtual void insertHouse();
 signals:
 
 public slots:
