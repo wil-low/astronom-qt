@@ -10,6 +10,8 @@
 
 #include <QPainter>
 #include <QDebug>
+#include <QToolTip>
+#include <QHelpEvent>
 
 const int PLANET_FONT_SIZE = 10;
 const int DEFAULT_FONT_SIZE = 10;
@@ -241,3 +243,20 @@ void SpeculumView::addAspects (AstroLabel* parentLabel)
 		}
 	}
 }
+
+bool SpeculumView::viewportEvent (QEvent* event)
+{
+	if (event->type() == QEvent::ToolTip) {
+		QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
+		AstroLabel* label = labels_->labelAt(helpEvent->pos());
+		if (label) {
+			QToolTip::showText(helpEvent->globalPos(), label->toString());
+		} else {
+			QToolTip::hideText();
+			event->ignore();
+		}
+		return true;
+	}
+	return QAbstractItemView::viewportEvent(event);
+}
+

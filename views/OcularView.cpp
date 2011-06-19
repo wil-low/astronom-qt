@@ -9,6 +9,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QDebug>
+#include <QToolTip>
 #include <boost/foreach.hpp>
 
 OcularView::OcularView(QWidget *parent)
@@ -249,13 +250,7 @@ void OcularView::scrollTo(const QModelIndex &index, ScrollHint hint)
 QModelIndex OcularView::indexAt(const QPoint &point) const
 {
 	QPoint translatedPoint(point.x() - viewport()->width() / 2, point.y() - viewport()->height() / 2);
-	AstroLabel* cur_al = NULL;
-	BOOST_FOREACH (AstroLabel* al, *labels_) {
-		if (al->visible() && al->contains(translatedPoint)) {
-			cur_al = al;
-			break;
-		}
-	}
+	AstroLabel* cur_al = labels_->labelAt(translatedPoint);
 	if (cur_al) {
 		int chart_id = cur_al->chartId();
 		int id = cur_al->id();
@@ -565,4 +560,22 @@ void OcularView::drawAspects(QPainter* painter)
 		}
 	}
 	painter->restore();
+}
+
+bool OcularView::viewportEvent (QEvent* event)
+{
+	if (event->type() == QEvent::ToolTip) {
+		QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
+		QPoint translatedPoint(helpEvent->pos().x() - viewport()->width() / 2,
+							   helpEvent->pos().y() - viewport()->height() / 2);
+		AstroLabel* label = labels_->labelAt(translatedPoint);
+		if (label) {
+			QToolTip::showText(helpEvent->globalPos(), label->toString());
+		} else {
+			QToolTip::hideText();
+			event->ignore();
+		}
+		return true;
+	}
+	return QAbstractItemView::viewportEvent(event);
 }

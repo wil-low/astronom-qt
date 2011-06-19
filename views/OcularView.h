@@ -83,6 +83,7 @@ protected:
 
 	virtual void setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command);
 	virtual QRegion visualRegionForSelection(const QItemSelection &selection) const;
+	virtual bool viewportEvent (QEvent* event);
 
 private:
 	void spreadLabels (int chart, int type, qreal r);

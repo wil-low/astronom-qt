@@ -12,6 +12,8 @@ struct chart_tag {};
 struct type_tag {};
 struct chart_type_tag {};
 
+class QPoint;
+
 typedef boost::multi_index_container<
 	AstroLabel*,
 	indexed_by<
@@ -42,6 +44,7 @@ class AstroLabelContainer : public AstroLabelSet
 {
 public:
 	AstroLabel* find_by_chart_id (int chart, int id);
+	AstroLabel* labelAt(const QPoint& point) const;
 };
 
 typedef AstroLabelContainer::iterator AlcIter;

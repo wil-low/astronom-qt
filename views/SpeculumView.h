@@ -34,6 +34,8 @@ protected:
 	virtual void setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command);
 	virtual QRegion visualRegionForSelection(const QItemSelection &selection) const;
 	virtual void resizeEvent (QResizeEvent* event);
+	virtual bool viewportEvent (QEvent* event);
+
 signals:
 
 public slots:
