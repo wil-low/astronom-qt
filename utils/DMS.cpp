@@ -40,14 +40,14 @@ void DMS::fromCoord (const QString& sdddmmss, coord_t coord_type)
 	zod_deg_ = int(deg_ - zodiac_ * DEG_PER_SIGN);
 }
 
-void DMS::fromOffset (const QString& sdddmmss)
+void DMS::fromOffset (const QString& sddmmss)
 {
 	coord_type_ = COORD_TZ;
-	int d = sdddmmss.mid(1, 3).toInt();
-	int m = sdddmmss.mid(4, 2).toInt();
-	int s = sdddmmss.mid(7, 2).toInt();
+	int d = sddmmss.mid(1, 2).toInt();
+	int m = sddmmss.mid(3, 2).toInt();
+	int s = sddmmss.mid(5, 2).toInt();
 	int multiplier = 1;
-	if (sdddmmss.left(1) == "-")
+	if (sddmmss.left(1) == "-")
 		multiplier = -1;
 	deg_ = d; min_ = m; sec_ = s;
 	angle_ = (deg_ * 3600 + min_ * 60 + sec_) * multiplier / SECONDS_IN_DAY;
@@ -112,7 +112,7 @@ QString DMS::toMaskedString() const
 		s.sprintf ("%03d%02d%02d%c", abs(deg_), min_, sec_, deg_ >= 0 ? 'E' : 'W');
 		break;
 	case COORD_TZ:
-		s.sprintf ("%c%03d%02d%02d", (deg_ >= 0 ? '+' : '-'), abs(deg_), min_, sec_);
+		s.sprintf ("%c%02d%02d%02d", (deg_ >= 0 ? '+' : '-'), abs(deg_), min_, sec_);
 		break;
 	}
 
