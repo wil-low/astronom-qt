@@ -79,12 +79,13 @@ const TimeLoc& InputForm::toTimeLoc ()
 	tl_.str_[TL_LON] = ui->editLon->dbText();
 	tl_.str_[TL_TZ] = ui->editUTCOffset->dbText();
 
+	tl_.recalculate(true);
 	titleStr_ = ui->editName->text() + ", " + ui->cboLocationName->currentText() + ", " +
 				date.toString(Qt::SystemLocaleShortDate) + " " +
 				time.toString(Qt::SystemLocaleShortDate) + ", " +
 				ui->editUTCOffset->text() + ", " +
-				ui->editLat->text() + " " + ui->editLon->text();
-	tl_.recalculate(true);
+				ui->editLat->text() + " " + ui->editLon->text() + " julday " +
+				QString::number(tl_.data_[TL_DATETIME], 'f');
 	return tl_;
 }
 

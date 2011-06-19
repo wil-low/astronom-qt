@@ -2,8 +2,12 @@
 #define SPECULUMVIEW_H
 
 #include <QAbstractItemView>
+#include "../utils/constants.h"
 
+class AstroLabel;
 class AstroLabelContainer;
+class SpeculumCell;
+class BodyProps;
 
 class SpeculumView : public QAbstractItemView
 {
@@ -36,11 +40,17 @@ public slots:
 	void reconfigure();
 
 private:
-	void drawLabels (QPainter* painter);
-	void reorderLabels();
+	static const int COLUMN_COUNT = ZODIAC_SIGN_COUNT;
+	static const int ROW_COUNT = DEG_PER_SIGN;
+	AstroLabel* insertLabel (int chart_id, const BodyProps& props, bool isVisible);
+	void addAspects (AstroLabel* parentLabel);
+	void drawHeaders (QPainter* painter);
+	void drawCells (QPainter* painter);
 	AstroLabelContainer* labels_;
 	qreal cellWidth_;
 	qreal cellHeight_;
+	SpeculumCell* cells_[COLUMN_COUNT * ROW_COUNT];
+	void clearCells();
 };
 
 #endif // SPECULUMVIEW_H

@@ -26,6 +26,7 @@ public:
 	QFont* font() const;
 	qreal prop(BodyProps::body_property p) const;
 	QWidget* parent() const;
+	int userData() const;
 
 	void setId(int id, const QString& text);
 	void setChartId(int id);
@@ -47,7 +48,14 @@ public:
 	void setSelected(bool selected);
 	virtual void drawOnParent(QPainter* painter);
 
+	virtual void setLinkedCount(int count) {}
+	virtual void setLinkedLabel(int index, AstroLabel* label) {}
+	virtual AstroLabel* linkedLabel(int index) {return NULL;}
+
 	AstroLabel(){}
+
+	static int getUniqueId();
+
 protected:
 	QRectF rect_;
 	QFont* font_;
@@ -58,4 +66,7 @@ protected:
 	BodyProps props_;
 	QWidget* parent_;
 	bool visible_;
+
+private:
+	static int unique_id_;
 };

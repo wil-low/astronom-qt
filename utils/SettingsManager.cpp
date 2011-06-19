@@ -8,6 +8,8 @@
 const QString DEG_STR("°");
 const QString BACKTICK_STR("`");
 
+const QString ASPECT_PREFIX("asp");
+
 SettingsManager::SettingsManager()
 {
 #ifdef __linux
@@ -115,6 +117,14 @@ QString SettingsManager::label(body_type_t type, int id) const
 				}
 			} }
 			break;
+	case TYPE_ASPECT: {
+			std::map<QString, int>::const_iterator it1 = astrofont_.glyphs_.find(
+					ASPECT_PREFIX + QString::number(id));
+			if (it1 != astrofont_.glyphs_.end()) {
+				char c = (*it1).second;
+				s.sprintf("%c", c);
+			} }
+			break;
 		case TYPE_HOUSE:
 /*			switch ((astro_flag_t)) {
 			case af_Asc:
@@ -180,4 +190,9 @@ QString SettingsManager::houseMethod() const
 void SettingsManager::setHouseMethod(const QString& str)
 {
 	settings_->setValue("house_method", str);
+}
+
+QString SettingsManager::aspectLabel(int id) const
+{
+	return "#";
 }

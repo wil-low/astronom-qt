@@ -1,6 +1,7 @@
 #pragma once
 #include <boost/serialization/singleton.hpp>
 #include "../utils/constants.h"
+
 #include <map>
 #include <vector>
 #include <QString>
@@ -31,6 +32,8 @@ public:
 	QString houseMethod() const;
 	void setHouseMethod(const QString& str);
 	const QString& settingsPath() const;
+
+	QString aspectLabel(int id) const;
 
 private:
 	QString settingsPath_;

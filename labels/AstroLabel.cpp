@@ -4,6 +4,8 @@
 #include <QDebug>
 #include "../utils/SettingsManager.h"
 
+int AstroLabel::unique_id_ = 20000;
+
 AstroLabel::AstroLabel(QWidget* parent, int chart_id, const BodyProps& props)
 : rect_(0, 0, 0, 0)
 , font_(NULL)
@@ -197,4 +199,14 @@ void AstroLabel::setProps(const BodyProps& props)
 qreal AstroLabel::prop(BodyProps::body_property p) const
 {
 	return props_.prop[p];
+}
+
+int AstroLabel::getUniqueId()
+{
+	return ++unique_id_;
+}
+
+int AstroLabel::userData() const
+{
+	return props_.userData;
 }

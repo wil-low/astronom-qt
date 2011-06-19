@@ -16,9 +16,11 @@ public:
 		bp_RectAsc,
 		bp_OblAsc,
 		bp_Declination,
+		bp_AspectAngle,
 		bp_Last
 	};
 	BodyProps();
+	static double normalize(double val, double circle_limit);
 	double prop[bp_Last];
 	body_type_t type;
 	int id;
