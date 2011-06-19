@@ -194,7 +194,7 @@ void AstroLabel::setProps(const BodyProps& props)
 	text_ = SettingsManager::get_const_instance().label(props_.type, props_.id);
 }
 
-double AstroLabel::prop(BodyProps::body_property p) const
+qreal AstroLabel::prop(BodyProps::body_property p) const
 {
 	return props_.prop[p];
 }

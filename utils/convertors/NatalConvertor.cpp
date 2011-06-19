@@ -16,7 +16,7 @@ NatalConvertor::NatalConvertor(const QString& input, BaseConvertor::convert_mode
 		if (values.size() < 7)
 			return;
 		name_ = values[0];
-		QRegExp rx("(\\d+)\.(\\d+)\.(\\d+)");
+                QRegExp rx("(\\d+)\\.(\\d+)\\.(\\d+)");
 		if (rx.indexIn(values[1]) != -1) {
 			date_ = QDate(rx.cap(3).toInt(), rx.cap(2).toInt(), rx.cap(1).toInt());
 		}
@@ -26,7 +26,7 @@ NatalConvertor::NatalConvertor(const QString& input, BaseConvertor::convert_mode
 		}
 		dateTimeStr_ = QDateTime(date_, time_).toString(Qt::ISODate);
 
-		rx.setPattern("([\+\-]\\d+):(\\d+)(?::(\\d+))?");
+                rx.setPattern("([\\+\\-]\\d+):(\\d+)(?::(\\d+))?");
 		if (rx.indexIn(values[3]) != -1) {
 			utcOffsetStr_.sprintf("%02d%02d%02d",
 							rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt());
