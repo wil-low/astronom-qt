@@ -24,7 +24,7 @@
 
 #include <QtGui>
 
-const central_view_t CENTRAL_VIEW_ON_START = cv_Wheel;
+const central_view_t CENTRAL_VIEW_ON_START = cv_Speculum;//cv_Wheel;
 
 MainForm::MainForm(QWidget *parent)
 : QMainWindow(parent)
