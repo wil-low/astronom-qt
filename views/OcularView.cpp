@@ -18,6 +18,13 @@ OcularView::OcularView(QWidget *parent)
 {
 	setSelectionMode(QAbstractItemView::SingleSelection);
 	setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+	BodyProps props;
+	props.type = TYPE_ZODIAC;
+	for (int i = 0; i < ZODIAC_SIGN_COUNT; ++i) {
+		props.id = i;
+		labels_->insert(LabelFactory::construct(this, -1, props));
+	}
 }
 
 OcularView::~OcularView()
@@ -64,12 +71,6 @@ void OcularView::reconfigure()
 	colors_.aspectTickColor = settings.value("aspectTickColor", QColor(0,0,0)).value<QColor>();
 	settings.endGroup();
 
-	BodyProps props;
-	props.type = TYPE_ZODIAC;
-	for (int i = 0; i < ZODIAC_SIGN_COUNT; ++i) {
-		props.id = i;
-		labels_->insert(LabelFactory::construct(this, -1, props));
-	}
 	BOOST_FOREACH (AstroLabel* label, *labels_) {
 		qDebug() << label->toString();
 	}

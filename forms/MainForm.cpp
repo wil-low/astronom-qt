@@ -22,6 +22,8 @@
 #include "../widgets/HouseSelector.h"
 #include "../widgets/AsteroidSelector.h"
 
+#include "../labels/AstroLabel.h"
+
 #include <QtGui>
 
 const central_view_t CENTRAL_VIEW_ON_START = cv_Speculum;//cv_Wheel;
@@ -114,6 +116,7 @@ void MainForm::setTimeLoc(int chart_index)
 	modelHelper.insertHouses();
 
 	emit timeloc_changed();
+	statusBar()->showMessage(AstroLabel::statistics());
 }
 
 void MainForm::loadHouseMenu()

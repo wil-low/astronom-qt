@@ -12,7 +12,7 @@ public:
 	virtual void setLinkedLabel(int index, AstroLabel* label);
 	virtual AstroLabel* linkedLabel(int index);
 	virtual void setProps(const BodyProps& props);
-
+	static int calculateId(int parentId0, int parentId1, int angle);
 private:
 	std::vector<AstroLabel*> linked_;
 };

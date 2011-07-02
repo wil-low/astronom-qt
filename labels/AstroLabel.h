@@ -55,6 +55,7 @@ public:
 	AstroLabel(){}
 
 	static int getUniqueId();
+	static QString statistics();
 
 protected:
 	QRectF rect_;
@@ -69,4 +70,6 @@ protected:
 
 private:
 	static int unique_id_;
+	typedef QMap<int, int> LabelTypeMap;
+	static LabelTypeMap type_map_;
 };

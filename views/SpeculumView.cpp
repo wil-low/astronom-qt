@@ -2,6 +2,7 @@
 #include "../utils/BodyProps.h"
 #include "../labels/AstroLabelContainer.h"
 #include "../labels/LabelFactory.h"
+#include "../labels/AspectLabel.h"
 #include "../utils/SettingsManager.h"
 #include "../utils/DMS.h"
 #include "items/SpeculumCell.h"
@@ -47,19 +48,21 @@ void SpeculumView::reconfigure()
 void SpeculumView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
 	QAbstractItemView::dataChanged(topLeft, bottomRight);
+//	qDebug() << __FUNCTION__ << topLeft.column() << "/" << topLeft.row()
+//			<< ", " << bottomRight.column() << "/" << bottomRight.row();
 	clearCells();
 	int chart_id = 0;
 	for (int row = 0; row < model()->rowCount(rootIndex()); ++row) {
 		QModelIndex index = model()->index(row, chart_id, rootIndex());
 		BodyProps props = model()->data(index).value<BodyProps>();
 		if (props.type != TYPE_PLANET) {
-			qDebug() << __FUNCTION__ << props.type << props.id;
 			continue;
 		}
 		bool isVisible = index.data(Qt::VisibilityRole).toBool();
 		AstroLabel* label = insertLabel(chart_id, props, isVisible);
 		addAspects(label);
 	}
+	reconfigure();
 }
 
 void SpeculumView::paintEvent(QPaintEvent* event)
@@ -230,13 +233,13 @@ void SpeculumView::addAspects (AstroLabel* parentLabel)
 		props.userData = (int)angle;
 		props.prop[BodyProps::bp_AspectAngle] = angle;
 		// positive angle
-		props.id = AstroLabel::getUniqueId();
+		props.id = AspectLabel::calculateId(parentLabel->id(), parentLabel->id(), (int)angle);
 		props.prop[BodyProps::bp_Lon] = BodyProps::normalize(
 				parentLabel->prop(BodyProps::bp_Lon) + angle, ZODIAC_SIGN_COUNT * DEG_PER_SIGN);
 		insertLabel(parentLabel->chartId(), props, parentLabel->visible());
 		// negative angle
 		if ((int)angle != 180) {
-			props.id = AstroLabel::getUniqueId();
+			props.id = AspectLabel::calculateId(parentLabel->id(), parentLabel->id(), (int)-angle);
 			props.prop[BodyProps::bp_Lon] = BodyProps::normalize(
 					parentLabel->prop(BodyProps::bp_Lon) - angle, ZODIAC_SIGN_COUNT * DEG_PER_SIGN);
 			insertLabel(parentLabel->chartId(), props, parentLabel->visible());

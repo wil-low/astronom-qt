@@ -2,9 +2,11 @@
 #include <QFont>
 #include <QPainter>
 #include <QDebug>
+
 #include "../utils/SettingsManager.h"
 
 int AstroLabel::unique_id_ = 20000;
+AstroLabel::LabelTypeMap AstroLabel::type_map_;
 
 AstroLabel::AstroLabel(QWidget* parent, int chart_id, const BodyProps& props)
 : rect_(0, 0, 0, 0)
@@ -17,10 +19,12 @@ AstroLabel::AstroLabel(QWidget* parent, int chart_id, const BodyProps& props)
 , chart_id_(chart_id)
 {
 	setProps(props);
+	++type_map_[props_.type];
 }
 
 AstroLabel::~AstroLabel(void)
 {
+	--type_map_[props_.type];
 }
 
 int AstroLabel::id() const
@@ -209,4 +213,16 @@ int AstroLabel::getUniqueId()
 int AstroLabel::userData() const
 {
 	return props_.userData;
+}
+
+QString AstroLabel::statistics()
+{
+	QString str("AstroLabel - ");
+	QTextStream out(&str);
+	LabelTypeMap::const_iterator it = type_map_.constBegin();
+	while (it != type_map_.constEnd()) {
+		out << it.key() << ": " << it.value() << ", ";
+		++it;
+	}
+	return str;
 }
