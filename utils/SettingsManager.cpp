@@ -1,5 +1,6 @@
 #include "SettingsManager.h"
 #include "../db/DBHelper.h"
+#include "../utils/BodyProps.h"
 #include <QString>
 #include <QStringList>
 #include <QSettings>
@@ -100,15 +101,15 @@ void SettingsManager::loadFont(font_glyph_t& font, const QString& face)
 	settings_->endGroup();
 }
 
-QString SettingsManager::label(body_type_t type, int id) const
+QString SettingsManager::label(const BodyProps& bp) const
 {
-	QString s("?");
-	switch (type) {
+	QString s(QString::number(bp.type) + "?");
+	switch (bp.type) {
 		case TYPE_ZODIAC:
-			s.sprintf("%c", astrofont_.zodiac_signs_[id]);
+			s.sprintf("%c", astrofont_.zodiac_signs_[bp.id]);
 			break;
 		case TYPE_PLANET: {
-			std::map<int, QString>::const_iterator it = id2planet_.find(id);
+			std::map<int, QString>::const_iterator it = id2planet_.find(bp.id);
 			if (it != id2planet_.end()) {
 				std::map<QString, int>::const_iterator it1 = astrofont_.glyphs_.find((*it).second);
 				if (it1 != astrofont_.glyphs_.end()) {
@@ -117,9 +118,9 @@ QString SettingsManager::label(body_type_t type, int id) const
 				}
 			} }
 			break;
-	case TYPE_ASPECT: {
+		case TYPE_ASPECT: {
 			std::map<QString, int>::const_iterator it1 = astrofont_.glyphs_.find(
-					ASPECT_PREFIX + QString::number(id));
+					ASPECT_PREFIX + QString::number(bp.userData));
 			if (it1 != astrofont_.glyphs_.end()) {
 				char c = (*it1).second;
 				s.sprintf("%c", c);
@@ -136,24 +137,28 @@ QString SettingsManager::label(body_type_t type, int id) const
 			case af_MC:
 				return "N";
 			default:*/
-				s = HOUSE_NAMES[id - HOUSE_ID_FIRST];
+			if (bp.flags & FLG_ARABIC)
+				s = QString::number(bp.id - HOUSE_ID_FIRST + 1);
+			else
+				s = HOUSE_NAMES[bp.id - HOUSE_ID_FIRST];
+			break;
 			//}
 	}
 	return s;
 }
 
-QString SettingsManager::formulaVariable(body_type_t type, int id) const
+QString SettingsManager::formulaVariable(const BodyProps& bp) const
 {
 	QString s("?");
-	switch (type) {
+	switch (bp.type) {
 		case TYPE_PLANET: {
-			std::map<int, QString>::const_iterator it = id2planet_.find(id);
+			std::map<int, QString>::const_iterator it = id2planet_.find(bp.id);
 			if (it != id2planet_.end()) {
 				s = (*it).second;
 			} }
 			break;
 		case TYPE_HOUSE:
-			s.sprintf("H%d", id - HOUSE_ID_FIRST + 1);
+			s.sprintf("H%d", bp.id - HOUSE_ID_FIRST + 1);
 			break;
 	}
 	return s;

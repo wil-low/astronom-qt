@@ -8,6 +8,7 @@
 
 class QFont;
 class QSettings;
+class BodyProps;
 
 class SettingsManager : public boost::serialization::singleton<SettingsManager>
 {
@@ -18,9 +19,9 @@ public:
 	void init();
 	void fini();
 
-	QString label(body_type_t type, int id) const;
-	QString formulaVariable(body_type_t type, int id) const;
-	char name(body_type_t type, int id) const;
+	QString label(const BodyProps& bp) const;
+	QString formulaVariable(const BodyProps& bp) const;
+	char name(const BodyProps& bp) const;
 	char degreeSign(font_face_t face) const;
 	QString houseLabel(int id, astro_flag_t hf) const;
 

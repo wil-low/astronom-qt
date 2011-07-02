@@ -21,32 +21,33 @@ void HouseSelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 	BodyProps props = qVariantValue<BodyProps>(index.data());
 
 	const SettingsManager& sm = SettingsManager::get_const_instance();
-	text[0] = sm.label(props.type, props.id);
+	text[0] = sm.label(props);
 	text[1] = text[2] = "";
 
 	DMS dms;
 	switch (degree_mode_) {
-		case dm_Absolute:
-			dms.fromCoord(props.prop[BodyProps::bp_Lon]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-			break;
-		case dm_Longitude:
-			dms.fromCoord(props.prop[BodyProps::bp_Lon]);
-			text[1].sprintf("%2d%c%02d\'%02d\"", dms.zod_deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-			text[2] = sm.label(TYPE_ZODIAC, dms.zodiac());
-			break;
-		case dm_RectAsc:
-			dms.fromCoord(props.prop[BodyProps::bp_RectAsc]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-			break;
-		case dm_OblAsc:
-			dms.fromCoord(props.prop[BodyProps::bp_OblAsc]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-			break;
-		case dm_LatDecl:
-			dms.fromCoord(props.prop[BodyProps::bp_Lat]);
-			text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-			break;
+	case dm_Absolute:
+		dms.fromCoord(props.prop[BodyProps::bp_Lon]);
+		text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
+		break;
+	case dm_Longitude: {
+		dms.fromCoord(props.prop[BodyProps::bp_Lon]);
+		text[1].sprintf("%2d%c%02d\'%02d\"", dms.zod_deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
+		BodyProps bp(TYPE_ZODIAC, dms.zodiac());
+		text[2] = sm.label(bp);
+		break;}
+	case dm_RectAsc:
+		dms.fromCoord(props.prop[BodyProps::bp_RectAsc]);
+		text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
+		break;
+	case dm_OblAsc:
+		dms.fromCoord(props.prop[BodyProps::bp_OblAsc]);
+		text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
+		break;
+	case dm_LatDecl:
+		dms.fromCoord(props.prop[BodyProps::bp_Lat]);
+		text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
+		break;
 	}
 	SettingsManager::fromBackTick(text[1]);
 

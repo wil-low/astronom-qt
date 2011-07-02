@@ -19,7 +19,7 @@ void SpeculumItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	BodyProps props = qVariantValue<BodyProps>(index.data());
 
 	const SettingsManager& sm = SettingsManager::get_const_instance();
-	text[0] = sm.label(props.type, props.id);
+	text[0] = sm.label(props);
 	QRect rect = option.rect;
 	painter->drawText(rect, text[0]);
 	painter->restore();

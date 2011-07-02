@@ -30,12 +30,6 @@ AstroLabel* AspectLabel::linkedLabel(int index)
 	return NULL;
 }
 
-void AspectLabel::setProps(const BodyProps& props)
-{
-	props_ = props;
-	text_ = SettingsManager::get_const_instance().label(props_.type, props_.userData);
-}
-
 int AspectLabel::calculateId(int parentId0, int parentId1, int angle)
 {
 	int checksumArray[] = {parentId0, parentId1, angle};

@@ -20,11 +20,13 @@ public:
 		bp_Last
 	};
 	BodyProps();
+	BodyProps(body_type_t type0, int id0, bool clear = false);
 	static double normalize(double val, double circle_limit);
 	double prop[bp_Last];
 	body_type_t type;
 	int id;
 	int userData;
+	int flags;
 };
 
 Q_DECLARE_METATYPE(BodyProps)

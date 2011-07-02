@@ -76,4 +76,6 @@ static const char* HOUSE_NAMES[] = {
 	"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI"
 };
 
+const int FLG_ARABIC = 0x1;
+
 #endif // CONSTANTS_H

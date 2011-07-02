@@ -55,12 +55,15 @@ void SpeculumView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bo
 	for (int row = 0; row < model()->rowCount(rootIndex()); ++row) {
 		QModelIndex index = model()->index(row, chart_id, rootIndex());
 		BodyProps props = model()->data(index).value<BodyProps>();
-		if (props.type != TYPE_PLANET) {
-			continue;
-		}
 		bool isVisible = index.data(Qt::VisibilityRole).toBool();
-		AstroLabel* label = insertLabel(chart_id, props, isVisible);
-		addAspects(label);
+		if (props.type == TYPE_HOUSE) {
+			props.flags |= FLG_ARABIC;
+			AstroLabel* label = insertLabel(chart_id, props, isVisible);
+		}
+		else if (props.type == TYPE_PLANET) {
+			AstroLabel* label = insertLabel(chart_id, props, isVisible);
+			addAspects(label);
+		}
 	}
 	reconfigure();
 }
@@ -180,9 +183,10 @@ void SpeculumView::drawHeaders (QPainter* painter)
 	painter->translate(cellWidth_, 0);
 	painter->setPen(Qt::darkCyan);
 	for (int i = 0; i < COLUMN_COUNT; ++i) {
+		BodyProps bp(TYPE_ZODIAC, i);
 		painter->drawText(QRect(i * cellWidth_, 0, cellWidth_, cellHeight_),
 						  Qt::AlignHCenter | Qt::TextDontClip,
-						  SettingsManager::get_const_instance().label(TYPE_ZODIAC, i));
+						  SettingsManager::get_const_instance().label(bp));
 	}
 	painter->restore();
 	painter->save();

@@ -163,7 +163,7 @@ void MainForm::on_actionFormula_activated()
 	BodyProps bp;
 	int index = 0;
 	while (modelHelper.propsByIndex(index++, 0, &bp)) {
-		form.setVariable(SettingsManager::get_const_instance().formulaVariable(bp.type, bp.id),
+		form.setVariable(SettingsManager::get_const_instance().formulaVariable(bp),
 			bp.prop[BodyProps::bp_Lon]);
 	}
 	form.exec();

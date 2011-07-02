@@ -197,7 +197,7 @@ void AstroLabel::setSelected(bool selected)
 void AstroLabel::setProps(const BodyProps& props)
 {
 	props_ = props;
-	text_ = SettingsManager::get_const_instance().label(props_.type, props_.id);
+	text_ = SettingsManager::get_const_instance().label(props_);
 }
 
 qreal AstroLabel::prop(BodyProps::body_property p) const
