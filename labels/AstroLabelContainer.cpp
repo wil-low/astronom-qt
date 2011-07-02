@@ -3,6 +3,13 @@
 #include <boost/foreach.hpp>
 #include <QPoint>
 
+AstroLabelContainer::~AstroLabelContainer()
+{
+	BOOST_FOREACH (AstroLabel* al, *this)
+		delete al;
+	clear();
+}
+
 AstroLabel* AstroLabelContainer::find_by_chart_id (int chart, int id)
 {
 	alc_by_chart_id& ref = get<chart_id_tag>();

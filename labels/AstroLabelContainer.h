@@ -43,6 +43,7 @@ typedef boost::multi_index_container<
 class AstroLabelContainer : public AstroLabelSet
 {
 public:
+	virtual ~AstroLabelContainer();
 	AstroLabel* find_by_chart_id (int chart, int id);
 	AstroLabel* labelAt(const QPoint& point) const;
 };

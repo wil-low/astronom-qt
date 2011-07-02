@@ -77,6 +77,7 @@ MainForm::~MainForm()
 	delete model_;
 	delete input_;
 	delete persons_;
+	delete view_;
 	delete ui;
 }
 
@@ -252,7 +253,7 @@ void MainForm::centralViewMenuTriggered(QAction* action)
 
 void MainForm::changeCentralView(central_view_t type)
 {
-	delete view_;
+	QAbstractItemView* old_view = view_;
 	view_ = NULL;
 	switch (type) {
 	case cv_Wheel: {
@@ -273,4 +274,5 @@ void MainForm::changeCentralView(central_view_t type)
 		applyInputData();
 		emit reconfigure();
 	}
+	delete old_view;
 }
