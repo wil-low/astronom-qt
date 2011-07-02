@@ -54,7 +54,6 @@ SOURCES += \
     forms/ImportForm.cpp \
 	db/ImportDBHelper.cpp \
     views/SpeculumView.cpp \
-    widgets/SpeculumItemDelegate.cpp \
     views/items/SpeculumCell.cpp \
     labels/AspectLabel.cpp \
     utils/CRC32.cpp
@@ -107,7 +106,6 @@ HEADERS += \
     db/ImportDBHelper.h \
 	db/Statements.h \
     views/SpeculumView.h \
-    widgets/SpeculumItemDelegate.h \
     views/items/SpeculumCell.h \
     labels/AspectLabel.h \
     utils/CRC32.h
