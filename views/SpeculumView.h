@@ -1,15 +1,14 @@
 #ifndef SPECULUMVIEW_H
 #define SPECULUMVIEW_H
 
-#include <QAbstractItemView>
+#include "CentralView.h"
 #include "../utils/constants.h"
 
 class AstroLabel;
-class AstroLabelContainer;
 class SpeculumCell;
 class BodyProps;
 
-class SpeculumView : public QAbstractItemView
+class SpeculumView : public CentralView
 {
     Q_OBJECT
 public:
@@ -18,23 +17,11 @@ public:
 	virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 	void paintEvent(QPaintEvent* event);
-	virtual QRect visualRect(const QModelIndex &index) const;
-	virtual void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
 	virtual QModelIndex indexAt(const QPoint &point) const;
-	virtual void currentChanged (const QModelIndex & current, const QModelIndex & previous);
 
 protected:
-	virtual QModelIndex moveCursor(CursorAction cursorAction,
-								   Qt::KeyboardModifiers modifiers);
-	virtual int horizontalOffset() const;
-	virtual int verticalOffset() const;
-
 	virtual bool isIndexHidden(const QModelIndex &index) const;
-
-	virtual void setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command);
-	virtual QRegion visualRegionForSelection(const QItemSelection &selection) const;
 	virtual void resizeEvent (QResizeEvent* event);
-	virtual bool viewportEvent (QEvent* event);
 
 signals:
 
@@ -48,7 +35,6 @@ private:
 	void addAspects (AstroLabel* parentLabel);
 	void drawHeaders (QPainter* painter);
 	void drawCells (QPainter* painter);
-	AstroLabelContainer* labels_;
 	qreal cellWidth_;
 	qreal cellHeight_;
 	SpeculumCell* cells_[COLUMN_COUNT * ROW_COUNT];

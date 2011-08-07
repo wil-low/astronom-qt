@@ -67,7 +67,7 @@ enum astro_flag_t {
 };
 
 enum central_view_t {
-	cv_Wheel = 0,
+	cv_Ocular = 0,
 	cv_Speculum,
 	cv_Last,
 };

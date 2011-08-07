@@ -56,7 +56,8 @@ SOURCES += \
     views/SpeculumView.cpp \
     views/items/SpeculumCell.cpp \
     labels/AspectLabel.cpp \
-    utils/CRC32.cpp
+    utils/CRC32.cpp \
+    views/CentralView.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -108,7 +109,8 @@ HEADERS += \
     views/SpeculumView.h \
     views/items/SpeculumCell.h \
     labels/AspectLabel.h \
-    utils/CRC32.h
+    utils/CRC32.h \
+    views/CentralView.h
 
 FORMS += \
     forms/MainForm.ui \

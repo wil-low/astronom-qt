@@ -11,15 +11,12 @@
 
 #include <QPainter>
 #include <QDebug>
-#include <QToolTip>
-#include <QHelpEvent>
 
 const int PLANET_FONT_SIZE = 10;
 const int DEFAULT_FONT_SIZE = 10;
 
 SpeculumView::SpeculumView(QWidget *parent)
-: QAbstractItemView(parent)
-, labels_(new AstroLabelContainer)
+: CentralView(parent, cv_Speculum)
 , cellWidth_(0)
 , cellHeight_(0)
 {
@@ -35,7 +32,6 @@ SpeculumView::~SpeculumView()
 {
 	BOOST_FOREACH(SpeculumCell* cell, cells_)
 		delete cell;
-	delete labels_;
 }
 
 void SpeculumView::reconfigure()
@@ -93,16 +89,6 @@ void SpeculumView::paintEvent(QPaintEvent* event)
 	drawCells(&painter);
 }
 
-QRect SpeculumView::visualRect(const QModelIndex &index) const
-{
-	return QRect();
-}
-
-void SpeculumView::scrollTo(const QModelIndex &index, ScrollHint hint)
-{
-
-}
-
 QModelIndex SpeculumView::indexAt(const QPoint &point) const
 {
 	AstroLabel* cur_al = NULL;
@@ -126,39 +112,9 @@ QModelIndex SpeculumView::indexAt(const QPoint &point) const
 	return QModelIndex();
 }
 
-void SpeculumView::currentChanged (const QModelIndex & current, const QModelIndex & previous)
-{
-
-}
-
-QModelIndex SpeculumView::moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers)
-{
-	return QModelIndex();
-}
-
-int SpeculumView::horizontalOffset() const
-{
-	return 0;
-}
-
-int SpeculumView::verticalOffset() const
-{
-	return 0;
-}
-
 bool SpeculumView::isIndexHidden(const QModelIndex &index) const
 {
 	return false;
-}
-
-void SpeculumView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command)
-{
-	//qDebug() << rect;
-}
-
-QRegion SpeculumView::visualRegionForSelection(const QItemSelection &selection) const
-{
-	return QRegion();
 }
 
 void SpeculumView::drawCells (QPainter* painter)
@@ -249,21 +205,5 @@ void SpeculumView::addAspects (AstroLabel* parentLabel)
 			insertLabel(parentLabel->chartId(), props, parentLabel->visible());
 		}
 	}
-}
-
-bool SpeculumView::viewportEvent (QEvent* event)
-{
-	if (event->type() == QEvent::ToolTip) {
-		QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
-		AstroLabel* label = labels_->labelAt(helpEvent->pos());
-		if (label) {
-			QToolTip::showText(helpEvent->globalPos(), label->toString());
-		} else {
-			QToolTip::hideText();
-			event->ignore();
-		}
-		return true;
-	}
-	return QAbstractItemView::viewportEvent(event);
 }
 

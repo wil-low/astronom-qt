@@ -17,7 +17,7 @@ class InputForm;
 class PersonsForm;
 class QAbstractItemModel;
 class QItemSelectionModel;
-class QAbstractItemView;
+class CentralView;
 
 class MainForm : public QMainWindow
 {
@@ -33,8 +33,8 @@ signals:
 	void updateCentralView();
 
 private:
-    Ui::MainForm *ui;
-	QAbstractItemView* view_;
+        Ui::MainForm *ui;
+        CentralView* view_;
 	InputForm* input_;
 	PersonsForm* persons_;
 	void setupModel();

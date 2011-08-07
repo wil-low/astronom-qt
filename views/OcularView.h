@@ -1,7 +1,7 @@
 #ifndef OCULARWHEEL_H
 #define OCULARWHEEL_H
 
-#include <QAbstractItemView>
+#include "CentralView.h"
 
 // zero point of wheel
 enum ZeroPoint {
@@ -50,23 +50,19 @@ struct OcularColors {
 };
 
 class AstroLabel;
-class AstroLabelContainer;
 
-class OcularView : public QAbstractItemView
+class OcularView : public CentralView
 {
 	Q_OBJECT
 public:
 	OcularView(QWidget *parent = 0);
-	~OcularView();
 	void recalcDimensions(qreal newRadius);
 	void recalcDimensionsByFactor(qreal factor);
 	void paintEvent(QPaintEvent* event);
-	virtual QRect visualRect(const QModelIndex &index) const;
-	virtual void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
 	virtual QModelIndex indexAt(const QPoint &point) const;
 	virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 	virtual void currentChanged (const QModelIndex & current, const QModelIndex & previous);
-
+	virtual QPoint translatePoint(const QPoint& p) const;
 signals:
 
 public slots:
@@ -74,16 +70,7 @@ public slots:
 	void invalidateView();
 
 protected:
-	virtual QModelIndex moveCursor(CursorAction cursorAction,
-								   Qt::KeyboardModifiers modifiers);
-	virtual int horizontalOffset() const;
-	virtual int verticalOffset() const;
-
 	virtual bool isIndexHidden(const QModelIndex &index) const;
-
-	virtual void setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command);
-	virtual QRegion visualRegionForSelection(const QItemSelection &selection) const;
-	virtual bool viewportEvent (QEvent* event);
 
 private:
 	void spreadLabels (int chart, int type, qreal r);
@@ -98,7 +85,6 @@ private:
 	qreal defaultDimensions_[ODIM_LAST];
 	qreal dimensions_[ODIM_LAST];
 	OcularColors colors_;
-	AstroLabelContainer* labels_;
 	ZeroPoint zeroPoint_;
 	qreal zeroAngle_;
 };

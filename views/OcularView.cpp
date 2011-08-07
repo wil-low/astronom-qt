@@ -9,12 +9,10 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QDebug>
-#include <QToolTip>
 #include <boost/foreach.hpp>
 
 OcularView::OcularView(QWidget *parent)
-: QAbstractItemView(parent)
-, labels_(new AstroLabelContainer)
+: CentralView(parent, cv_Ocular)
 {
 	setSelectionMode(QAbstractItemView::SingleSelection);
 	setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -25,11 +23,6 @@ OcularView::OcularView(QWidget *parent)
 		props.id = i;
 		labels_->insert(LabelFactory::construct(this, -1, props));
 	}
-}
-
-OcularView::~OcularView()
-{
-	delete labels_;
 }
 
 void OcularView::reconfigure()
@@ -238,16 +231,6 @@ void OcularView::paintEvent(QPaintEvent* event)
 	drawLabels (dc);*/
 }
 
-QRect OcularView::visualRect(const QModelIndex &index) const
-{
-	return QRect(0,0,0,0);
-}
-
-void OcularView::scrollTo(const QModelIndex &index, ScrollHint hint)
-{
-
-}
-
 QModelIndex OcularView::indexAt(const QPoint &point) const
 {
 	QPoint translatedPoint(point.x() - viewport()->width() / 2, point.y() - viewport()->height() / 2);
@@ -266,36 +249,11 @@ QModelIndex OcularView::indexAt(const QPoint &point) const
 	return QModelIndex();
 }
 
-QModelIndex OcularView::moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers)
-{
-	return QModelIndex();
-}
-
-int OcularView::horizontalOffset() const
-{
-	return 0;
-}
-
-int OcularView::verticalOffset() const
-{
-	return 0;
-}
-
 bool OcularView::isIndexHidden(const QModelIndex &index) const
 {
 	AstroLabel* label = findByIndex(index);
 	if (label)
 		return !label->visible();
-}
-
-void OcularView::setSelection(const QRect &rect, QItemSelectionModel::SelectionFlags command)
-{
-	//qDebug() << rect;
-}
-
-QRegion OcularView::visualRegionForSelection(const QItemSelection &selection) const
-{
-	return QRegion();
 }
 
 void OcularView::spreadLabels (int chart, int type, qreal r)
@@ -563,20 +521,7 @@ void OcularView::drawAspects(QPainter* painter)
 	painter->restore();
 }
 
-bool OcularView::viewportEvent (QEvent* event)
+QPoint OcularView::translatePoint(const QPoint& p) const
 {
-	if (event->type() == QEvent::ToolTip) {
-		QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
-		QPoint translatedPoint(helpEvent->pos().x() - viewport()->width() / 2,
-							   helpEvent->pos().y() - viewport()->height() / 2);
-		AstroLabel* label = labels_->labelAt(translatedPoint);
-		if (label) {
-			QToolTip::showText(helpEvent->globalPos(), label->toString());
-		} else {
-			QToolTip::hideText();
-			event->ignore();
-		}
-		return true;
-	}
-	return QAbstractItemView::viewportEvent(event);
+	return QPoint(p.x() - viewport()->width() / 2, p.y() - viewport()->height() / 2);
 }

@@ -228,7 +228,7 @@ void MainForm::loadCentralViewMenu()
 	ui->menuView->addSeparator(); //->setText(tr("CentralView"));
 
 	centralViewActionGroup_ = new QActionGroup(this);
-	assert (connect(centralViewActionGroup_, SIGNAL(triggered(QAction*)), this, SLOT(centralViewMenuTriggered(QAction*))) &&
+        assert (connect(centralViewActionGroup_, SIGNAL(triggered(QAction*)), this, SLOT(centralViewMenuTriggered(QAction*))) &&
 			"centralViewMenu connect failed");
 	for (int i = 0; i < sizeof(CENTRAL_VIEW_CAPTIONS) / sizeof(CENTRAL_VIEW_CAPTIONS[0]); ++i) {
 		QAction* action = new QAction(tr(CENTRAL_VIEW_CAPTIONS[i]), this);
@@ -256,7 +256,7 @@ void MainForm::changeCentralView(central_view_t type)
 	QAbstractItemView* old_view = view_;
 	view_ = NULL;
 	switch (type) {
-	case cv_Wheel: {
+	case cv_Ocular: {
 		OcularView* itemView = new OcularView(ui->centralwidget);
 		connect(this, SIGNAL(updateCentralView()), itemView, SLOT(invalidateView()));
 		view_ = itemView;
