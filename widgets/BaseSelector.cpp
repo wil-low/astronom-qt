@@ -3,6 +3,7 @@
 #include "../utils/constants.h"
 #include "../utils/BodyProps.h"
 #include "../utils/SettingsManager.h"
+#include "../utils/css.h"
 #include <QTabBar>
 #include <QListView>
 #include <QDebug>
@@ -28,9 +29,11 @@ void BaseSelector::tabChanged(int index)
 {
 	QFont* font = SettingsManager::get_const_instance().font(listFontSize_, FF_ASTRO);
 	listMain_->setFont(*font);
+	listMain_->setProperty(CSS::MarineBackground, true);
 	BaseSelectorDelegate* delegate = dynamic_cast<BaseSelectorDelegate*>(listMain_->itemDelegate());
 	delegate->restyle(tabBar_->tabData(index).toInt(), listFontSize_);
 	listSecondary_->setFont(*font);
+	listSecondary_->setProperty(CSS::MarineBackground, true);
 	delegate = dynamic_cast<BaseSelectorDelegate*>(listSecondary_->itemDelegate());
 	delegate->restyle(tabBar_->tabData(index).toInt(), listFontSize_);
 	emit invalidateViews();

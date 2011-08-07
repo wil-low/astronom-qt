@@ -2,10 +2,10 @@
 #define SPECULUMVIEW_H
 
 #include "CentralView.h"
+#include "items/SpeculumCell.h"
 #include "../utils/constants.h"
 
 class AstroLabel;
-class SpeculumCell;
 class BodyProps;
 
 class SpeculumView : public CentralView
@@ -29,11 +29,12 @@ public slots:
 	void reconfigure();
 
 private:
-	static const int COLUMN_COUNT = ZODIAC_SIGN_COUNT;
-	static const int ROW_COUNT = DEG_PER_SIGN;
-	AstroLabel* insertLabel (int chart_id, const BodyProps& props, bool isVisible);
+	static const int COLUMN_COUNT = ZODIAC_SIGN_COUNT + 1;
+	static const int ROW_COUNT = DEG_PER_SIGN + 1;
+	AstroLabel* insertLabel (int chart_id, const BodyProps& props, bool isVisible,
+							 int column, int row, SpeculumCell::category_t category);
 	void addAspects (AstroLabel* parentLabel);
-	void drawHeaders (QPainter* painter);
+	void addReference (AstroLabel* parentLabel);
 	void drawCells (QPainter* painter);
 	qreal cellWidth_;
 	qreal cellHeight_;

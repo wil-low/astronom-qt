@@ -1,0 +1,21 @@
+#include "SpeculumHorizHeader.h"
+#include "../../utils/SettingsManager.h"
+#include "../../utils/constants.h"
+#include "../../utils/BodyProps.h"
+#include <QPainter>
+
+SpeculumHorizHeader::SpeculumHorizHeader(int column, int row)
+: SpeculumCell(column, row)
+{
+}
+
+void SpeculumHorizHeader::draw(QPainter* painter)
+{
+	painter->save();
+	painter->setFont(*SettingsManager::get_const_instance().font(DEFAULT_FONT_SIZE, FF_ASTRO));
+	painter->setPen(Qt::darkCyan);
+	BodyProps bp(TYPE_ZODIAC, column_ - 1);
+	painter->drawText(rect_, Qt::AlignHCenter | Qt::TextDontClip,
+					  SettingsManager::get_const_instance().label(bp));
+	painter->restore();
+}

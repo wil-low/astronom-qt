@@ -27,6 +27,11 @@ AstroLabel::~AstroLabel(void)
 	--type_map_[props_.type];
 }
 
+const BodyProps& AstroLabel::props() const
+{
+	return props_;
+}
+
 int AstroLabel::id() const
 {
 	return props_.id;
@@ -82,50 +87,10 @@ void AstroLabel::drawOnParent(QPainter* painter)
 //    painter->setClipRectangle (rect_.x, rect_.y, rect_.w, rect_.h);
 	painter->setPen(selected_? Qt::red : Qt::black);
 	//painter->drawRect(rect_);
-	painter->drawText(rect_, Qt::AlignHCenter | Qt::TextDontClip, text_);
+	painter->drawText(rect_, Qt::AlignHCenter | Qt::TextDontClip, text());
 	painter->restore();
 }
 
-/*
-long AstroLabel::onClicked(FXObject*, FXSelector, void*)
-{
-	return 1;
-}
-
-long AstroLabel::onDrawOnParent(FXObject* o, FXSelector sel, void* ptr)
-{
-    if (!visible_)
-        return 1;
-    FXDC* dc = (FXDC*)ptr;
-    dc->setFont(font_);
-    dc->setClipRectangle (rect_.x, rect_.y, rect_.w, rect_.h);
-    dc->setForeground(FXRGB(0, 0, 0));
-    FXint tw = font_->getTextWidth(text_);
-    FXint th = font_->getTextHeight(text_);
-    dc->drawText(rect_.x + (rect_.w - tw) / 2, rect_.y + (rect_.h + th) / 2, text_);
-    if (selected_)
-        onDrawFocus(o, sel, ptr);
-    return 1;
-}
-
-long AstroLabel::onDrawFocus(FXObject*, FXSelector, void* ptr)
-{
-    if (!visible_)
-        return 1;
-    FXDC* dc = (FXDC*)ptr;
-    dc->setClipRectangle (rect_.x, rect_.y, rect_.w, rect_.h);
-    dc->setForeground(selected_ ? FXRGB(255, 0, 0) : dc->getBackground());
-    dc->drawRectangle(rect_.x, rect_.y, rect_.w - 1, rect_.h - 1);
-    return 1;
-}
-
-long AstroLabel::onCmdSelect(FXObject* o, FXSelector sel, void* ptr)
-{
-    selected_ = ptr != 0;
-//    FXTRACE((10, selected_ ? "sel\n" : "unsel\n"));
-    return 1;
-}
-*/
 void AstroLabel::position(qreal x, qreal y, qreal w, qreal h)
 {
 	if (w == -1)
@@ -164,8 +129,8 @@ const QRectF& AstroLabel::rect() const
 QString AstroLabel::toString() const
 {
 	QString s;
-	s.sprintf ("AstroLabel type %d, id %d, angle %.2f, visible angle %.2f",
-			   type(), id(), angle(), visibleAngle());
+	s.sprintf ("AstroLabel %X type %d, id %d, angle %.2f, visible angle %.2f, text '%s'",
+			   this, type(), id(), angle(), visibleAngle(), text().toAscii().data());
 	return s;
 }
 

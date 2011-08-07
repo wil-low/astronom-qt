@@ -17,12 +17,12 @@ void SpeculumCell::reconfigure(qreal cellWidth, qreal cellHeight, int fontSize)
 	cellWidth_ = cellWidth;
 	cellHeight_ = cellHeight;
 	fontSize_ = fontSize;
-	rect_.setRect(cellWidth_ * (column_ + 1), cellHeight_ * (row_ + 1),
+	rect_.setRect(cellWidth_ * column_, cellHeight_ * row_,
 				  cellWidth_, cellHeight_);
 	for (int category = cat_First; category < cat_Last; ++category) {
 //		std::sort(labels_[category]);
 		int x = (category == cat_Second) ? cellWidth_ - fontSize_ : fontSize_;
-		int y = (category == cat_Second) ? cellHeight_ : fontSize_ / 2;
+		int y = (category == cat_Second) ? cellHeight_ - fontSize_ / 2 : fontSize_ / 2;
 		BOOST_FOREACH (AstroLabel* al, labels_[category]) {
 			al->setFont(SettingsManager::get_const_instance().font(fontSize_, FF_ASTRO));
 			//qDebug() << "Prop:" << al->type() << al->angle() << dms.zodiac() << dms.zod_deg();

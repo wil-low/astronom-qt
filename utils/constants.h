@@ -49,6 +49,7 @@ enum body_type_t {
 	TYPE_ASTEROID,
 	TYPE_HOUSE,
 	TYPE_ASPECT,
+	TYPE_REFERENCE,
 	TYPE_LAST,
 };
 

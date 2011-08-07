@@ -7,6 +7,9 @@
 class AstroLabel;
 class QPainter;
 
+const int PLANET_FONT_SIZE = 10;
+const int DEFAULT_FONT_SIZE = 10;
+
 class SpeculumCell
 {
 public:
@@ -19,8 +22,9 @@ public:
 	void clear();
 	void addLabel(category_t category, AstroLabel* label);
 	void reconfigure(qreal cellWidth, qreal cellHeight, int fontSize);
-	void draw(QPainter* painter);
-private:
+	virtual void draw(QPainter* painter);
+
+protected:
 	std::list<AstroLabel*> labels_[cat_Last];
 	QRect rect_;
 	int column_;

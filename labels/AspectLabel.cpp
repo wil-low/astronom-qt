@@ -29,9 +29,3 @@ AstroLabel* AspectLabel::linkedLabel(int index)
 	catch (std::out_of_range&) {}
 	return NULL;
 }
-
-int AspectLabel::calculateId(int parentId0, int parentId1, int angle)
-{
-	int checksumArray[] = {parentId0, parentId1, angle};
-	return Crc32((const unsigned char*)checksumArray, sizeof(checksumArray));
-}

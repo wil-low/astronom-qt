@@ -1,5 +1,6 @@
 #include "CentralView.h"
 #include "../labels/AstroLabelContainer.h"
+#include "../utils/css.h"
 #include <QEvent>
 #include <QHelpEvent>
 #include <QToolTip>
@@ -9,6 +10,7 @@ CentralView::CentralView(QWidget *parent, central_view_t type)
 , labels_(new AstroLabelContainer)
 , type_(type)
 {
+	setProperty(CSS::MarineBackground, true);
 }
 
 CentralView::~CentralView()

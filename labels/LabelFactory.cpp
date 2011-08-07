@@ -4,6 +4,7 @@
 #include "PlanetLabel.h"
 #include "HouseLabel.h"
 #include "AspectLabel.h"
+#include "ReferenceLabel.h"
 
 #include <assert.h>
 
@@ -27,6 +28,9 @@ AstroLabel* LabelFactory::construct(QWidget* parent, int chart_id, const BodyPro
 		break;
 	case TYPE_ASPECT:
 		label = new AspectLabel(parent, chart_id, props);
+		break;
+	case TYPE_REFERENCE:
+		label = new ReferenceLabel(parent, chart_id, props);
 		break;
 	}
 	return label;

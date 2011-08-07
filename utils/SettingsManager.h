@@ -35,6 +35,7 @@ public:
 	const QString& settingsPath() const;
 
 	QString aspectLabel(int id) const;
+	QSettings& settings();
 
 private:
 	QString settingsPath_;

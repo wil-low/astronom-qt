@@ -11,6 +11,7 @@ class QPainter;
 class AstroLabel
 {
 public:
+	AstroLabel(QWidget* parent);
 	AstroLabel(QWidget* parent, int chart_id, const BodyProps& props);
 	virtual ~AstroLabel(void);
 
@@ -33,6 +34,7 @@ public:
 	void setFont(QFont* font);
 	void setFlags(int flags);
 
+	const BodyProps& props() const;
 	virtual void setProps(const BodyProps& props);
 
 	virtual void setVisibleAngle(qreal /*ang*/) {}

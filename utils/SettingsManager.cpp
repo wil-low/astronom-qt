@@ -3,8 +3,11 @@
 #include "../utils/BodyProps.h"
 #include <QString>
 #include <QStringList>
+#include <QApplication>
 #include <QSettings>
 #include <QFont>
+#include <QFile>
+#include <QTextStream>
 
 const QString DEG_STR("°");
 const QString BACKTICK_STR("`");
@@ -25,9 +28,22 @@ const QString& SettingsManager::settingsPath() const
 	return settingsPath_;
 }
 
+QSettings& SettingsManager::settings()
+{
+	return *settings_;
+}
+
 void SettingsManager::init()
 {
 	DBHelper::get_mutable_instance().initConnections(settingsPath_);
+
+	QFile cssFile(settingsPath_ + "/style.css");
+	if (cssFile.open(QFile::ReadOnly)) {
+		QTextStream in(&cssFile);
+		qApp->setStyleSheet(in.readAll());
+	}
+	cssFile.close();
+
 	settings_ = new QSettings(settingsPath_ + "/global.txt", QSettings::IniFormat);
 	loadFont(astrofont_, "Astronom");
 	loadFont(arialfont_, "Arial");

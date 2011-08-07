@@ -28,7 +28,8 @@ OcularView::OcularView(QWidget *parent)
 void OcularView::reconfigure()
 {
 	zeroPoint_ = ZERO_ASC;
-	QSettings settings;
+	QSettings& settings = SettingsManager::get_mutable_instance().settings();
+
 	settings.beginGroup("ocular:dimensions");
 	defaultDimensions_[ODIM_radius] = settings.value("radius", 377).toInt();
 	defaultDimensions_[ODIM_ascArrowR] = settings.value("ascArrowR", 374).toInt();
@@ -99,11 +100,13 @@ void OcularView::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(viewport());
 //	painter.setClipRegion(event->region());
+//	painter.fillRect(viewport()->rect(), colors_.backgroundColor);
 	painter.translate(viewport()->width() / 2, viewport()->height() / 2);
-	painter.fillRect(QRectF(-dimensions_[ODIM_radius], -dimensions_[ODIM_radius], dimensions_[ODIM_radius] * 2, dimensions_[ODIM_radius] * 2), QColor(Qt::white));
+//	painter.fillRect(QRectF(-dimensions_[ODIM_radius], -dimensions_[ODIM_radius], dimensions_[ODIM_radius] * 2, dimensions_[ODIM_radius] * 2), colors_.backgroundColor);
 //	painter.setRenderHints(QPainter::Antialiasing);
 	if (dimensions_[ODIM_ascArrowR] != 0) {
 		painter.setPen(colors_.ocularColor);
+		painter.setBrush(QBrush(Qt::white));
 		DrawHelper::drawCircle(&painter, dimensions_[ODIM_ascArrowR]);
 	}
 	qreal ang = zeroAngle_;
