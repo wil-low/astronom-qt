@@ -15,17 +15,15 @@ void AspectLabel::setLinkedCount(int count)
 
 void AspectLabel::setLinkedLabel(int index, AstroLabel* label)
 {
-	try {
-		linked_.at(index) = label;
-	}
-	catch (std::out_of_range&) {}
+	linked_.at(index) = label;
 }
 
 AstroLabel* AspectLabel::linkedLabel(int index)
 {
-	try {
-		return linked_.at(index);
-	}
-	catch (std::out_of_range&) {}
-	return NULL;
+	return linked_.at(index);
+}
+
+qreal AspectLabel::angle() const
+{
+	return linked_.at(0)->angle();
 }

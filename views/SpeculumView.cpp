@@ -206,6 +206,8 @@ void SpeculumView::addAspects (AstroLabel* parentLabel)
 		row = dms.zod_deg() + 1;
 		AstroLabel* aspect = insertLabel(parentLabel->chartId(), props, parentLabel->visible(),
 										column, row, speculum::cat_First, colors_.aspectColor);
+		aspect->setLinkedCount(1);
+		aspect->setLinkedLabel(0, parentLabel);
 		// negative angle
 		if ((int)angle != 180) {
 			int checksumArray[] = {parentLabel->id(), parentLabel->id(), (int)-angle};
@@ -217,6 +219,8 @@ void SpeculumView::addAspects (AstroLabel* parentLabel)
 			row = dms.zod_deg() + 1;
 			aspect = insertLabel(parentLabel->chartId(), props, parentLabel->visible(),
 								 column, row, speculum::cat_First, colors_.aspectColor);
+			aspect->setLinkedCount(1);
+			aspect->setLinkedLabel(0, parentLabel);
 		}
 	}
 }

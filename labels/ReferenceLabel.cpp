@@ -16,3 +16,8 @@ AstroLabel* ReferenceLabel::linkedLabel(int index)
 {
 	return linked_;
 }
+
+qreal ReferenceLabel::angle() const
+{
+	return linked_->angle();
+}
