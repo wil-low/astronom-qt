@@ -9,6 +9,9 @@ struct SpeculumColors {
 	QColor houseColor;
 	QColor aspectColor;
 	QColor referenceColor;
+	QColor gridColor;
+	QColor contourColor;
+	QColor middleColor;
 };
 
 #endif // SPECULUMCOLORS_H

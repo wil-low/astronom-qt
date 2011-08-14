@@ -31,7 +31,7 @@ public slots:
 	void reconfigure();
 
 private:
-	static const int COLUMN_COUNT = ZODIAC_SIGN_COUNT + 1;
+	static const int COLUMN_COUNT = ZODIAC_SIGN_COUNT + 2;
 	static const int ROW_COUNT = DEG_PER_SIGN + 1;
 	AstroLabel* insertLabel (int chart_id, const BodyProps& props, bool isVisible,
 							 int column, int row, speculum::category_t category,

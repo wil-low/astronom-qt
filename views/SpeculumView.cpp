@@ -27,7 +27,7 @@ SpeculumView::SpeculumView(QWidget *parent)
 		for (int row = 0; row < ROW_COUNT; ++row) {
 			if (column == 0 && row > 0)
 				cell = new SpeculumVertHeader(column, row, &colors_);
-			else if (column > 0 && row == 0)
+			else if (column > 0 && row == 0 && column != COLUMN_COUNT - 1)
 				cell = new SpeculumHorizHeader(column, row, &colors_);
 			else
 				cell = new SpeculumCell(column, row, &colors_);
@@ -52,6 +52,9 @@ void SpeculumView::reconfigure()
 	colors_.houseColor = settings.value("houseColor", QColor(0,0,0)).value<QColor>(); // black
 	colors_.aspectColor = settings.value("aspectColor", QColor(67,0,134)).value<QColor>(); // dye violet
 	colors_.referenceColor = settings.value("referenceColor", QColor(67,0,134)).value<QColor>(); // dye violet
+	colors_.gridColor = settings.value("gridColor", QColor(67,0,134)).value<QColor>(); // dye violet
+	colors_.contourColor = settings.value("contourColor", QColor(0,0,0)).value<QColor>(); // black
+	colors_.middleColor = settings.value("middleColor", QColor(176,176,176)).value<QColor>(); // gray
 	settings.endGroup();
 
 	BOOST_FOREACH(SpeculumCell* cell, cells_) {
@@ -100,7 +103,21 @@ void SpeculumView::paintEvent(QPaintEvent* event)
 	painter.save();
 	painter.translate(0, cellHeight_);
 	QLineF horizLine (0, 0, viewport()->width(), 0);
+	QColor* penColor;
 	for (int i = 0; i < ROW_COUNT; ++i) {
+		switch (i) {
+		case 0:
+		case ROW_COUNT - 1:
+			penColor = &colors_.contourColor;
+			break;
+		case DEG_PER_SIGN / 2:
+			penColor = &colors_.middleColor;
+			break;
+		default:
+			penColor = &colors_.gridColor;
+			break;
+		}
+		painter.setPen(*penColor);
 		painter.drawLine(horizLine);
 		horizLine.translate(0, cellHeight_);
 	}
@@ -109,6 +126,19 @@ void SpeculumView::paintEvent(QPaintEvent* event)
 	painter.translate(cellWidth_, 0);
 	QLineF vertLine (0, 0, 0, viewport()->height());
 	for (int i = 0; i < COLUMN_COUNT; ++i) {
+		switch (i) {
+		case 0:
+		case COLUMN_COUNT - 2:
+			penColor = &colors_.contourColor;
+			break;
+		case ZODIAC_SIGN_COUNT / 2:
+			penColor = &colors_.middleColor;
+			break;
+		default:
+			penColor = &colors_.gridColor;
+			break;
+		}
+		painter.setPen(*penColor);
 		painter.drawLine(vertLine);
 		vertLine.translate(cellWidth_, 0);
 	}
