@@ -16,7 +16,7 @@ void SpeculumHorizHeader::draw(QPainter* painter)
 	painter->setFont(*SettingsManager::get_const_instance().font(speculum::DEFAULT_FONT_SIZE, FF_ASTRO));
 	painter->setPen(colors_->headerColor);
 	BodyProps bp(TYPE_ZODIAC, column_ - 1);
-	painter->drawText(rect_, Qt::AlignHCenter | Qt::TextDontClip,
+	painter->drawText(rect_, Qt::AlignCenter | Qt::TextDontClip,
 					  SettingsManager::get_const_instance().label(bp));
 	painter->restore();
 }
