@@ -20,6 +20,8 @@ AstroLabel::AstroLabel(QWidget* parent, int chart_id, const BodyProps& props)
 {
 	setProps(props);
 	++type_map_[props_.type];
+	setColor(Qt::black, false);
+	setColor(Qt::red, true);
 }
 
 AstroLabel::~AstroLabel(void)
@@ -57,6 +59,16 @@ void AstroLabel::setFlags(int flags)
 	flags_ = flags;
 }
 
+void AstroLabel::setColor(QColor color, bool isSelected)
+{
+	color_[isSelected ? 1 : 0] = color;
+}
+
+QColor AstroLabel::color(bool isSelected) const
+{
+	return color_[isSelected ? 1 : 0];
+}
+
 void AstroLabel::setFont(QFont* font)
 {
 	font_ = font;
@@ -85,7 +97,7 @@ void AstroLabel::drawOnParent(QPainter* painter)
 	painter->save();
 	painter->setFont(*font_);
 //    painter->setClipRectangle (rect_.x, rect_.y, rect_.w, rect_.h);
-	painter->setPen(selected_? Qt::red : Qt::black);
+	painter->setPen(color(selected_));
 	//painter->drawRect(rect_);
 	painter->drawText(rect_, Qt::AlignHCenter | Qt::TextDontClip, text());
 	painter->restore();

@@ -1,9 +1,12 @@
 #pragma once
 #include "../utils/constants.h"
 #include "../utils/BodyProps.h"
+
 #include <QtGlobal>
 #include <QRectF>
 #include <QString>
+#include <QColor>
+
 class QWidget;
 class QFont;
 class QPainter;
@@ -33,6 +36,9 @@ public:
 	void setChartId(int id);
 	void setFont(QFont* font);
 	void setFlags(int flags);
+
+	void setColor(QColor color, bool isSelected);
+	QColor color(bool isSelected) const;
 
 	const BodyProps& props() const;
 	virtual void setProps(const BodyProps& props);
@@ -69,6 +75,7 @@ protected:
 	BodyProps props_;
 	QWidget* parent_;
 	bool visible_;
+	QColor color_[2];
 
 private:
 	static int unique_id_;
