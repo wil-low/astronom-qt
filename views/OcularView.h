@@ -30,10 +30,8 @@ enum OcularDimensionType {
 	ODIM_degreeFontSize,
 	ODIM_tick10Size,
 	ODIM_tick5Size,
+	ODIM_centerGripR,
 	ODIM_LAST
-};
-
-struct OcularDimensions {
 };
 
 class OcularView : public CentralView
@@ -56,6 +54,7 @@ public slots:
 
 protected:
 	virtual bool isIndexHidden(const QModelIndex &index) const;
+	virtual bool viewportEvent (QEvent* event);
 
 private:
 	void spreadLabels (int chart, int type, qreal r);

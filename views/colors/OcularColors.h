@@ -17,6 +17,7 @@ struct OcularColors {
 	QColor innerRColor;
 	QColor planetTickColor;
 	QColor aspectTickColor;
+	QColor centerGripColor;
 };
 
 #endif // OCULARCOLORS_H

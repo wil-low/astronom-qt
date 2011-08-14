@@ -5,6 +5,7 @@
 #include "../labels/LabelFactory.h"
 #include "../utils/SettingsManager.h"
 #include "../CircleSpread/CircleSpread.h"
+#include <QMessageBox>
 #include <QSettings>
 #include <QPainter>
 #include <QPaintEvent>
@@ -49,6 +50,7 @@ void OcularView::reconfigure()
 	defaultDimensions_[ODIM_degreeFontSize] = settings.value("degreeFontSize", 3).toInt();
 	defaultDimensions_[ODIM_tick10Size] = settings.value("tick10Size", 8).toInt();
 	defaultDimensions_[ODIM_tick5Size] = settings.value("tick5Size", 5).toInt();
+	defaultDimensions_[ODIM_centerGripR] = settings.value("centerGripR", 5).toInt();
 	settings.endGroup();
 
 	settings.beginGroup("ocular:colors");
@@ -64,6 +66,7 @@ void OcularView::reconfigure()
 	colors_.innerRColor = settings.value("innerRColor", QColor(192,0,255)).value<QColor>();
 	colors_.planetTickColor = settings.value("planetTickColor", QColor(0,192,255)).value<QColor>();
 	colors_.aspectTickColor = settings.value("aspectTickColor", QColor(0,0,0)).value<QColor>();
+	colors_.centerGripColor = settings.value("centerGripColor", QColor(129,135,187)).value<QColor>(); // almost grey
 	settings.endGroup();
 
 	BOOST_FOREACH (AstroLabel* label, *labels_) {
@@ -221,6 +224,11 @@ void OcularView::paintEvent(QPaintEvent* event)
 		pt[1] = DrawHelper::getXYdeg(ang, zouter);
 		painter.drawLines(pt, 1);
 		ang += delta_ang;
+	}
+	if (dimensions_[ODIM_centerGripR] != 0) {
+		painter.setPen(colors_.centerGripColor);
+		painter.setBrush(Qt::transparent);
+		DrawHelper::drawCircle(&painter, dimensions_[ODIM_centerGripR]);
 	}
 
 	drawLabels(&painter);
@@ -514,4 +522,18 @@ void OcularView::drawAspects(QPainter* painter)
 QPoint OcularView::translatePoint(const QPoint& p) const
 {
 	return QPoint(p.x() - viewport()->width() / 2, p.y() - viewport()->height() / 2);
+}
+
+bool OcularView::viewportEvent (QEvent* event)
+{
+	if (event->type() == QEvent::MouseButtonPress) {
+		QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+		if (mouseEvent->button() == Qt::LeftButton) {
+			QString message;
+			QMessageBox::information(this, "",
+					message.sprintf("%d:%d", mouseEvent->pos().x(), mouseEvent->pos().y()));
+		}
+		return true;
+	}
+	return CentralView::viewportEvent(event);
 }
