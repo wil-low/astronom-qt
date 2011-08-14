@@ -52,7 +52,7 @@ void OcularView::reconfigure()
 	settings.endGroup();
 
 	settings.beginGroup("ocular:colors");
-	colors_.outerRColor = settings.value("outerRColor", QColor(247,240,255)).value<QColor>(); // almost grey
+	colors_.outerRColor = settings.value("outerRColor", QColor(129,135,187/*78,84,136*/)).value<QColor>(); // almost grey
 	colors_.ocularColor = settings.value("ocularColor", QColor(255,255,255)).value<QColor>(); // white
 	colors_.contourColor = settings.value("contourColor", QColor(0,0,0)).value<QColor>(); // light violet
 	colors_.mainLineColor = settings.value("mainLineColor", QColor(128,0,192)).value<QColor>();

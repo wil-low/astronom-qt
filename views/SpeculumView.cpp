@@ -52,7 +52,7 @@ void SpeculumView::reconfigure()
 	colors_.houseColor = settings.value("houseColor", QColor(0,0,0)).value<QColor>(); // black
 	colors_.aspectColor = settings.value("aspectColor", QColor(67,0,134)).value<QColor>(); // dye violet
 	colors_.referenceColor = settings.value("referenceColor", QColor(67,0,134)).value<QColor>(); // dye violet
-	colors_.gridColor = settings.value("gridColor", QColor(67,0,134)).value<QColor>(); // dye violet
+	colors_.gridColor = settings.value("gridColor", QColor(78,84,136)).value<QColor>(); // dye violet
 	colors_.contourColor = settings.value("contourColor", QColor(0,0,0)).value<QColor>(); // black
 	colors_.middleColor = settings.value("middleColor", QColor(176,176,176)).value<QColor>(); // gray
 	settings.endGroup();
