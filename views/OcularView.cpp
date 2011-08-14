@@ -52,7 +52,8 @@ void OcularView::reconfigure()
 	settings.endGroup();
 
 	settings.beginGroup("ocular:colors");
-	colors_.ocularColor = settings.value("ocularColor", QColor(247,240,255)).value<QColor>(); // almost grey
+	colors_.outerRColor = settings.value("outerRColor", QColor(247,240,255)).value<QColor>(); // almost grey
+	colors_.ocularColor = settings.value("ocularColor", QColor(255,255,255)).value<QColor>(); // white
 	colors_.contourColor = settings.value("contourColor", QColor(0,0,0)).value<QColor>(); // light violet
 	colors_.mainLineColor = settings.value("mainLineColor", QColor(128,0,192)).value<QColor>();
 	colors_.labelColor = settings.value("labelColor", QColor(0,0,0)).value<QColor>();
@@ -105,31 +106,29 @@ void OcularView::paintEvent(QPaintEvent* event)
 //	painter.fillRect(QRectF(-dimensions_[ODIM_radius], -dimensions_[ODIM_radius], dimensions_[ODIM_radius] * 2, dimensions_[ODIM_radius] * 2), colors_.backgroundColor);
 //	painter.setRenderHints(QPainter::Antialiasing);
 	if (dimensions_[ODIM_ascArrowR] != 0) {
-		painter.setPen(colors_.ocularColor);
-		painter.setBrush(QBrush(Qt::white));
+		painter.setPen(colors_.outerRColor);
 		DrawHelper::drawCircle(&painter, dimensions_[ODIM_ascArrowR]);
 	}
+
 	qreal ang = zeroAngle_;
 	qreal delta_ang = DEG_PER_SIGN;
 
 	if (dimensions_[ODIM_zodiacOuterR] != 0) {
-//		if (!is_resizing_) {
-			ang = zeroAngle_;
-			delta_ang = DEG_PER_SIGN;
-			painter.setBrush(colors_.fillColor);
-			for (int sign = 0; sign < 6; ++sign) {
-				DrawHelper::drawPie(&painter, dimensions_[ODIM_zodiacOuterR], ang + delta_ang, delta_ang);
-				ang += delta_ang * 2;
-			}
-//		}
-		painter.setPen(colors_.contourColor);
-		painter.setBrush(Qt::transparent);
+		painter.setPen(colors_.outerRColor);
+		painter.setBrush(QBrush(colors_.ocularColor));
 		DrawHelper::drawCircle(&painter, dimensions_[ODIM_zodiacOuterR]);
+		ang = zeroAngle_;
+		delta_ang = DEG_PER_SIGN;
+		painter.setBrush(colors_.fillColor);
+		for (int sign = 0; sign < 6; ++sign) {
+			DrawHelper::drawPie(&painter, dimensions_[ODIM_zodiacOuterR], ang + delta_ang, delta_ang);
+			ang += delta_ang * 2;
+		}
 	}
 
 	if (dimensions_[ODIM_zodiac10dgrR] != 0) {
 		painter.setPen(colors_.mainLineColor);
-		painter.setBrush(Qt::white);
+		painter.setBrush(colors_.ocularColor);
 		DrawHelper::drawCircle(&painter, dimensions_[ODIM_zodiac10dgrR]);
 	}
 	if (dimensions_[ODIM_zodiac5dgrR] != 0) {
@@ -158,7 +157,7 @@ void OcularView::paintEvent(QPaintEvent* event)
 
 	if (dimensions_[ODIM_zodiacInnerR] != 0) {
 		painter.setPen(colors_.mainLineColor);
-		painter.setBrush(Qt::white);
+		painter.setBrush(colors_.ocularColor);
 		DrawHelper::drawCircle(&painter, dimensions_[ODIM_zodiacInnerR]);
 	}
 /*
@@ -228,10 +227,6 @@ void OcularView::paintEvent(QPaintEvent* event)
 	drawAspects(&painter);
 	drawPlanetLines (&painter);
 	drawHouseLines (&painter);
-/*
-	drawAspects(dc);
-
-	drawLabels (dc);*/
 }
 
 QModelIndex OcularView::indexAt(const QPoint &point) const

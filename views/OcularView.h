@@ -37,6 +37,7 @@ struct OcularDimensions {
 
 struct OcularColors {
 	QColor backgroundColor;
+	QColor outerRColor;
 	QColor ocularColor;
 	QColor contourColor;
 	QColor mainLineColor;
