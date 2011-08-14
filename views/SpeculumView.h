@@ -2,6 +2,7 @@
 #define SPECULUMVIEW_H
 
 #include "CentralView.h"
+#include "colors/SpeculumColors.h"
 #include "items/SpeculumCell.h"
 #include "../utils/constants.h"
 
@@ -40,6 +41,7 @@ private:
 	qreal cellHeight_;
 	SpeculumCell* cells_[COLUMN_COUNT * ROW_COUNT];
 	void clearCells();
+	SpeculumColors colors_;
 };
 
 #endif // SPECULUMVIEW_H

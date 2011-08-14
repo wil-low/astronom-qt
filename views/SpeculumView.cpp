@@ -10,6 +10,7 @@
 
 #include <boost/foreach.hpp>
 
+#include <QSettings>
 #include <QPainter>
 #include <QDebug>
 
@@ -24,11 +25,11 @@ SpeculumView::SpeculumView(QWidget *parent)
 	for (int column = 0; column < COLUMN_COUNT; ++column)
 		for (int row = 0; row < ROW_COUNT; ++row) {
 			if (column == 0 && row > 0)
-				cell = new SpeculumVertHeader(column, row);
+				cell = new SpeculumVertHeader(column, row, &colors_);
 			else if (column > 0 && row == 0)
-				cell = new SpeculumHorizHeader(column, row);
+				cell = new SpeculumHorizHeader(column, row, &colors_);
 			else
-				cell = new SpeculumCell(column, row);
+				cell = new SpeculumCell(column, row, &colors_);
 
 			cells_[row * COLUMN_COUNT + column] = cell;
 		}
@@ -42,6 +43,10 @@ SpeculumView::~SpeculumView()
 
 void SpeculumView::reconfigure()
 {
+	QSettings& settings = SettingsManager::get_mutable_instance().settings();
+	settings.beginGroup("speculum:colors");
+	colors_.headerColor = settings.value("headerColor", QColor(255,204,102)).value<QColor>(); // orange
+	settings.endGroup();
 	BOOST_FOREACH(SpeculumCell* cell, cells_)
 		cell->reconfigure(cellWidth_, cellHeight_, DEFAULT_FONT_SIZE);
 //	viewport()->update();

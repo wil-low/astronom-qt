@@ -1,14 +1,16 @@
 #include "SpeculumCell.h"
 
+#include "../colors/SpeculumColors.h"
 #include "../../labels/AstroLabel.h"
 #include "../../utils/SettingsManager.h"
 
 #include <boost/foreach.hpp>
 #include <QPainter>
 
-SpeculumCell::SpeculumCell(int column, int row)
+SpeculumCell::SpeculumCell(int column, int row, const SpeculumColors* colors)
 : column_(column)
 , row_(row)
+, colors_(colors)
 {
 }
 

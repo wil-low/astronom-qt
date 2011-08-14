@@ -117,7 +117,9 @@ HEADERS += \
     views/items/SpeculumHorizHeader.h \
     views/items/SpeculumVertHeader.h \
     labels/ReferenceLabel.h \
-    utils/css.h
+    utils/css.h \
+    views/colors/OcularColors.h \
+    views/colors/SpeculumColors.h
 
 FORMS += \
     forms/MainForm.ui \

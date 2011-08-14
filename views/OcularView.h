@@ -2,6 +2,7 @@
 #define OCULARWHEEL_H
 
 #include "CentralView.h"
+#include "colors/OcularColors.h"
 
 // zero point of wheel
 enum ZeroPoint {
@@ -33,22 +34,6 @@ enum OcularDimensionType {
 };
 
 struct OcularDimensions {
-};
-
-struct OcularColors {
-	QColor backgroundColor;
-	QColor outerRColor;
-	QColor ocularColor;
-	QColor contourColor;
-	QColor mainLineColor;
-	QColor labelColor;
-	QColor fillColor;
-	QColor arrowColor;
-	QColor cuspidColor;
-	QColor tick10Color;
-	QColor innerRColor;
-	QColor planetTickColor;
-	QColor aspectTickColor;
 };
 
 class AstroLabel;

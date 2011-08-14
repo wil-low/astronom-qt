@@ -6,6 +6,7 @@
 
 class AstroLabel;
 class QPainter;
+struct SpeculumColors;
 
 const int PLANET_FONT_SIZE = 10;
 const int DEFAULT_FONT_SIZE = 10;
@@ -18,7 +19,7 @@ public:
 		cat_Second = 1,
 		cat_Last,
 	};
-	SpeculumCell(int column, int row);
+	SpeculumCell(int column, int row, const SpeculumColors* colors);
 	void clear();
 	void addLabel(category_t category, AstroLabel* label);
 	void reconfigure(qreal cellWidth, qreal cellHeight, int fontSize);
@@ -32,6 +33,7 @@ protected:
 	int fontSize_;
 	qreal cellWidth_;
 	qreal cellHeight_;
+	const SpeculumColors* colors_;
 };
 
 #endif // SPECULUMCELL_H

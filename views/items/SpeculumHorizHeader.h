@@ -6,7 +6,7 @@
 class SpeculumHorizHeader : public SpeculumCell
 {
 public:
-	SpeculumHorizHeader(int column, int row);
+	SpeculumHorizHeader(int column, int row, const SpeculumColors* colors);
 	virtual void draw(QPainter* painter);
 };
 
