@@ -209,6 +209,11 @@ void MainForm::createDockWindows()
 	dock->setWidget(tabBodyList);
 	addDockWidget(Qt::RightDockWidgetArea, dock);
 	ui->menuView->addAction(dock->toggleViewAction());
+
+	dock = new QDockWidget(tr("Bottom dock"), this);
+	dock->setAllowedAreas(Qt::BottomDockWidgetArea);
+	addDockWidget(Qt::BottomDockWidgetArea, dock);
+
 	setUnifiedTitleAndToolBarOnMac(true);
 }
 
