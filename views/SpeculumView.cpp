@@ -45,9 +45,15 @@ SpeculumView::~SpeculumView()
 void SpeculumView::reconfigure()
 {
 	QSettings& settings = SettingsManager::get_mutable_instance().settings();
+
 	settings.beginGroup("speculum:colors");
 	colors_.headerColor = settings.value("headerColor", QColor(255,204,102)).value<QColor>(); // orange
+	colors_.planetColor = settings.value("planetColor", QColor(0,0,0)).value<QColor>(); // black
+	colors_.houseColor = settings.value("houseColor", QColor(0,0,0)).value<QColor>(); // black
+	colors_.aspectColor = settings.value("aspectColor", QColor(67,0,134)).value<QColor>(); // dye violet
+	colors_.referenceColor = settings.value("referenceColor", QColor(67,0,134)).value<QColor>(); // dye violet
 	settings.endGroup();
+
 	BOOST_FOREACH(SpeculumCell* cell, cells_) {
 		cell->sort();
 		cell->reconfigure(cellWidth_, cellHeight_, speculum::DEFAULT_FONT_SIZE);
@@ -71,11 +77,15 @@ void SpeculumView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bo
 		int row = dms.zod_deg() + 1;
 		if (props.type == TYPE_HOUSE) {
 			props.flags |= FLG_ARABIC;
-			AstroLabel* label = insertLabel(chart_id, props, isVisible, column, row, speculum::cat_First);
+			AstroLabel* label = insertLabel(chart_id, props, isVisible,
+											column, row, speculum::cat_First,
+											colors_.houseColor);
 			//addReference(label);
 		}
 		else if (props.type == TYPE_PLANET) {
-			AstroLabel* label = insertLabel(chart_id, props, isVisible, column, row, speculum::cat_First);
+			AstroLabel* label = insertLabel(chart_id, props, isVisible,
+											column, row, speculum::cat_First,
+											colors_.planetColor);
 			addAspects(label);
 			addReference(label);
 		}
@@ -156,7 +166,8 @@ void SpeculumView::clearCells()
 }
 
 AstroLabel* SpeculumView::insertLabel(int chart_id, const BodyProps& props, bool isVisible,
-									  int column, int row, speculum::category_t category)
+									  int column, int row, speculum::category_t category,
+									  const QColor& color)
 {
 	AstroLabel* label = labels_->find_by_chart_id(chart_id, props.id);
 	bool need_insert = !label;
@@ -165,6 +176,7 @@ AstroLabel* SpeculumView::insertLabel(int chart_id, const BodyProps& props, bool
 	label->setProps(props);
 	label->setChartId(chart_id);
 	label->setVisible(isVisible);
+	label->setColor(color, false); // set inactive color
 	if (need_insert) {
 		std::pair<AlcIter, bool> result = labels_->insert(label);
 		assert (result.second);
@@ -192,7 +204,8 @@ void SpeculumView::addAspects (AstroLabel* parentLabel)
 		DMS dms(props.prop[BodyProps::bp_Lon], DMS::COORD_LON);
 		column = dms.zodiac() + 1;
 		row = dms.zod_deg() + 1;
-		insertLabel(parentLabel->chartId(), props, parentLabel->visible(), column, row, speculum::cat_First);
+		AstroLabel* aspect = insertLabel(parentLabel->chartId(), props, parentLabel->visible(),
+										column, row, speculum::cat_First, colors_.aspectColor);
 		// negative angle
 		if ((int)angle != 180) {
 			int checksumArray[] = {parentLabel->id(), parentLabel->id(), (int)-angle};
@@ -202,7 +215,8 @@ void SpeculumView::addAspects (AstroLabel* parentLabel)
 			DMS dms(props.prop[BodyProps::bp_Lon], DMS::COORD_LON);
 			column = dms.zodiac() + 1;
 			row = dms.zod_deg() + 1;
-			insertLabel(parentLabel->chartId(), props, parentLabel->visible(), column, row, speculum::cat_First);
+			aspect = insertLabel(parentLabel->chartId(), props, parentLabel->visible(),
+								 column, row, speculum::cat_First, colors_.aspectColor);
 		}
 	}
 }
@@ -216,6 +230,7 @@ void SpeculumView::addReference (AstroLabel* parentLabel)
 	DMS dms(props.prop[BodyProps::bp_Lon], DMS::COORD_LON);
 	int column = 0;
 	int row = dms.zod_deg() + 1;
-	AstroLabel* label = insertLabel(parentLabel->chartId(), props, parentLabel->visible(), column, row, speculum::cat_Second);
+	AstroLabel* label = insertLabel(parentLabel->chartId(), props, parentLabel->visible(),
+									column, row, speculum::cat_Second, colors_.referenceColor);
 	label->setLinkedLabel(0, parentLabel);
 }

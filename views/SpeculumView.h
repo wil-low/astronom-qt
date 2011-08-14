@@ -34,7 +34,8 @@ private:
 	static const int COLUMN_COUNT = ZODIAC_SIGN_COUNT + 1;
 	static const int ROW_COUNT = DEG_PER_SIGN + 1;
 	AstroLabel* insertLabel (int chart_id, const BodyProps& props, bool isVisible,
-							 int column, int row, speculum::category_t category);
+							 int column, int row, speculum::category_t category,
+							 const QColor& color);
 	void addAspects (AstroLabel* parentLabel);
 	void addReference (AstroLabel* parentLabel);
 	void drawCells (QPainter* painter);
