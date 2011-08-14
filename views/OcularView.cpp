@@ -231,8 +231,7 @@ void OcularView::paintEvent(QPaintEvent* event)
 
 QModelIndex OcularView::indexAt(const QPoint &point) const
 {
-	QPoint translatedPoint(point.x() - viewport()->width() / 2, point.y() - viewport()->height() / 2);
-	AstroLabel* cur_al = labels_->labelAt(translatedPoint);
+	AstroLabel* cur_al = labels_->labelAt(translatePoint(point));
 	if (cur_al) {
 		int chart_id = cur_al->chartId();
 		int id = cur_al->id();
@@ -486,13 +485,6 @@ void OcularView::currentChanged (const QModelIndex & current, const QModelIndex 
 	if (label)
 		label->setSelected(true);
 	viewport()->update();
-}
-
-AstroLabel* OcularView::findByIndex (const QModelIndex & index) const
-{
-	int chart_id = index.column();
-	BodyProps props = model()->data(index).value<BodyProps>();
-	return labels_->find_by_chart_id(chart_id, props.id);
 }
 
 void OcularView::invalidateView()

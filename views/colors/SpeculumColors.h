@@ -8,6 +8,7 @@ struct SpeculumColors {
 	QColor planetColor;
 	QColor houseColor;
 	QColor aspectColor;
+	QColor aspectSelectedColor;
 	QColor referenceColor;
 	QColor gridColor;
 	QColor contourColor;

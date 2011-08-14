@@ -4,6 +4,7 @@
 #include <QAbstractItemView>
 #include "../utils/constants.h"
 
+class AstroLabel;
 class AstroLabelContainer;
 
 class CentralView : public QAbstractItemView
@@ -29,6 +30,9 @@ protected:
 	virtual int horizontalOffset() const;
 	virtual int verticalOffset() const;
 	virtual bool viewportEvent (QEvent* event);
+
+	AstroLabel* findByIndex (const QModelIndex & index) const;
+
 	AstroLabelContainer* labels_;
 private:
 	central_view_t type_;

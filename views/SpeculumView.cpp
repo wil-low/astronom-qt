@@ -51,6 +51,7 @@ void SpeculumView::reconfigure()
 	colors_.planetColor = settings.value("planetColor", QColor(0,0,0)).value<QColor>(); // black
 	colors_.houseColor = settings.value("houseColor", QColor(0,0,0)).value<QColor>(); // black
 	colors_.aspectColor = settings.value("aspectColor", QColor(67,0,134)).value<QColor>(); // dye violet
+	colors_.aspectSelectedColor = settings.value("aspectSelectedColor", QColor(184,54,54)).value<QColor>(); // dye violet
 	colors_.referenceColor = settings.value("referenceColor", QColor(67,0,134)).value<QColor>(); // dye violet
 	colors_.gridColor = settings.value("gridColor", QColor(78,84,136)).value<QColor>(); // dye violet
 	colors_.contourColor = settings.value("contourColor", QColor(0,0,0)).value<QColor>(); // black
@@ -148,13 +149,7 @@ void SpeculumView::paintEvent(QPaintEvent* event)
 
 QModelIndex SpeculumView::indexAt(const QPoint &point) const
 {
-	AstroLabel* cur_al = NULL;
-	BOOST_FOREACH (AstroLabel* al, *labels_) {
-		if (al->visible() && al->contains(point)) {
-			cur_al = al;
-			break;
-		}
-	}
+	AstroLabel* cur_al = labels_->labelAt(translatePoint(point));
 	if (cur_al) {
 		int chart_id = cur_al->chartId();
 		int id = cur_al->id();
@@ -236,6 +231,7 @@ void SpeculumView::addAspects (AstroLabel* parentLabel)
 		row = dms.zod_deg() + 1;
 		AstroLabel* aspect = insertLabel(parentLabel->chartId(), props, parentLabel->visible(),
 										column, row, speculum::cat_First, colors_.aspectColor);
+		aspect->setColor(colors_.aspectSelectedColor, true);
 		aspect->setLinkedCount(1);
 		aspect->setLinkedLabel(0, parentLabel);
 		// negative angle
@@ -249,6 +245,7 @@ void SpeculumView::addAspects (AstroLabel* parentLabel)
 			row = dms.zod_deg() + 1;
 			aspect = insertLabel(parentLabel->chartId(), props, parentLabel->visible(),
 								 column, row, speculum::cat_First, colors_.aspectColor);
+			aspect->setColor(colors_.aspectSelectedColor, true);
 			aspect->setLinkedCount(1);
 			aspect->setLinkedLabel(0, parentLabel);
 		}
@@ -268,3 +265,27 @@ void SpeculumView::addReference (AstroLabel* parentLabel)
 									column, row, speculum::cat_Second, colors_.referenceColor);
 	label->setLinkedLabel(0, parentLabel);
 }
+
+void SpeculumView::currentChanged (const QModelIndex & current, const QModelIndex & previous)
+{
+	AstroLabel* label = findByIndex(previous);
+	if (label) {
+		label->setSelected(false);
+		selectAspects(label, false);
+	}
+	label = findByIndex(current);
+	if (label) {
+		label->setSelected(true);
+		selectAspects(label, true);
+	}
+	viewport()->update();
+}
+
+void SpeculumView::selectAspects (const AstroLabel* parentLabel, bool isSelected)
+{
+	BOOST_FOREACH (AstroLabel* al, *labels_) {
+		if (al->type() == TYPE_ASPECT && al->linkedLabel(0) == parentLabel)
+			al->setSelected(isSelected);
+	}
+}
+

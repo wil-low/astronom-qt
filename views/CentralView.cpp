@@ -73,3 +73,10 @@ QPoint CentralView::translatePoint(const QPoint& p) const
 {
 	return p;
 }
+
+AstroLabel* CentralView::findByIndex (const QModelIndex & index) const
+{
+	int chart_id = index.column();
+	BodyProps props = model()->data(index).value<BodyProps>();
+	return labels_->find_by_chart_id(chart_id, props.id);
+}

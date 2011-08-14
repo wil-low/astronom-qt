@@ -17,6 +17,7 @@ public:
     explicit SpeculumView(QWidget *parent = 0);
 	virtual ~SpeculumView();
 	virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+	virtual void currentChanged (const QModelIndex & current, const QModelIndex & previous);
 
 	void paintEvent(QPaintEvent* event);
 	virtual QModelIndex indexAt(const QPoint &point) const;
@@ -43,6 +44,7 @@ private:
 	qreal cellHeight_;
 	SpeculumCell* cells_[COLUMN_COUNT * ROW_COUNT];
 	void clearCells();
+	void selectAspects (const AstroLabel* parentLabel, bool isSelected);
 	SpeculumColors colors_;
 };
 

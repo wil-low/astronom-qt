@@ -36,8 +36,6 @@ enum OcularDimensionType {
 struct OcularDimensions {
 };
 
-class AstroLabel;
-
 class OcularView : public CentralView
 {
 	Q_OBJECT
@@ -66,8 +64,6 @@ private:
 	void drawPlanetLines(QPainter* painter);
 	void drawHouseLines(QPainter* painter);
 	void drawAspects(QPainter* painter);
-
-	AstroLabel* findByIndex (const QModelIndex & index) const;
 
 	qreal defaultDimensions_[ODIM_LAST];
 	qreal dimensions_[ODIM_LAST];
