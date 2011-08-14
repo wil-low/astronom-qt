@@ -3,9 +3,10 @@
 
 #include "CentralView.h"
 #include "colors/SpeculumColors.h"
-#include "items/SpeculumCell.h"
+#include "items/SpeculumConst.h"
 #include "../utils/constants.h"
 
+class SpeculumCell;
 class AstroLabel;
 class BodyProps;
 
@@ -33,7 +34,7 @@ private:
 	static const int COLUMN_COUNT = ZODIAC_SIGN_COUNT + 1;
 	static const int ROW_COUNT = DEG_PER_SIGN + 1;
 	AstroLabel* insertLabel (int chart_id, const BodyProps& props, bool isVisible,
-							 int column, int row, SpeculumCell::category_t category);
+							 int column, int row, speculum::category_t category);
 	void addAspects (AstroLabel* parentLabel);
 	void addReference (AstroLabel* parentLabel);
 	void drawCells (QPainter* painter);

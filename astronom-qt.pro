@@ -119,7 +119,8 @@ HEADERS += \
     labels/ReferenceLabel.h \
     utils/css.h \
     views/colors/OcularColors.h \
-    views/colors/SpeculumColors.h
+    views/colors/SpeculumColors.h \
+    views/items/SpeculumConst.h
 
 FORMS += \
     forms/MainForm.ui \

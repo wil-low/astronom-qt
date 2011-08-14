@@ -16,7 +16,7 @@ SpeculumVertHeader::SpeculumVertHeader(int column, int row, const SpeculumColors
 void SpeculumVertHeader::draw(QPainter* painter)
 {
 	painter->save();
-	painter->setFont(*SettingsManager::get_const_instance().font(DEFAULT_FONT_SIZE, FF_ASTRO));
+	painter->setFont(*SettingsManager::get_const_instance().font(speculum::DEFAULT_FONT_SIZE, FF_ASTRO));
 	painter->setPen(colors_->headerColor);
 	painter->drawText(rect_, Qt::AlignLeft | Qt::AlignVCenter | Qt::TextDontClip, QString::number(row_));
 	painter->restore();

@@ -1,6 +1,7 @@
 #ifndef SPECULUMCELL_H
 #define SPECULUMCELL_H
 
+#include "SpeculumConst.h"
 #include <QRect>
 #include <list>
 
@@ -8,25 +9,17 @@ class AstroLabel;
 class QPainter;
 struct SpeculumColors;
 
-const int PLANET_FONT_SIZE = 10;
-const int DEFAULT_FONT_SIZE = 10;
-
 class SpeculumCell
 {
 public:
-	enum category_t {
-		cat_First = 0,
-		cat_Second = 1,
-		cat_Last,
-	};
 	SpeculumCell(int column, int row, const SpeculumColors* colors);
 	void clear();
-	void addLabel(category_t category, AstroLabel* label);
+	void sort();
+	void addLabel(speculum::category_t category, AstroLabel* label);
 	void reconfigure(qreal cellWidth, qreal cellHeight, int fontSize);
 	virtual void draw(QPainter* painter);
-
 protected:
-	std::list<AstroLabel*> labels_[cat_Last];
+	std::list<AstroLabel*> labels_[speculum::cat_Last];
 	QRect rect_;
 	int column_;
 	int row_;

@@ -13,7 +13,7 @@ SpeculumHorizHeader::SpeculumHorizHeader(int column, int row, const SpeculumColo
 void SpeculumHorizHeader::draw(QPainter* painter)
 {
 	painter->save();
-	painter->setFont(*SettingsManager::get_const_instance().font(DEFAULT_FONT_SIZE, FF_ASTRO));
+	painter->setFont(*SettingsManager::get_const_instance().font(speculum::DEFAULT_FONT_SIZE, FF_ASTRO));
 	painter->setPen(colors_->headerColor);
 	BodyProps bp(TYPE_ZODIAC, column_ - 1);
 	painter->drawText(rect_, Qt::AlignHCenter | Qt::TextDontClip,
