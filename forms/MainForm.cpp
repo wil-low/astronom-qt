@@ -95,7 +95,7 @@ void MainForm::applyInputData()
 	timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
 	setTimeLoc(0);
 	emit reconfigure();
-//	((OcularView*)view_)->recalcDimensionsByFactor(1);
+	updateViews();
 }
 
 void MainForm::on_actionGlyph_manager_activated()
