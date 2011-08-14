@@ -25,5 +25,5 @@ AstroLabel* AspectLabel::linkedLabel(int index)
 
 qreal AspectLabel::angle() const
 {
-	return linked_.at(0)->angle();
+	return props_.prop[BodyProps::bp_Lon];
 }

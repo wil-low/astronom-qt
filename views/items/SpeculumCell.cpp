@@ -60,8 +60,31 @@ void SpeculumCell::draw(QPainter* painter)
 	painter->restore();
 }
 
+struct LabelSort {
+	LabelSort(speculum::category_t category)
+		: category_(category)
+	{}
+	bool operator ()(const AstroLabel* lhs, const AstroLabel* rhs) const
+	{
+		if (lhs->type() != rhs->type()) {
+			if (category_ == speculum::cat_First)
+				return lhs->type() < rhs->type();
+			else
+				return lhs->type() > rhs->type();
+		}
+		if (category_ == speculum::cat_First)
+			return lhs->angle() < rhs->angle();
+		else
+			return lhs->angle() > rhs->angle();
+	}
+	speculum::category_t category_;
+};
+
 void SpeculumCell::sort()
 {
-
+	for (int category = speculum::cat_First; category < speculum::cat_Last; ++category) {
+		LabelSort label_sort((speculum::category_t)category);
+		labels_[category].sort(label_sort);
+	}
 }
 
