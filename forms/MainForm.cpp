@@ -15,6 +15,7 @@
 #include "../utils/TimeLoc.h"
 #include "../utils/SettingsManager.h"
 
+#include "../widgets/DocumentWidget.h"
 #include "../views/OcularView.h"
 #include "../views/SpeculumView.h"
 
@@ -25,6 +26,7 @@
 #include "../labels/AstroLabel.h"
 
 #include <QtGui>
+#include <QPushButton>
 
 const central_view_t CENTRAL_VIEW_ON_START = cv_Ocular;
 
@@ -68,13 +70,21 @@ MainForm::MainForm(QWidget *parent)
 
 	connect(persons_, SIGNAL(timeloc_set(const TimeLoc&)), this, SLOT(timeloc_set(const TimeLoc&)));
 
-	changeCentralView(CENTRAL_VIEW_ON_START);
-	changeHouseMethod("P");
+	ui->centralwidget->insertTab(0, new DocumentWidget(this, cv_Ocular), QIcon(), "Ocular");
+	ui->centralwidget->insertTab(1, new DocumentWidget(this, cv_Speculum), QIcon(), "Speculum");
+	ui->centralwidget->insertTab(2, new QPushButton("H3", this), QIcon(), "Hello3");
+	ui->centralwidget->insertTab(3, new QPushButton("H4", this), QIcon(), "Hello4");
+	ui->centralwidget->setTabEnabled(0, true);
+	ui->centralwidget->setTabEnabled(1, true);
+	connect(ui->centralwidget, SIGNAL(currentAboutToShow(int)), this, SLOT(centralViewAboutToChange(int)));
+//	changeCentralView(CENTRAL_VIEW_ON_START);
+//	changeHouseMethod("P");
 }
 
 MainForm::~MainForm()
 {
-	view_->saveSettings();
+	if (view_)
+		view_->saveSettings();
 	delete model_;
 	delete input_;
 	delete persons_;
@@ -184,6 +194,7 @@ void MainForm::timeloc_set(const TimeLoc& tl)
 
 void MainForm::createDockWindows()
 {
+/*
 	QDockWidget *dock = new QDockWidget(tr("Data dock"), this);
 	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 	QTabWidget* tabBodyList = new QTabWidget(dock);
@@ -216,6 +227,7 @@ void MainForm::createDockWindows()
 	addDockWidget(Qt::BottomDockWidgetArea, dock);
 
 	setUnifiedTitleAndToolBarOnMac(true);
+	*/
 }
 
 void MainForm::on_actionImport_triggered()
@@ -276,11 +288,16 @@ void MainForm::changeCentralView(central_view_t type)
 	}
 	if (view_) {
 		qDebug() << __FUNCTION__ << type;
-		ui->horizontalLayout->insertWidget(0, view_, 4);
+		ui->horizontalLayout->insertWidget(1, view_, 4);
 		connect(this, SIGNAL(reconfigure()), view_, SLOT(reconfigure()));
 		view_->setModel(model_);
 		applyInputData();
 		emit reconfigure();
 	}
 	delete old_view;
+}
+
+void MainForm::centralViewAboutToChange(int index)
+{
+	QMessageBox::information(this, "", QString::number(index));
 }

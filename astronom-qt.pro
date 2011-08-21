@@ -60,7 +60,11 @@ SOURCES += \
     views/CentralView.cpp \
     views/items/SpeculumHorizHeader.cpp \
     views/items/SpeculumVertHeader.cpp \
-    labels/ReferenceLabel.cpp
+    labels/ReferenceLabel.cpp \
+    widgets/QtCreator/utils/stylehelper.cpp \
+    widgets/QtCreator/fancytabwidget.cpp \
+    widgets/QtCreator/utils/styledbar.cpp \
+    widgets/DocumentWidget.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -120,7 +124,12 @@ HEADERS += \
     utils/css.h \
     views/colors/OcularColors.h \
     views/colors/SpeculumColors.h \
-    views/items/SpeculumConst.h
+    views/items/SpeculumConst.h \
+    widgets/QtCreator/utils/stylehelper.h \
+    widgets/QtCreator/utils/utils_global.h \
+    widgets/QtCreator/fancytabwidget.h \
+    widgets/QtCreator/utils/styledbar.h \
+    widgets/DocumentWidget.h
 
 FORMS += \
     forms/MainForm.ui \

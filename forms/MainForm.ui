@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>Astronom</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="Core::Internal::FancyTabWidget" name="centralwidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
      <horstretch>0</horstretch>
@@ -41,7 +41,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -70,7 +70,6 @@
    <addaction name="menuView"/>
    <addaction name="menuHouses"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionInput_data">
    <property name="text">
     <string>Input data...</string>
@@ -117,6 +116,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Core::Internal::FancyTabWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/QtCreator/fancytabwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -59,6 +59,7 @@ private slots:
 	void houseMenuTriggered(QAction*);
 	void updateViews();
 	void timeloc_set(const TimeLoc&);
+	void centralViewAboutToChange(int index);
 };
 
 #endif // MAINFORM_H
