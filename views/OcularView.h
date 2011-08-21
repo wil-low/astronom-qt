@@ -69,6 +69,15 @@ private:
 	OcularColors colors_;
 	ZeroPoint zeroPoint_;
 	qreal zeroAngle_;
+	QPointF centerPoint_;
+
+	enum cursor_mode_t {
+		cm_None = 0,
+		cm_Pan,
+		cm_Resize,
+	};
+	cursor_mode_t cursorMode_;
+	bool mousePressed_;
 };
 
 #endif // OCULARWHEEL_H

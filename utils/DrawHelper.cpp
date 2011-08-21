@@ -34,4 +34,9 @@ void drawCenteredText(QPainter* painter, const QPointF& pt, const QString& str)
 	QRectF rect = fm.boundingRect(str);
 	painter->drawText(pt.x() - rect.width() / 2, pt.y() + rect.height() / 2, str);
 }
+
+qreal distance(const QPointF& p0, const QPointF& p1)
+{
+	return sqrt (pow((p0.x() - p1.x()), 2) + pow((p0.y() - p1.y()), 2));
+}
 }

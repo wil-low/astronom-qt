@@ -14,9 +14,12 @@
 
 OcularView::OcularView(QWidget *parent)
 : CentralView(parent, cv_Ocular)
+, cursorMode_(cm_None)
+, mousePressed_(false)
 {
 	setSelectionMode(QAbstractItemView::SingleSelection);
 	setEditTriggers(QAbstractItemView::NoEditTriggers);
+	setMouseTracking(true);
 
 	BodyProps props;
 	props.type = TYPE_ZODIAC;
@@ -24,6 +27,7 @@ OcularView::OcularView(QWidget *parent)
 		props.id = i;
 		labels_->insert(LabelFactory::construct(this, -1, props));
 	}
+	centerPoint_ = QPointF(viewport()->width() / 2, viewport()->height() / 2);
 }
 
 void OcularView::reconfigure()
@@ -105,7 +109,7 @@ void OcularView::paintEvent(QPaintEvent* event)
 	QPainter painter(viewport());
 //	painter.setClipRegion(event->region());
 //	painter.fillRect(viewport()->rect(), colors_.backgroundColor);
-	painter.translate(viewport()->width() / 2, viewport()->height() / 2);
+	painter.translate(centerPoint_);
 //	painter.fillRect(QRectF(-dimensions_[ODIM_radius], -dimensions_[ODIM_radius], dimensions_[ODIM_radius] * 2, dimensions_[ODIM_radius] * 2), colors_.backgroundColor);
 //	painter.setRenderHints(QPainter::Antialiasing);
 	if (dimensions_[ODIM_ascArrowR] != 0) {
@@ -521,19 +525,52 @@ void OcularView::drawAspects(QPainter* painter)
 
 QPoint OcularView::translatePoint(const QPoint& p) const
 {
-	return QPoint(p.x() - viewport()->width() / 2, p.y() - viewport()->height() / 2);
+	return QPoint(p.x() - centerPoint_.x(), p.y() - centerPoint_.y());
 }
 
 bool OcularView::viewportEvent (QEvent* event)
 {
-	if (event->type() == QEvent::MouseButtonPress) {
+	const int RESIZE_PRECISION = 2;
+	if (event->type() == QEvent::MouseMove) {
 		QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-		if (mouseEvent->button() == Qt::LeftButton) {
-			QString message;
-			QMessageBox::information(this, "",
-					message.sprintf("%d:%d", mouseEvent->pos().x(), mouseEvent->pos().y()));
+		if (!mousePressed_) {
+			qreal distance = DrawHelper::distance(centerPoint_, mouseEvent->posF());
+			if (distance < dimensions_[ODIM_centerGripR]) {
+				setCursor(QCursor(Qt::OpenHandCursor));
+				cursorMode_ = cm_Pan;
+			}
+			else if (fabs(distance - dimensions_[ODIM_ascArrowR]) < RESIZE_PRECISION) {
+				setCursor(QCursor(Qt::CrossCursor));
+				cursorMode_ = cm_Resize;
+			}
+			else {
+				setCursor(QCursor(Qt::ArrowCursor));
+				cursorMode_ = cm_None;
+			}
+		}
+		else if (cursorMode_ == cm_Pan) {
+			centerPoint_ = mouseEvent->posF();
+			viewport()->update();
+		}
+		else if (cursorMode_ == cm_Resize) {
+			qreal distance = DrawHelper::distance(centerPoint_, mouseEvent->posF());
+			recalcDimensions(distance);
 		}
 		return true;
+	}
+	else if (cursorMode_ != cm_None) {
+		if (event->type() == QEvent::MouseButtonPress) {
+			mousePressed_ = true;
+		}
+		else if (event->type() == QEvent::MouseButtonRelease) {
+			if (mousePressed_) {
+				setCursor(QCursor(Qt::ArrowCursor));
+				cursorMode_ == cm_None;
+				viewport()->update();
+			}
+			mousePressed_ = false;
+			return true;
+		}
 	}
 	return CentralView::viewportEvent(event);
 }
