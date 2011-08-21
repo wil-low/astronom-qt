@@ -36,6 +36,7 @@ protected:
 	AstroLabel* findByIndex (const QModelIndex & index) const;
 
 	AstroLabelContainer* labels_;
+	QString colorScheme_;
 private:
 	central_view_t type_;
 };

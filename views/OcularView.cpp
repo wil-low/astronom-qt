@@ -564,6 +564,8 @@ bool OcularView::loadSettings()
 	settings.endGroup();
 
 	settings.beginGroup("ocular-colors");
+	colorScheme_ = settings.value("colorScheme", "default").toString();
+	settings.beginGroup(colorScheme_);
 	colors_.outerRColor = settings.value("outerRColor", QColor(129,135,187/*78,84,136*/)).value<QColor>(); // almost grey
 	colors_.ocularColor = settings.value("ocularColor", QColor(255,255,255)).value<QColor>(); // white
 	colors_.contourColor = settings.value("contourColor", QColor(0,0,0)).value<QColor>(); // light violet
@@ -577,6 +579,7 @@ bool OcularView::loadSettings()
 	colors_.planetTickColor = settings.value("planetTickColor", QColor(0,192,255)).value<QColor>();
 	colors_.aspectTickColor = settings.value("aspectTickColor", QColor(0,0,0)).value<QColor>();
 	colors_.centerGripColor = settings.value("centerGripColor", QColor(129,135,187)).value<QColor>(); // almost grey
+	settings.endGroup();
 	settings.endGroup();
 
 	return true;
@@ -609,6 +612,8 @@ bool OcularView::saveSettings()
 	settings.endGroup();
 */
 	settings.beginGroup("ocular-colors");
+	settings.setValue("colorScheme", colorScheme_);
+	settings.beginGroup(colorScheme_);
 	settings.setValue("outerRColor", colors_.outerRColor);
 	settings.setValue("ocularColor", colors_.ocularColor);
 	settings.setValue("contourColor", colors_.contourColor);
@@ -622,6 +627,7 @@ bool OcularView::saveSettings()
 	settings.setValue("planetTickColor", colors_.planetTickColor);
 	settings.setValue("aspectTickColor", colors_.aspectTickColor);
 	settings.setValue("centerGripColor", colors_.centerGripColor);
+	settings.endGroup();
 	settings.endGroup();
 
 	settings.sync();

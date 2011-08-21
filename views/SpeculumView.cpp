@@ -282,6 +282,8 @@ bool SpeculumView::loadSettings()
 	QSettings& settings = SettingsManager::get_mutable_instance().settings();
 
 	settings.beginGroup("speculum-colors");
+	colorScheme_ = settings.value("colorScheme", "default").toString();
+	settings.beginGroup(colorScheme_);
 	colors_.headerColor = settings.value("headerColor", QColor(255,204,102)).value<QColor>(); // orange
 	colors_.planetColor = settings.value("planetColor", QColor(0,0,0)).value<QColor>(); // black
 	colors_.houseColor = settings.value("houseColor", QColor(0,0,0)).value<QColor>(); // black
@@ -292,6 +294,7 @@ bool SpeculumView::loadSettings()
 	colors_.contourColor = settings.value("contourColor", QColor(0,0,0)).value<QColor>(); // black
 	colors_.middleColor = settings.value("middleColor", QColor(176,176,176)).value<QColor>(); // gray
 	settings.endGroup();
+	settings.endGroup();
 
 	return true;
 }
@@ -301,6 +304,8 @@ bool SpeculumView::saveSettings()
 	QSettings& settings = SettingsManager::get_mutable_instance().settings();
 
 	settings.beginGroup("speculum-colors");
+	settings.setValue("colorScheme", colorScheme_);
+	settings.beginGroup(colorScheme_);
 	settings.setValue("headerColor", colors_.headerColor); // orange
 	settings.setValue("planetColor", colors_.planetColor); // black
 	settings.setValue("houseColor", colors_.houseColor); // black
@@ -310,6 +315,7 @@ bool SpeculumView::saveSettings()
 	settings.setValue("gridColor", colors_.gridColor); // dye violet
 	settings.setValue("contourColor", colors_.contourColor); // black
 	settings.setValue("middleColor", colors_.middleColor); // gray
+	settings.endGroup();
 	settings.endGroup();
 
 	settings.sync();
