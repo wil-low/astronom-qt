@@ -46,6 +46,8 @@ public:
 	virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 	virtual void currentChanged (const QModelIndex & current, const QModelIndex & previous);
 	virtual QPoint translatePoint(const QPoint& p) const;
+	virtual bool loadSettings();
+	virtual bool saveSettings();
 signals:
 
 public slots:

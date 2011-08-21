@@ -1,0 +1,1 @@
+These files bootstrap user settings and should be copied in application's local setting directory after installation.

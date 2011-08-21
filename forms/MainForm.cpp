@@ -74,6 +74,7 @@ MainForm::MainForm(QWidget *parent)
 
 MainForm::~MainForm()
 {
+	view_->saveSettings();
 	delete model_;
 	delete input_;
 	delete persons_;
@@ -258,7 +259,9 @@ void MainForm::centralViewMenuTriggered(QAction* action)
 
 void MainForm::changeCentralView(central_view_t type)
 {
-	QAbstractItemView* old_view = view_;
+	CentralView* old_view = view_;
+	if (old_view)
+		old_view->saveSettings();
 	view_ = NULL;
 	switch (type) {
 	case cv_Ocular: {

@@ -21,6 +21,8 @@ public:
 
 	void paintEvent(QPaintEvent* event);
 	virtual QModelIndex indexAt(const QPoint &point) const;
+	virtual bool loadSettings();
+	virtual bool saveSettings();
 
 protected:
 	virtual bool isIndexHidden(const QModelIndex &index) const;

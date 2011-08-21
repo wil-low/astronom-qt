@@ -33,45 +33,7 @@ OcularView::OcularView(QWidget *parent)
 void OcularView::reconfigure()
 {
 	zeroPoint_ = ZERO_ASC;
-	QSettings& settings = SettingsManager::get_mutable_instance().settings();
-
-	settings.beginGroup("ocular:dimensions");
-	defaultDimensions_[ODIM_radius] = settings.value("radius", 377).toInt();
-	defaultDimensions_[ODIM_ascArrowR] = settings.value("ascArrowR", 374).toInt();
-	defaultDimensions_[ODIM_zodiacOuterR] = settings.value("zodiacOuterR", 300).toInt();
-	defaultDimensions_[ODIM_zodiac10dgrR] = settings.value("zodiac10dgrR", 291).toInt();
-	defaultDimensions_[ODIM_zodiac5dgrR] = settings.value("zodiac5dgrR", 262).toInt();
-	defaultDimensions_[ODIM_innerPlanetLabelR] = settings.value("innerPlanetLabelR", 234).toInt();
-	defaultDimensions_[ODIM_innerPlanetDegreeLabelR] = settings.value("innerPlanetDegreeLabelR", 212).toInt();
-	defaultDimensions_[ODIM_innerPlanetRetrogradeLabelR] = settings.value("innerPlanetRetrogradeLabelR", 195).toInt();
-	defaultDimensions_[ODIM_zodiac30dgrR] = settings.value("zodiac30dgrR", 0).toInt();
-	defaultDimensions_[ODIM_innerPlanetR] = settings.value("innerPlanetR", 248).toInt();
-	defaultDimensions_[ODIM_zodiacInner2R] = settings.value("zodiacInner2R", 147).toInt();
-	defaultDimensions_[ODIM_zodiacInnerR] = settings.value("zodiacInnerR", 141).toInt();
-	defaultDimensions_[ODIM_aspectR] = settings.value("aspectR", 138).toInt();
-	defaultDimensions_[ODIM_planetFontSize] = settings.value("planetFontSize", 5).toInt();
-	defaultDimensions_[ODIM_zodiacFontSize] = settings.value("zodiacFontSize", 4).toInt();
-	defaultDimensions_[ODIM_degreeFontSize] = settings.value("degreeFontSize", 3).toInt();
-	defaultDimensions_[ODIM_tick10Size] = settings.value("tick10Size", 8).toInt();
-	defaultDimensions_[ODIM_tick5Size] = settings.value("tick5Size", 5).toInt();
-	defaultDimensions_[ODIM_centerGripR] = settings.value("centerGripR", 5).toInt();
-	settings.endGroup();
-
-	settings.beginGroup("ocular:colors");
-	colors_.outerRColor = settings.value("outerRColor", QColor(129,135,187/*78,84,136*/)).value<QColor>(); // almost grey
-	colors_.ocularColor = settings.value("ocularColor", QColor(255,255,255)).value<QColor>(); // white
-	colors_.contourColor = settings.value("contourColor", QColor(0,0,0)).value<QColor>(); // light violet
-	colors_.mainLineColor = settings.value("mainLineColor", QColor(128,0,192)).value<QColor>();
-	colors_.labelColor = settings.value("labelColor", QColor(0,0,0)).value<QColor>();
-	colors_.fillColor = settings.value("fillColor", QColor(240,224,255)).value<QColor>();
-	colors_.arrowColor = settings.value("arrowColor", QColor(255,0,0)).value<QColor>();
-	colors_.cuspidColor = settings.value("cuspidColor", QColor(0,192,128)).value<QColor>();
-	colors_.tick10Color = settings.value("tick10Color", QColor(192,0,255)).value<QColor>();
-	colors_.innerRColor = settings.value("innerRColor", QColor(192,0,255)).value<QColor>();
-	colors_.planetTickColor = settings.value("planetTickColor", QColor(0,192,255)).value<QColor>();
-	colors_.aspectTickColor = settings.value("aspectTickColor", QColor(0,0,0)).value<QColor>();
-	colors_.centerGripColor = settings.value("centerGripColor", QColor(129,135,187)).value<QColor>(); // almost grey
-	settings.endGroup();
+	loadSettings();
 
 	BOOST_FOREACH (AstroLabel* label, *labels_) {
 		qDebug() << label->toString();
@@ -573,4 +535,95 @@ bool OcularView::viewportEvent (QEvent* event)
 		}
 	}
 	return CentralView::viewportEvent(event);
+}
+
+bool OcularView::loadSettings()
+{
+	QSettings& settings = SettingsManager::get_mutable_instance().settings();
+
+	settings.beginGroup("ocular-dimensions");
+	defaultDimensions_[ODIM_radius] = settings.value("radius", 377).toInt();
+	defaultDimensions_[ODIM_ascArrowR] = settings.value("ascArrowR", 374).toInt();
+	defaultDimensions_[ODIM_zodiacOuterR] = settings.value("zodiacOuterR", 300).toInt();
+	defaultDimensions_[ODIM_zodiac10dgrR] = settings.value("zodiac10dgrR", 291).toInt();
+	defaultDimensions_[ODIM_zodiac5dgrR] = settings.value("zodiac5dgrR", 262).toInt();
+	defaultDimensions_[ODIM_innerPlanetLabelR] = settings.value("innerPlanetLabelR", 234).toInt();
+	defaultDimensions_[ODIM_innerPlanetDegreeLabelR] = settings.value("innerPlanetDegreeLabelR", 212).toInt();
+	defaultDimensions_[ODIM_innerPlanetRetrogradeLabelR] = settings.value("innerPlanetRetrogradeLabelR", 195).toInt();
+	defaultDimensions_[ODIM_zodiac30dgrR] = settings.value("zodiac30dgrR", 0).toInt();
+	defaultDimensions_[ODIM_innerPlanetR] = settings.value("innerPlanetR", 248).toInt();
+	defaultDimensions_[ODIM_zodiacInner2R] = settings.value("zodiacInner2R", 147).toInt();
+	defaultDimensions_[ODIM_zodiacInnerR] = settings.value("zodiacInnerR", 141).toInt();
+	defaultDimensions_[ODIM_aspectR] = settings.value("aspectR", 138).toInt();
+	defaultDimensions_[ODIM_planetFontSize] = settings.value("planetFontSize", 5).toInt();
+	defaultDimensions_[ODIM_zodiacFontSize] = settings.value("zodiacFontSize", 4).toInt();
+	defaultDimensions_[ODIM_degreeFontSize] = settings.value("degreeFontSize", 3).toInt();
+	defaultDimensions_[ODIM_tick10Size] = settings.value("tick10Size", 8).toInt();
+	defaultDimensions_[ODIM_tick5Size] = settings.value("tick5Size", 5).toInt();
+	defaultDimensions_[ODIM_centerGripR] = settings.value("centerGripR", 5).toInt();
+	settings.endGroup();
+
+	settings.beginGroup("ocular-colors");
+	colors_.outerRColor = settings.value("outerRColor", QColor(129,135,187/*78,84,136*/)).value<QColor>(); // almost grey
+	colors_.ocularColor = settings.value("ocularColor", QColor(255,255,255)).value<QColor>(); // white
+	colors_.contourColor = settings.value("contourColor", QColor(0,0,0)).value<QColor>(); // light violet
+	colors_.mainLineColor = settings.value("mainLineColor", QColor(128,0,192)).value<QColor>();
+	colors_.labelColor = settings.value("labelColor", QColor(0,0,0)).value<QColor>();
+	colors_.fillColor = settings.value("fillColor", QColor(240,224,255)).value<QColor>();
+	colors_.arrowColor = settings.value("arrowColor", QColor(255,0,0)).value<QColor>();
+	colors_.cuspidColor = settings.value("cuspidColor", QColor(0,192,128)).value<QColor>();
+	colors_.tick10Color = settings.value("tick10Color", QColor(192,0,255)).value<QColor>();
+	colors_.innerRColor = settings.value("innerRColor", QColor(192,0,255)).value<QColor>();
+	colors_.planetTickColor = settings.value("planetTickColor", QColor(0,192,255)).value<QColor>();
+	colors_.aspectTickColor = settings.value("aspectTickColor", QColor(0,0,0)).value<QColor>();
+	colors_.centerGripColor = settings.value("centerGripColor", QColor(129,135,187)).value<QColor>(); // almost grey
+	settings.endGroup();
+
+	return true;
+}
+
+bool OcularView::saveSettings()
+{
+	QSettings& settings = SettingsManager::get_mutable_instance().settings();
+/*
+	settings.beginGroup("ocular:dimensions");
+	defaultDimensions_[ODIM_radius] = settings.value("radius", 377).toInt();
+	defaultDimensions_[ODIM_ascArrowR] = settings.value("ascArrowR", 374).toInt();
+	defaultDimensions_[ODIM_zodiacOuterR] = settings.value("zodiacOuterR", 300).toInt();
+	defaultDimensions_[ODIM_zodiac10dgrR] = settings.value("zodiac10dgrR", 291).toInt();
+	defaultDimensions_[ODIM_zodiac5dgrR] = settings.value("zodiac5dgrR", 262).toInt();
+	defaultDimensions_[ODIM_innerPlanetLabelR] = settings.value("innerPlanetLabelR", 234).toInt();
+	defaultDimensions_[ODIM_innerPlanetDegreeLabelR] = settings.value("innerPlanetDegreeLabelR", 212).toInt();
+	defaultDimensions_[ODIM_innerPlanetRetrogradeLabelR] = settings.value("innerPlanetRetrogradeLabelR", 195).toInt();
+	defaultDimensions_[ODIM_zodiac30dgrR] = settings.value("zodiac30dgrR", 0).toInt();
+	defaultDimensions_[ODIM_innerPlanetR] = settings.value("innerPlanetR", 248).toInt();
+	defaultDimensions_[ODIM_zodiacInner2R] = settings.value("zodiacInner2R", 147).toInt();
+	defaultDimensions_[ODIM_zodiacInnerR] = settings.value("zodiacInnerR", 141).toInt();
+	defaultDimensions_[ODIM_aspectR] = settings.value("aspectR", 138).toInt();
+	defaultDimensions_[ODIM_planetFontSize] = settings.value("planetFontSize", 5).toInt();
+	defaultDimensions_[ODIM_zodiacFontSize] = settings.value("zodiacFontSize", 4).toInt();
+	defaultDimensions_[ODIM_degreeFontSize] = settings.value("degreeFontSize", 3).toInt();
+	defaultDimensions_[ODIM_tick10Size] = settings.value("tick10Size", 8).toInt();
+	defaultDimensions_[ODIM_tick5Size] = settings.value("tick5Size", 5).toInt();
+	defaultDimensions_[ODIM_centerGripR] = settings.value("centerGripR", 5).toInt();
+	settings.endGroup();
+*/
+	settings.beginGroup("ocular-colors");
+	settings.setValue("outerRColor", colors_.outerRColor);
+	settings.setValue("ocularColor", colors_.ocularColor);
+	settings.setValue("contourColor", colors_.contourColor);
+	settings.setValue("mainLineColor", colors_.mainLineColor);
+	settings.setValue("labelColor", colors_.labelColor);
+	settings.setValue("fillColor", colors_.fillColor);
+	settings.setValue("arrowColor", colors_.arrowColor);
+	settings.setValue("cuspidColor", colors_.cuspidColor);
+	settings.setValue("tick10Color", colors_.tick10Color);
+	settings.setValue("innerRColor", colors_.innerRColor);
+	settings.setValue("planetTickColor", colors_.planetTickColor);
+	settings.setValue("aspectTickColor", colors_.aspectTickColor);
+	settings.setValue("centerGripColor", colors_.centerGripColor);
+	settings.endGroup();
+
+	settings.sync();
+	return true;
 }

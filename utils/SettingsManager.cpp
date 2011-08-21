@@ -7,6 +7,7 @@
 #include <QSettings>
 #include <QFont>
 #include <QFile>
+#include <QDir>
 #include <QTextStream>
 
 const QString DEG_STR("°");
@@ -16,11 +17,6 @@ const QString ASPECT_PREFIX("asp");
 
 SettingsManager::SettingsManager()
 {
-#ifdef __linux
-	settingsPath_ = "/home/willow/prj/astronom-qt/settings";
-#else
-	settingsPath_ = "D:/prj/astronom-qt/settings";
-#endif
 }
 
 const QString& SettingsManager::settingsPath() const
@@ -35,6 +31,8 @@ QSettings& SettingsManager::settings()
 
 void SettingsManager::init()
 {
+	settings_ = new QSettings;
+	settingsPath_ = QFileInfo(settings_->fileName()).absolutePath() + "/";
 	DBHelper::get_mutable_instance().initConnections(settingsPath_);
 
 	QFile cssFile(settingsPath_ + "/style.css");
@@ -44,10 +42,9 @@ void SettingsManager::init()
 	}
 	cssFile.close();
 
-	settings_ = new QSettings(settingsPath_ + "/global.txt", QSettings::IniFormat);
 	loadFont(astrofont_, "Astronom");
 	loadFont(arialfont_, "Arial");
-	settings_->beginGroup("ephemeris:mapping");
+	settings_->beginGroup("ephemeris-mapping");
 	QStringList list = settings_->childKeys();
 	for (int i = 0; i < list.size(); ++i) {
 		QString name = list.at(i);
@@ -56,7 +53,7 @@ void SettingsManager::init()
 		id2planet_[id] = name;
 	}
 	settings_->endGroup();
-	settings_->beginGroup("house:method");
+	settings_->beginGroup("house-method");
 	list = settings_->childKeys();
 	for (int i = 0; i < list.size(); ++i) {
 		QString name = list.at(i);
@@ -101,7 +98,7 @@ void SettingsManager::loadFont(font_glyph_t& font, const QString& face)
 		QFont* fnt = new QFont(face, FONT_SIZES[i]);
 		font.fonts_[FONT_SIZES[i]] = fnt;
 	}
-	settings_->beginGroup("font:" + face);
+	settings_->beginGroup("font-" + face);
 	QStringList list = settings_->childKeys();
 	for (int i = 0; i < list.size(); ++i) {
 		QString name = list.at(i);
