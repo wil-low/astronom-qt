@@ -44,13 +44,10 @@ SpeculumView::~SpeculumView()
 
 void SpeculumView::reconfigure()
 {
-//	restoreState();
-
 	BOOST_FOREACH(SpeculumCell* cell, cells_) {
 		cell->sort();
 		cell->reconfigure(cellWidth_, cellHeight_, speculum::DEFAULT_FONT_SIZE);
 	}
-//	viewport()->update();
 }
 
 void SpeculumView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
@@ -311,6 +308,4 @@ void SpeculumView::saveState(QSettings& settings)
 	settings.setValue("middleColor", colors_.middleColor); // gray
 	settings.endGroup();
 	settings.endGroup();
-
-	settings.sync();
 }

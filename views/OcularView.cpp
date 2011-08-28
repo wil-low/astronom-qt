@@ -33,7 +33,6 @@ OcularView::OcularView(QWidget *parent)
 void OcularView::reconfigure()
 {
 	zeroPoint_ = ZERO_ASC;
-//	restoreState();
 
 	BOOST_FOREACH (AstroLabel* label, *labels_) {
 		qDebug() << label->toString();
@@ -69,11 +68,7 @@ void OcularView::recalcDimensionsByFactor(qreal factor)
 void OcularView::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(viewport());
-//	painter.setClipRegion(event->region());
-//	painter.fillRect(viewport()->rect(), colors_.backgroundColor);
 	painter.translate(centerPoint_);
-//	painter.fillRect(QRectF(-dimensions_[ODIM_radius], -dimensions_[ODIM_radius], dimensions_[ODIM_radius] * 2, dimensions_[ODIM_radius] * 2), colors_.backgroundColor);
-//	painter.setRenderHints(QPainter::Antialiasing);
 	if (dimensions_[ODIM_ascArrowR] != 0) {
 		painter.setPen(colors_.outerRColor);
 		DrawHelper::drawCircle(&painter, dimensions_[ODIM_ascArrowR]);
@@ -109,15 +104,13 @@ void OcularView::paintEvent(QPaintEvent* event)
 		DrawHelper::drawCircle(&painter, dimensions_[ODIM_zodiac30dgrR]);
 	}
 	if (dimensions_[ODIM_zodiacInner2R] != 0) {
-//		if (!is_resizing_) {
-			ang = zeroAngle_;
-			delta_ang = DEG_PER_SIGN;
-			painter.setPen(Qt::transparent);
-			painter.setBrush(colors_.fillColor);
-			for (int sign = 0; sign < 6; ++sign) {
-				DrawHelper::drawPie(&painter, dimensions_[ODIM_zodiacInner2R], ang + delta_ang, delta_ang);
-				ang += delta_ang * 2;
-//			}
+		ang = zeroAngle_;
+		delta_ang = DEG_PER_SIGN;
+		painter.setPen(Qt::transparent);
+		painter.setBrush(colors_.fillColor);
+		for (int sign = 0; sign < 6; ++sign) {
+			DrawHelper::drawPie(&painter, dimensions_[ODIM_zodiacInner2R], ang + delta_ang, delta_ang);
+			ang += delta_ang * 2;
 		}
 		painter.setPen(colors_.mainLineColor);
 		painter.setBrush(Qt::transparent);
@@ -252,11 +245,9 @@ void OcularView::spreadLabels (int chart, int type, qreal r)
 	CircleSpread cspread(input);
 
 	std::vector<SpreadValue> output;
-	//FXTRACE((90, "Delta_ang %.02f, input vector size %d\n", delta_ang, input.size()));
 	cspread.spread(output, delta_ang, 360);
 
 	BOOST_FOREACH (SpreadValue& sv, output) {
-//		FXTRACE((99, "output %d->%.02f\n", (int)sv.ptr_, sv.val_));
 		AstroLabel* label = static_cast<AstroLabel*>(sv.ptr_);
 		label->setVisibleAngle(sv.val_);
 		//qDebug() << label->toString();
@@ -498,8 +489,6 @@ bool OcularView::viewportEvent (QEvent* event)
 		QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
 		QPoint pos = mouseEvent->pos();
 		if (!viewport()->rect().contains(pos)) {
-			//mousePressed_ = false;
-			//cursorMode_ = cm_None;
 			return true;
 		}
 		if (!mousePressed_) {
