@@ -1,7 +1,13 @@
 #include "DocumentManager.h"
+
 #include "../models/ModelHelper.h"
+
 #include "../widgets/QtCreator/fancytabwidget.h"
 #include "../widgets/DocumentWidget.h"
+
+#include "../forms/FormulaForm.h"
+
+#include "BodyProps.h"
 #include "SettingsManager.h"
 
 #include <boost/foreach.hpp>
@@ -120,4 +126,15 @@ void DocumentManager::restoreState()
 	BOOST_FOREACH(DocumentWidget* dw, documents_)
 		dw->restoreState(settings);
 	settings.endGroup();
+}
+
+void DocumentManager::setVariables(FormulaForm& form)
+{
+	ModelHelper modelHelper(timeLoc[0], model_, 0, false);
+	BodyProps bp;
+	int index = 0;
+	while (modelHelper.propsByIndex(index++, 0, &bp)) {
+		form.setVariable(SettingsManager::get_const_instance().formulaVariable(bp),
+			bp.prop[BodyProps::bp_Lon]);
+	}
 }

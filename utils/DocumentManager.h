@@ -10,6 +10,7 @@ class QAction;
 class QAbstractItemModel;
 class QItemSelectionModel;
 class DocumentWidget;
+class FormulaForm;
 
 namespace Core {
 	namespace Internal {
@@ -30,7 +31,7 @@ public:
 	void setMode(doc_mode_t type);
 	void saveState();
 	void restoreState();
-
+	void setVariables(FormulaForm& form);
 signals:
 	void reconfigure();
 	void timeloc_changed();
@@ -48,7 +49,6 @@ private:
 	std::vector<DocumentWidget*> documents_;
 
 private slots:
-	//void reconfigure();
 	void houseMenuTriggered(QAction*);
 	//void updateViews();
 	//void timeloc_set(const TimeLoc&);

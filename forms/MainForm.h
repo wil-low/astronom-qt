@@ -25,7 +25,6 @@ public:
 
 signals:
 	void reconfigure();
-	void updateDocument();
 
 private:
 	Ui::MainForm *ui;
@@ -34,7 +33,6 @@ private:
 	PersonsForm* persons_;
 	void applyInputData();
 	void loadHouseMenu();
-	void createDockWindows();
 	QActionGroup* houseActionGroup_;
 	QActionGroup* centralViewActionGroup_;
 
