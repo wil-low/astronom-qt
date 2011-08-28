@@ -72,7 +72,7 @@ private:
 	ZeroPoint zeroPoint_;
 	qreal zeroAngle_;
 	QPointF centerPoint_;
-	qreal radius_;
+	int radius_;
 
 	enum cursor_mode_t {
 		cm_None = 0,

@@ -493,8 +493,15 @@ QPoint OcularView::translatePoint(const QPoint& p) const
 bool OcularView::viewportEvent (QEvent* event)
 {
 	const int RESIZE_PRECISION = 2;
+	const int MIN_RADIUS = 88;
 	if (event->type() == QEvent::MouseMove) {
 		QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+		QPoint pos = mouseEvent->pos();
+		if (!viewport()->rect().contains(pos)) {
+			//mousePressed_ = false;
+			//cursorMode_ = cm_None;
+			return true;
+		}
 		if (!mousePressed_) {
 			qreal distance = DrawHelper::distance(centerPoint_, mouseEvent->posF());
 			if (distance < dimensions_[ODIM_centerGripR]) {
@@ -515,8 +522,11 @@ bool OcularView::viewportEvent (QEvent* event)
 			viewport()->update();
 		}
 		else if (cursorMode_ == cm_Resize) {
-			radius_ = DrawHelper::distance(centerPoint_, mouseEvent->posF());
-			recalcDimensions(radius_);
+			qreal r = DrawHelper::distance(centerPoint_, mouseEvent->posF());
+			if (r > MIN_RADIUS) {
+				radius_ = r;
+				recalcDimensions(radius_);
+			}
 		}
 		return true;
 	}
@@ -527,7 +537,7 @@ bool OcularView::viewportEvent (QEvent* event)
 		else if (event->type() == QEvent::MouseButtonRelease) {
 			if (mousePressed_) {
 				setCursor(QCursor(Qt::ArrowCursor));
-				cursorMode_ == cm_None;
+				cursorMode_ = cm_None;
 				viewport()->update();
 			}
 			mousePressed_ = false;
@@ -539,7 +549,7 @@ bool OcularView::viewportEvent (QEvent* event)
 
 void OcularView::restoreState(QSettings& settings)
 {
-	radius_ = settings.value("radius", 377).toReal();
+	radius_ = settings.value("radius", 377).toInt();
 	centerPoint_ = settings.value("center", QPointF(100, 100)).value<QPointF>();
 
 	settings.beginGroup("dimensions");
