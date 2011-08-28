@@ -67,10 +67,10 @@ enum astro_flag_t {
 	af_Retrograde = 8,
 };
 
-enum central_view_t {
-	cv_Ocular = 0,
-	cv_Speculum,
-	cv_Last,
+enum doc_mode_t {
+	doc_Ocular = 0,
+	doc_Speculum,
+	doc_Last,
 };
 
 static const char* HOUSE_NAMES[] = {

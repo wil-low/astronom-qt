@@ -13,7 +13,7 @@
 #include <boost/foreach.hpp>
 
 OcularView::OcularView(QWidget *parent)
-: CentralView(parent, cv_Ocular)
+: CentralView(parent, doc_Ocular)
 , cursorMode_(cm_None)
 , mousePressed_(false)
 {

@@ -11,13 +11,13 @@ class DocumentWidget : public QWidget
 {
     Q_OBJECT
 public:
-	DocumentWidget(QWidget *parent, central_view_t viewType);
+	DocumentWidget(QWidget *parent, doc_mode_t viewType);
 
 signals:
 
 public slots:
 private:
-	central_view_t viewType_;
+	doc_mode_t viewType_;
 	QVBoxLayout* layout_;
 	CentralView* view_;
 };

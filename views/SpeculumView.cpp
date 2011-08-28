@@ -16,7 +16,7 @@
 #include <QDebug>
 
 SpeculumView::SpeculumView(QWidget *parent)
-: CentralView(parent, cv_Speculum)
+: CentralView(parent, doc_Speculum)
 , cellWidth_(0)
 , cellHeight_(0)
 {

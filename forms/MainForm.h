@@ -9,15 +9,11 @@ namespace Ui {
     class MainForm;
 }
 
-class QGraphicsScene;
-class QGraphicsView;
 class QActionGroup;
 class QAction;
 class InputForm;
 class PersonsForm;
-class QAbstractItemModel;
-class QItemSelectionModel;
-class CentralView;
+class DocumentManager;
 
 class MainForm : public QMainWindow
 {
@@ -25,41 +21,26 @@ class MainForm : public QMainWindow
 
 public:
     explicit MainForm(QWidget *parent = 0);
-    ~MainForm();
-	void setTimeLoc(int chart_index);
-signals:
-	void reconfigure();
-	void timeloc_changed();
-	void updateCentralView();
+	virtual ~MainForm();
 
 private:
-        Ui::MainForm *ui;
-        CentralView* view_;
+	Ui::MainForm *ui;
 	InputForm* input_;
+	DocumentManager* manager_;
 	PersonsForm* persons_;
-	void setupModel();
-	QAbstractItemModel *model_;
-	QItemSelectionModel *selectionModel;
+	void applyInputData();
 	void loadHouseMenu();
 	void loadCentralViewMenu();
 	void createDockWindows();
 	QActionGroup* houseActionGroup_;
 	QActionGroup* centralViewActionGroup_;
-	TimeLoc timeLoc[MAX_CHART_COUNT];
-	void applyInputData();
-	void changeCentralView(central_view_t type);
-	void changeHouseMethod(const QString& method);
+
 private slots:
 	void on_actionImport_triggered();
 	void on_actionPersons_activated();
 	void on_actionFormula_activated();
 	void on_actionGlyph_manager_activated();
 	void on_actionInput_data_activated();
-	void centralViewMenuTriggered(QAction*);
-	void houseMenuTriggered(QAction*);
-	void updateViews();
-	void timeloc_set(const TimeLoc&);
-	void centralViewAboutToChange(int index);
 };
 
 #endif // MAINFORM_H

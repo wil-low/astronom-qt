@@ -7,13 +7,13 @@
 #include "PersonsForm.h"
 #include "ImportForm.h"
 
-#include "../models/ModelHelper.h"
 #include "../models/OcularDelegate.h"
 
 #include "../utils/BodyProps.h"
 #include "../utils/Ephemeris.h"
 #include "../utils/TimeLoc.h"
 #include "../utils/SettingsManager.h"
+#include "../utils/DocumentManager.h"
 
 #include "../widgets/DocumentWidget.h"
 #include "../views/OcularView.h"
@@ -26,16 +26,15 @@
 #include "../labels/AstroLabel.h"
 
 #include <QtGui>
-#include <QPushButton>
 
-const central_view_t CENTRAL_VIEW_ON_START = cv_Ocular;
+const doc_mode_t DOC_MODE_ON_START = doc_Ocular;
 
 MainForm::MainForm(QWidget *parent)
 : QMainWindow(parent)
 , ui(new Ui::MainForm)
 , input_(new InputForm(this))
 , persons_(new PersonsForm(this))
-, view_(NULL)
+, manager_(new DocumentManager(this))
 {
 	//setAttribute(Qt::WA_DeleteOnClose);
 #ifdef __linux
@@ -47,11 +46,9 @@ MainForm::MainForm(QWidget *parent)
 	QFontInfo fi(font);
 	QString fam = fi.family();
 
-	model_ = new QStandardItemModel(0, 2, this);
-
 	ui->setupUi(this);
 	houseActionGroup_ = new QActionGroup(this);
-	assert (connect(houseActionGroup_, SIGNAL(triggered(QAction*)), this, SLOT(houseMenuTriggered(QAction*))) &&
+	assert (connect(houseActionGroup_, SIGNAL(triggered(QAction*)), manager_, SLOT(houseMenuTriggered(QAction*))) &&
 			"houseMenu connect failed");
 	loadCentralViewMenu();
 /*
@@ -70,25 +67,22 @@ MainForm::MainForm(QWidget *parent)
 
 	connect(persons_, SIGNAL(timeloc_set(const TimeLoc&)), this, SLOT(timeloc_set(const TimeLoc&)));
 
-	ui->centralwidget->insertTab(0, new DocumentWidget(this, cv_Ocular), QIcon(), "Ocular");
-	ui->centralwidget->insertTab(1, new DocumentWidget(this, cv_Speculum), QIcon(), "Speculum");
+	ui->centralwidget->insertTab(0, new DocumentWidget(this, doc_Ocular), QIcon(), "Ocular");
+	ui->centralwidget->insertTab(1, new DocumentWidget(this, doc_Speculum), QIcon(), "Speculum");
 	ui->centralwidget->insertTab(2, new QPushButton("H3", this), QIcon(), "Hello3");
 	ui->centralwidget->insertTab(3, new QPushButton("H4", this), QIcon(), "Hello4");
 	ui->centralwidget->setTabEnabled(0, true);
 	ui->centralwidget->setTabEnabled(1, true);
-	connect(ui->centralwidget, SIGNAL(currentAboutToShow(int)), this, SLOT(centralViewAboutToChange(int)));
-//	changeCentralView(CENTRAL_VIEW_ON_START);
-//	changeHouseMethod("P");
+	connect(ui->centralwidget, SIGNAL(currentAboutToShow(int)), manager_, SLOT(centralViewAboutToChange(int)));
+	manager_->changeMode(DOC_MODE_ON_START);
+	manager_->changeHouseMethod("P");
 }
 
 MainForm::~MainForm()
 {
-	if (view_)
-		view_->saveSettings();
-	delete model_;
 	delete input_;
 	delete persons_;
-	delete view_;
+	delete manager_;
 	delete ui;
 }
 
@@ -100,35 +94,21 @@ void MainForm::on_actionInput_data_activated()
 
 void MainForm::applyInputData()
 {
+	/*
 	timeLoc[0] = input_->toTimeLoc();
 	qDebug() << __FUNCTION__ << timeLoc[0];
 	setWindowTitle(input_->titleStr() + " - Astronom");
 	timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
-	setTimeLoc(0);
+	manager_->setTimeLoc(0);
 	emit reconfigure();
 	updateViews();
+	*/
 }
 
 void MainForm::on_actionGlyph_manager_activated()
 {
 	GlyphForm form;
 	form.exec();
-}
-
-void MainForm::setTimeLoc(int chart_index)
-{
-	const TimeLoc& tl = timeLoc[chart_index];
-	model_->setHeaderData(chart_index, Qt::Horizontal, qVariantFromValue(tl), Qt::UserRole);
-
-	ModelHelper modelHelper(tl, model_, chart_index, true);
-	int bodies[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18};
-	for (int i = 0; i < sizeof(bodies) / sizeof(int); ++i) {
-		modelHelper.insertPlanet(bodies[i], true);
-	}
-	modelHelper.insertHouses();
-
-	emit timeloc_changed();
-	statusBar()->showMessage(AstroLabel::statistics());
 }
 
 void MainForm::loadHouseMenu()
@@ -147,29 +127,15 @@ void MainForm::loadHouseMenu()
 			action->setChecked(true);
 	}
 }
-
-void MainForm::houseMenuTriggered(QAction* action)
-{
-	if (action) {
-		changeHouseMethod(action->data().toString());
-		view_->viewport()->update();
-	}
-}
-
-void MainForm::changeHouseMethod(const QString& method)
-{
-	SettingsManager::get_mutable_instance().setHouseMethod(method);
-	timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
-	setTimeLoc(0);
-}
-
+/*
 void MainForm::updateViews()
 {
 	emit updateCentralView();
 }
-
+*/
 void MainForm::on_actionFormula_activated()
 {
+	/*
 	FormulaForm form(this);
 	ModelHelper modelHelper(timeLoc[0], model_, 0, false);
 	BodyProps bp;
@@ -178,20 +144,20 @@ void MainForm::on_actionFormula_activated()
 		form.setVariable(SettingsManager::get_const_instance().formulaVariable(bp),
 			bp.prop[BodyProps::bp_Lon]);
 	}
-	form.exec();
+	form.exec();*/
 }
 
 void MainForm::on_actionPersons_activated()
 {
 	persons_->show();
 }
-
+/*
 void MainForm::timeloc_set(const TimeLoc& tl)
 {
 	input_->fromTimeLoc(tl);
 	applyInputData();
 }
-
+*/
 void MainForm::createDockWindows()
 {
 /*
@@ -246,58 +212,26 @@ void MainForm::loadCentralViewMenu()
 	ui->menuView->addSeparator(); //->setText(tr("CentralView"));
 
 	centralViewActionGroup_ = new QActionGroup(this);
-        assert (connect(centralViewActionGroup_, SIGNAL(triggered(QAction*)), this, SLOT(centralViewMenuTriggered(QAction*))) &&
-			"centralViewMenu connect failed");
+//	assert (connect(centralViewActionGroup_, SIGNAL(triggered(QAction*)), manager_, SLOT(centralViewMenuTriggered(QAction*))) &&
+//			"centralViewMenu connect failed");
 	for (int i = 0; i < sizeof(CENTRAL_VIEW_CAPTIONS) / sizeof(CENTRAL_VIEW_CAPTIONS[0]); ++i) {
 		QAction* action = new QAction(tr(CENTRAL_VIEW_CAPTIONS[i]), this);
 		action->setCheckable(true);
 		action->setData(i);
 		centralViewActionGroup_->addAction(action);
 		ui->menuView->addAction(action);
-		if (i == CENTRAL_VIEW_ON_START)
+		if (i == DOC_MODE_ON_START)
 			action->setChecked(true);
 	}
 
 	ui->menuView->addSeparator();
 }
-
+/*
 void MainForm::centralViewMenuTriggered(QAction* action)
 {
 	if (action) {
 		central_view_t type = static_cast<central_view_t>(action->data().toInt());
-		changeCentralView(type);
+		manager_->changeCentralView(type);
 	}
 }
-
-void MainForm::changeCentralView(central_view_t type)
-{
-	CentralView* old_view = view_;
-	if (old_view)
-		old_view->saveSettings();
-	view_ = NULL;
-	switch (type) {
-	case cv_Ocular: {
-		OcularView* itemView = new OcularView(ui->centralwidget);
-		connect(this, SIGNAL(updateCentralView()), itemView, SLOT(invalidateView()));
-		view_ = itemView;
-		break; }
-	case cv_Speculum:
-		SpeculumView* speculumView = new SpeculumView(ui->centralwidget);
-		view_ = speculumView;
-		break;
-	}
-	if (view_) {
-		qDebug() << __FUNCTION__ << type;
-		ui->horizontalLayout->insertWidget(1, view_, 4);
-		connect(this, SIGNAL(reconfigure()), view_, SLOT(reconfigure()));
-		view_->setModel(model_);
-		applyInputData();
-		emit reconfigure();
-	}
-	delete old_view;
-}
-
-void MainForm::centralViewAboutToChange(int index)
-{
-	QMessageBox::information(this, "", QString::number(index));
-}
+*/

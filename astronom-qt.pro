@@ -64,7 +64,8 @@ SOURCES += \
     widgets/QtCreator/utils/stylehelper.cpp \
     widgets/QtCreator/fancytabwidget.cpp \
     widgets/QtCreator/utils/styledbar.cpp \
-    widgets/DocumentWidget.cpp
+    widgets/DocumentWidget.cpp \
+    utils/DocumentManager.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -129,7 +130,8 @@ HEADERS += \
     widgets/QtCreator/utils/utils_global.h \
     widgets/QtCreator/fancytabwidget.h \
     widgets/QtCreator/utils/styledbar.h \
-    widgets/DocumentWidget.h
+    widgets/DocumentWidget.h \
+    utils/DocumentManager.h
 
 FORMS += \
     forms/MainForm.ui \

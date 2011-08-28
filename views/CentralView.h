@@ -11,9 +11,9 @@ class CentralView : public QAbstractItemView
 {
     Q_OBJECT
 public:
-	CentralView(QWidget *parent, central_view_t type);
+	CentralView(QWidget *parent, doc_mode_t type);
 	virtual ~CentralView();
-	central_view_t type() const;
+	doc_mode_t type() const;
 	virtual QRect visualRect(const QModelIndex &index) const;
 	virtual void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
 	virtual QPoint translatePoint(const QPoint& p) const;
@@ -38,7 +38,7 @@ protected:
 	AstroLabelContainer* labels_;
 	QString colorScheme_;
 private:
-	central_view_t type_;
+	doc_mode_t type_;
 };
 
 #endif // CENTRALVIEW_H

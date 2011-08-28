@@ -2,7 +2,7 @@
 
 #include <QVBoxLayout>
 
-DocumentWidget::DocumentWidget(QWidget *parent, central_view_t viewType)
+DocumentWidget::DocumentWidget(QWidget *parent, doc_mode_t viewType)
 : QWidget(parent)
 , viewType_(viewType)
 , view_(NULL)

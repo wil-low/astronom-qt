@@ -5,7 +5,7 @@
 #include <QHelpEvent>
 #include <QToolTip>
 
-CentralView::CentralView(QWidget *parent, central_view_t type)
+CentralView::CentralView(QWidget *parent, doc_mode_t type)
 : QAbstractItemView(parent)
 , labels_(new AstroLabelContainer)
 , type_(type)
