@@ -33,12 +33,11 @@ OcularView::OcularView(QWidget *parent)
 void OcularView::reconfigure()
 {
 	zeroPoint_ = ZERO_ASC;
-	loadSettings();
+//	restoreState();
 
 	BOOST_FOREACH (AstroLabel* label, *labels_) {
 		qDebug() << label->toString();
 	}
-	recalcDimensions(defaultDimensions_[ODIM_radius]);
 	switch (zeroPoint_) {
 		case ZERO_ASC:
 		{
@@ -51,6 +50,7 @@ void OcularView::reconfigure()
 			zeroAngle_ = 180;
 			break;
 	}
+	recalcDimensions(radius_);
 }
 
 void OcularView::recalcDimensions(qreal newRadius)
@@ -515,8 +515,8 @@ bool OcularView::viewportEvent (QEvent* event)
 			viewport()->update();
 		}
 		else if (cursorMode_ == cm_Resize) {
-			qreal distance = DrawHelper::distance(centerPoint_, mouseEvent->posF());
-			recalcDimensions(distance);
+			radius_ = DrawHelper::distance(centerPoint_, mouseEvent->posF());
+			recalcDimensions(radius_);
 		}
 		return true;
 	}
@@ -537,11 +537,12 @@ bool OcularView::viewportEvent (QEvent* event)
 	return CentralView::viewportEvent(event);
 }
 
-bool OcularView::loadSettings()
+void OcularView::restoreState(QSettings& settings)
 {
-	QSettings& settings = SettingsManager::get_mutable_instance().settings();
+	radius_ = settings.value("radius", 377).toReal();
+	centerPoint_ = settings.value("center", QPointF(100, 100)).value<QPointF>();
 
-	settings.beginGroup("ocular-dimensions");
+	settings.beginGroup("dimensions");
 	defaultDimensions_[ODIM_radius] = settings.value("radius", 377).toInt();
 	defaultDimensions_[ODIM_ascArrowR] = settings.value("ascArrowR", 374).toInt();
 	defaultDimensions_[ODIM_zodiacOuterR] = settings.value("zodiacOuterR", 300).toInt();
@@ -563,7 +564,7 @@ bool OcularView::loadSettings()
 	defaultDimensions_[ODIM_centerGripR] = settings.value("centerGripR", 5).toInt();
 	settings.endGroup();
 
-	settings.beginGroup("ocular-colors");
+	settings.beginGroup("colors");
 	colorScheme_ = settings.value("colorScheme", "default").toString();
 	settings.beginGroup(colorScheme_);
 	colors_.outerRColor = settings.value("outerRColor", QColor(129,135,187/*78,84,136*/)).value<QColor>(); // almost grey
@@ -581,13 +582,13 @@ bool OcularView::loadSettings()
 	colors_.centerGripColor = settings.value("centerGripColor", QColor(129,135,187)).value<QColor>(); // almost grey
 	settings.endGroup();
 	settings.endGroup();
-
-	return true;
 }
 
-bool OcularView::saveSettings()
+void OcularView::saveState(QSettings& settings)
 {
-	QSettings& settings = SettingsManager::get_mutable_instance().settings();
+	settings.setValue("radius", radius_);
+	settings.setValue("center", centerPoint_);
+
 /*
 	settings.beginGroup("ocular:dimensions");
 	defaultDimensions_[ODIM_radius] = settings.value("radius", 377).toInt();
@@ -611,7 +612,7 @@ bool OcularView::saveSettings()
 	defaultDimensions_[ODIM_centerGripR] = settings.value("centerGripR", 5).toInt();
 	settings.endGroup();
 */
-	settings.beginGroup("ocular-colors");
+	settings.beginGroup("colors");
 	settings.setValue("colorScheme", colorScheme_);
 	settings.beginGroup(colorScheme_);
 	settings.setValue("outerRColor", colors_.outerRColor);
@@ -630,6 +631,4 @@ bool OcularView::saveSettings()
 	settings.endGroup();
 	settings.endGroup();
 
-	settings.sync();
-	return true;
 }

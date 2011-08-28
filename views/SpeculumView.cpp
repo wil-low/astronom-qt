@@ -44,7 +44,7 @@ SpeculumView::~SpeculumView()
 
 void SpeculumView::reconfigure()
 {
-	loadSettings();
+//	restoreState();
 
 	BOOST_FOREACH(SpeculumCell* cell, cells_) {
 		cell->sort();
@@ -277,11 +277,9 @@ void SpeculumView::selectAspects (const AstroLabel* parentLabel, bool isSelected
 	}
 }
 
-bool SpeculumView::loadSettings()
+void SpeculumView::restoreState(QSettings& settings)
 {
-	QSettings& settings = SettingsManager::get_mutable_instance().settings();
-
-	settings.beginGroup("speculum-colors");
+	settings.beginGroup("colors");
 	colorScheme_ = settings.value("colorScheme", "default").toString();
 	settings.beginGroup(colorScheme_);
 	colors_.headerColor = settings.value("headerColor", QColor(255,204,102)).value<QColor>(); // orange
@@ -295,15 +293,11 @@ bool SpeculumView::loadSettings()
 	colors_.middleColor = settings.value("middleColor", QColor(176,176,176)).value<QColor>(); // gray
 	settings.endGroup();
 	settings.endGroup();
-
-	return true;
 }
 
-bool SpeculumView::saveSettings()
+void SpeculumView::saveState(QSettings& settings)
 {
-	QSettings& settings = SettingsManager::get_mutable_instance().settings();
-
-	settings.beginGroup("speculum-colors");
+	settings.beginGroup("colors");
 	settings.setValue("colorScheme", colorScheme_);
 	settings.beginGroup(colorScheme_);
 	settings.setValue("headerColor", colors_.headerColor); // orange
@@ -319,5 +313,4 @@ bool SpeculumView::saveSettings()
 	settings.endGroup();
 
 	settings.sync();
-	return true;
 }

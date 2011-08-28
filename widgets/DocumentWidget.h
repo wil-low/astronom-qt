@@ -4,21 +4,27 @@
 #include "../utils/constants.h"
 #include <QWidget>
 
-class QVBoxLayout;
+class QSplitter;
 class CentralView;
+class QAbstractItemModel;
+class QSettings;
 
 class DocumentWidget : public QWidget
 {
     Q_OBJECT
 public:
-	DocumentWidget(QWidget *parent, doc_mode_t viewType);
+	DocumentWidget(const QObject* manager, doc_mode_t viewType, QAbstractItemModel* model);
+	void saveState(QSettings& settings);
+	void restoreState(QSettings& settings);
 
 signals:
 
 public slots:
+	void reconfigure();
 private:
 	doc_mode_t viewType_;
-	QVBoxLayout* layout_;
+	QSplitter* vertSplitter_;
+	QSplitter* horizSplitter_;
 	CentralView* view_;
 };
 

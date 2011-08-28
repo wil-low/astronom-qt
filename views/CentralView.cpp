@@ -15,7 +15,6 @@ CentralView::CentralView(QWidget *parent, doc_mode_t type)
 
 CentralView::~CentralView()
 {
-	saveSettings();
 	delete labels_;
 }
 

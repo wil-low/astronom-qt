@@ -15,19 +15,12 @@
 #include "../utils/SettingsManager.h"
 #include "../utils/DocumentManager.h"
 
-#include "../widgets/DocumentWidget.h"
-#include "../views/OcularView.h"
-#include "../views/SpeculumView.h"
-
-#include "../widgets/PlanetSelector.h"
-#include "../widgets/HouseSelector.h"
-#include "../widgets/AsteroidSelector.h"
-
 #include "../labels/AstroLabel.h"
 
 #include <QtGui>
 
 const doc_mode_t DOC_MODE_ON_START = doc_Ocular;
+//const doc_mode_t DOC_MODE_ON_START = doc_Speculum;
 
 MainForm::MainForm(QWidget *parent)
 : QMainWindow(parent)
@@ -50,32 +43,14 @@ MainForm::MainForm(QWidget *parent)
 	houseActionGroup_ = new QActionGroup(this);
 	assert (connect(houseActionGroup_, SIGNAL(triggered(QAction*)), manager_, SLOT(houseMenuTriggered(QAction*))) &&
 			"houseMenu connect failed");
-	loadCentralViewMenu();
-/*
-	OcularView* itemView = new OcularView(ui->centralwidget);
-	connect(this, SIGNAL(updateCentralView()), itemView, SLOT(invalidateView()));
-
-	view_ = itemView;
-	ui->horizontalLayout->insertWidget(0, view_, 4);
-	itemView->setModel(model_);
-
-	connect(this, SIGNAL(reconfigure()), view_, SLOT(reconfigure()));
-*/
 	loadHouseMenu();
 
-	createDockWindows();
-
 	connect(persons_, SIGNAL(timeloc_set(const TimeLoc&)), this, SLOT(timeloc_set(const TimeLoc&)));
-
-	ui->centralwidget->insertTab(0, new DocumentWidget(this, doc_Ocular), QIcon(), "Ocular");
-	ui->centralwidget->insertTab(1, new DocumentWidget(this, doc_Speculum), QIcon(), "Speculum");
-	ui->centralwidget->insertTab(2, new QPushButton("H3", this), QIcon(), "Hello3");
-	ui->centralwidget->insertTab(3, new QPushButton("H4", this), QIcon(), "Hello4");
-	ui->centralwidget->setTabEnabled(0, true);
-	ui->centralwidget->setTabEnabled(1, true);
-	connect(ui->centralwidget, SIGNAL(currentAboutToShow(int)), manager_, SLOT(centralViewAboutToChange(int)));
-	manager_->changeMode(DOC_MODE_ON_START);
+	//connect(this, SIGNAL(reconfigure()), manager_, SLOT(reconfigure()));
+	manager_->setControlledWidget(ui->centralwidget);
 	manager_->changeHouseMethod("P");
+	manager_->setMode(DOC_MODE_ON_START);
+	applyInputData();
 }
 
 MainForm::~MainForm()
@@ -94,15 +69,14 @@ void MainForm::on_actionInput_data_activated()
 
 void MainForm::applyInputData()
 {
-	/*
-	timeLoc[0] = input_->toTimeLoc();
-	qDebug() << __FUNCTION__ << timeLoc[0];
+	TimeLoc timeLoc = input_->toTimeLoc();
+	qDebug() << __FUNCTION__ << timeLoc;
 	setWindowTitle(input_->titleStr() + " - Astronom");
-	timeLoc[0].method_ = SettingsManager::get_const_instance().houseMethod();
-	manager_->setTimeLoc(0);
-	emit reconfigure();
-	updateViews();
-	*/
+	timeLoc.method_ = SettingsManager::get_const_instance().houseMethod();
+	manager_->setTimeLoc(0, timeLoc);
+	//emit reconfigure();
+//	emit updateDocument();
+//	updateViews();
 }
 
 void MainForm::on_actionGlyph_manager_activated()
@@ -127,12 +101,7 @@ void MainForm::loadHouseMenu()
 			action->setChecked(true);
 	}
 }
-/*
-void MainForm::updateViews()
-{
-	emit updateCentralView();
-}
-*/
+
 void MainForm::on_actionFormula_activated()
 {
 	/*
@@ -151,13 +120,13 @@ void MainForm::on_actionPersons_activated()
 {
 	persons_->show();
 }
-/*
+
 void MainForm::timeloc_set(const TimeLoc& tl)
 {
 	input_->fromTimeLoc(tl);
 	applyInputData();
 }
-*/
+
 void MainForm::createDockWindows()
 {
 /*
@@ -201,7 +170,7 @@ void MainForm::on_actionImport_triggered()
 	ImportForm import(this);
 	import.exec();
 }
-
+/*
 void MainForm::loadCentralViewMenu()
 {
 	static const char* CENTRAL_VIEW_CAPTIONS[] = {
@@ -226,7 +195,7 @@ void MainForm::loadCentralViewMenu()
 
 	ui->menuView->addSeparator();
 }
-/*
+
 void MainForm::centralViewMenuTriggered(QAction* action)
 {
 	if (action) {

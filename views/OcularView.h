@@ -46,12 +46,12 @@ public:
 	virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 	virtual void currentChanged (const QModelIndex & current, const QModelIndex & previous);
 	virtual QPoint translatePoint(const QPoint& p) const;
-	virtual bool loadSettings();
-	virtual bool saveSettings();
-signals:
+	virtual void restoreState(QSettings& settings);
+	virtual void saveState(QSettings& settings);
+	virtual void reconfigure();
 
+signals:
 public slots:
-	void reconfigure();
 	void invalidateView();
 
 protected:
@@ -72,6 +72,7 @@ private:
 	ZeroPoint zeroPoint_;
 	qreal zeroAngle_;
 	QPointF centerPoint_;
+	qreal radius_;
 
 	enum cursor_mode_t {
 		cm_None = 0,

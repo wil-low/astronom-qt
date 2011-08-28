@@ -6,6 +6,7 @@
 
 class AstroLabel;
 class AstroLabelContainer;
+class QSettings;
 
 class CentralView : public QAbstractItemView
 {
@@ -17,8 +18,10 @@ public:
 	virtual QRect visualRect(const QModelIndex &index) const;
 	virtual void scrollTo(const QModelIndex &index, ScrollHint hint = EnsureVisible);
 	virtual QPoint translatePoint(const QPoint& p) const;
-	virtual bool loadSettings(){}
-	virtual bool saveSettings(){}
+	virtual void restoreState(QSettings& settings) = 0;
+	virtual void saveState(QSettings& settings) = 0;
+	virtual void reconfigure() = 0;
+
 signals:
 
 public slots:

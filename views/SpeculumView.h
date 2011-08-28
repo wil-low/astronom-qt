@@ -21,17 +21,13 @@ public:
 
 	void paintEvent(QPaintEvent* event);
 	virtual QModelIndex indexAt(const QPoint &point) const;
-	virtual bool loadSettings();
-	virtual bool saveSettings();
+	virtual void restoreState(QSettings& settings);
+	virtual void saveState(QSettings& settings);
+	virtual void reconfigure();
 
 protected:
 	virtual bool isIndexHidden(const QModelIndex &index) const;
 	virtual void resizeEvent (QResizeEvent* event);
-
-signals:
-
-public slots:
-	void reconfigure();
 
 private:
 	static const int COLUMN_COUNT = ZODIAC_SIGN_COUNT + 2;
