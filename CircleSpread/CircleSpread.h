@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <list>
+#include <stddef.h>
 
 struct SpreadValue
 {
