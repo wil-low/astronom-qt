@@ -21,6 +21,7 @@ signals:
 
 public slots:
 	void reconfigure();
+        void updateViews();
 private:
 	doc_mode_t viewType_;
 	QSplitter* vertSplitter_;

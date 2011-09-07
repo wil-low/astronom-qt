@@ -47,7 +47,7 @@ DocumentWidget::DocumentWidget(const QObject* manager, doc_mode_t viewType, QAbs
 		planetSelector->setFilterModels();
 		//	planetSelector->copySelectionModel(itemView);
 		connect(manager, SIGNAL(timeloc_changed()), planetSelector, SLOT(timeloc_changed()));
-		//connect(planetSelector, SIGNAL(invalidateViews()), this, SLOT(updateViews()));
+		connect(planetSelector, SIGNAL(invalidateViews()), this, SLOT(updateViews()));
 		tabBodyList->addTab(planetSelector, tr("Planets"));
 
 		HouseSelector* houseSelector = new HouseSelector(this, model);
@@ -69,6 +69,11 @@ DocumentWidget::DocumentWidget(const QObject* manager, doc_mode_t viewType, QAbs
 void DocumentWidget::reconfigure()
 {
 	view_->reconfigure();
+}
+
+void DocumentWidget::updateViews()
+{
+	view_->viewport()->update();
 }
 
 void DocumentWidget::saveState(QSettings& settings)
