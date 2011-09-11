@@ -13,7 +13,8 @@ class DocumentWidget : public QWidget
 {
     Q_OBJECT
 public:
-	DocumentWidget(const QObject* manager, doc_mode_t viewType, QAbstractItemModel* model);
+	DocumentWidget(const QObject* manager, doc_mode_t viewType,
+				   QAbstractItemModel* bodyModel, QAbstractItemModel* aspectModel);
 	void saveState(QSettings& settings);
 	void restoreState(QSettings& settings);
 

@@ -42,7 +42,8 @@ private:
 	void setupModel();
 
 	QWidget* parent_;
-	QAbstractItemModel *model_;
+	QAbstractItemModel *bodyModel_;
+	QAbstractItemModel *aspectModel_;
 	QItemSelectionModel *selectionModel;
 	TimeLoc timeLoc[MAX_CHART_COUNT];
 	Core::Internal::FancyTabWidget* tabWidget_;

@@ -65,7 +65,12 @@ SOURCES += \
     widgets/QtCreator/fancytabwidget.cpp \
     widgets/QtCreator/utils/styledbar.cpp \
     widgets/DocumentWidget.cpp \
-    utils/DocumentManager.cpp
+    utils/DocumentManager.cpp \
+    utils/Aspect.cpp \
+    utils/AspectProps.cpp \
+    models/AspectModelHelper.cpp \
+    utils/AspectManager.cpp \
+    widgets/Aspectarium.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -131,7 +136,12 @@ HEADERS += \
     widgets/QtCreator/fancytabwidget.h \
     widgets/QtCreator/utils/styledbar.h \
     widgets/DocumentWidget.h \
-    utils/DocumentManager.h
+    utils/DocumentManager.h \
+    utils/Aspect.h \
+    utils/AspectProps.h \
+    models/AspectModelHelper.h \
+    utils/AspectManager.h \
+    widgets/Aspectarium.h
 
 FORMS += \
     forms/MainForm.ui \

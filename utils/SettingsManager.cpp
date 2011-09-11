@@ -1,4 +1,5 @@
 #include "SettingsManager.h"
+#include "AspectManager.h"
 #include "../db/DBHelper.h"
 #include "../utils/BodyProps.h"
 #include <QString>
@@ -9,6 +10,8 @@
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
+
+const char DELIMITER = ' ';
 
 const QString DEG_STR("°");
 const QString BACKTICK_STR("`");
@@ -44,6 +47,7 @@ void SettingsManager::init()
 
 	loadFont(astrofont_, "Astronom");
 	loadFont(arialfont_, "Arial");
+
 	settings_->beginGroup("ephemeris-mapping");
 	QStringList list = settings_->childKeys();
 	for (int i = 0; i < list.size(); ++i) {
@@ -53,11 +57,27 @@ void SettingsManager::init()
 		id2planet_[id] = name;
 	}
 	settings_->endGroup();
+
 	settings_->beginGroup("house-method");
 	list = settings_->childKeys();
 	for (int i = 0; i < list.size(); ++i) {
 		QString name = list.at(i);
 		house_method_.push_back(StringPair(name, settings_->value(name).toString()));
+	}
+	settings_->endGroup();
+
+	settings_->beginGroup("aspect-angle-orb-diff");
+	list = settings_->childKeys();
+	for (int i = 0; i < list.size(); ++i) {
+		QString name = list.at(i);
+		int id = name.toInt();
+		QStringList strList = settings_->value(name).toString().split(DELIMITER);
+		double angle = strList[0].toDouble();
+		double orb = strList[1].toDouble();
+		int signDifference = strList[2].toInt();
+		AspectManager::get_mutable_instance().registerProps(
+				id,angle, orb, signDifference, 0, 0);
+
 	}
 	settings_->endGroup();
 }
@@ -105,7 +125,6 @@ void SettingsManager::loadFont(font_glyph_t& font, const QString& face)
 		int id = settings_->value(name).toInt();
 		font.glyphs_[name] = id;
 	}
-	const char DELIMITER = ' ';
 	QString s = settings_->value("zodiac").toString();
 	QStringList strList = s.split(DELIMITER);
 	for (int i = 0; i < strList.size(); ++i) {

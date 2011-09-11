@@ -6,13 +6,15 @@
 #include "../widgets/PlanetSelector.h"
 #include "../widgets/HouseSelector.h"
 #include "../widgets/AsteroidSelector.h"
+#include "../widgets/Aspectarium.h"
 
 #include <QVBoxLayout>
 #include <QSplitter>
 #include <QLabel>
 #include <QSettings>
 
-DocumentWidget::DocumentWidget(const QObject* manager, doc_mode_t viewType, QAbstractItemModel* model)
+DocumentWidget::DocumentWidget(const QObject* manager, doc_mode_t viewType,
+							   QAbstractItemModel* model, QAbstractItemModel* aspectModel)
 : viewType_(viewType)
 , view_(NULL)
 {
@@ -24,7 +26,8 @@ DocumentWidget::DocumentWidget(const QObject* manager, doc_mode_t viewType, QAbs
 
 	horizSplitter_ = new QSplitter(this);
 	vertSplitter_->addWidget(horizSplitter_);
-	vertSplitter_->addWidget(new QLabel("Hello"));
+	Aspectarium* aspectarium = new Aspectarium(this, aspectModel);
+	vertSplitter_->addWidget(aspectarium);
 
 	switch (viewType_) {
 	case doc_Ocular: {

@@ -5,7 +5,9 @@
 #include <QAbstractItemModel>
 
 ModelHelper::ModelHelper(const TimeLoc& tl, QAbstractItemModel* model, int chart_index, bool clear)
-: tl_(tl), model_(model), chart_index_(chart_index)
+: tl_(tl)
+, model_(model)
+, chart_index_(chart_index)
 {
 	if (clear)
 		model_->removeRows(chart_index, model_->rowCount(QModelIndex()), QModelIndex());

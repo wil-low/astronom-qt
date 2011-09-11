@@ -1,6 +1,7 @@
 #include "DocumentManager.h"
 
 #include "../models/ModelHelper.h"
+#include "../models/AspectModelHelper.h"
 
 #include "../widgets/QtCreator/fancytabwidget.h"
 #include "../widgets/DocumentWidget.h"
@@ -35,7 +36,8 @@ int docType2tabIndex(doc_mode_t type)
 
 DocumentManager::DocumentManager(QWidget *parent)
 : parent_(parent)
-, model_(new QStandardItemModel(0, 2, this))
+, bodyModel_(new QStandardItemModel(0, 2, this))
+, aspectModel_(new QStandardItemModel(0, 1, this))
 {
 	documents_.resize(doc_Last);
 }
@@ -44,20 +46,23 @@ DocumentManager::~DocumentManager()
 {
 	if (tabWidget_)
 		saveState();
-	delete model_;
+	delete bodyModel_;
 }
 
 void DocumentManager::setTimeLoc(int chart_index, const TimeLoc& tl)
 {
 	timeLoc[chart_index] = tl;
-	model_->setHeaderData(chart_index, Qt::Horizontal, qVariantFromValue(tl), Qt::UserRole);
+	bodyModel_->setHeaderData(chart_index, Qt::Horizontal, qVariantFromValue(tl), Qt::UserRole);
 
-	ModelHelper modelHelper(timeLoc[chart_index], model_, chart_index, true);
+	ModelHelper modelHelper(timeLoc[chart_index], bodyModel_, chart_index, true);
 	int bodies[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18};
 	for (int i = 0; i < sizeof(bodies) / sizeof(int); ++i) {
 		modelHelper.insertPlanet(bodies[i], true);
 	}
 	modelHelper.insertHouses();
+
+	AspectModelHelper aspectModelHelper(aspectModel_, true);
+	aspectModelHelper.insertAspects(bodyModel_, chart_index, chart_index);
 
 	emit timeloc_changed();
 	emit reconfigure();
@@ -97,7 +102,7 @@ void DocumentManager::setControlledWidget(Core::Internal::FancyTabWidget* w)
 	for (int dt = doc_Ocular; dt < doc_Last; ++dt) {
 		int tabIndex = docType2tabIndex((doc_mode_t)dt);
 		if (tabIndex != -1) {
-			DocumentWidget* docWidget = new DocumentWidget(this, (doc_mode_t)dt, model_);
+			DocumentWidget* docWidget = new DocumentWidget(this, (doc_mode_t)dt, bodyModel_, aspectModel_);
 			docWidget->setObjectName(TAB_CAPTIONS[tabIndex]);
 			connect(this, SIGNAL(reconfigure()), docWidget, SLOT(reconfigure()));
 			tabWidget_->insertTab(tabIndex, docWidget, QIcon(), tr(TAB_CAPTIONS[tabIndex]));
@@ -130,7 +135,7 @@ void DocumentManager::restoreState()
 
 void DocumentManager::setVariables(FormulaForm& form)
 {
-	ModelHelper modelHelper(timeLoc[0], model_, 0, false);
+	ModelHelper modelHelper(timeLoc[0], bodyModel_, 0, false);
 	BodyProps bp;
 	int index = 0;
 	while (modelHelper.propsByIndex(index++, 0, &bp)) {
