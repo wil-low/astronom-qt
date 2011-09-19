@@ -68,6 +68,8 @@ void SettingsManager::init()
 
 	settings_->beginGroup("aspect-angle-orb-diff");
 	list = settings_->childKeys();
+	BodyProps bp;
+	bp.type = TYPE_ASPECT;
 	for (int i = 0; i < list.size(); ++i) {
 		QString name = list.at(i);
 		int id = name.toInt();
@@ -75,8 +77,10 @@ void SettingsManager::init()
 		double angle = strList[0].toDouble();
 		double orb = strList[1].toDouble();
 		int signDifference = strList[2].toInt();
+		bp.userData = id;
+		char angleChar = label(bp).toAscii()[0];
 		AspectManager::get_mutable_instance().registerProps(
-				id,angle, orb, signDifference, 0, 0);
+				id,angle, orb, signDifference, angleChar, 0);
 
 	}
 	settings_->endGroup();

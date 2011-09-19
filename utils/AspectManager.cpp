@@ -32,9 +32,18 @@ bool AspectManager::makeAspect (Aspect& aspect, const BodyProps& body0, const Bo
 	double angle_delta = fabs(body0.prop[BodyProps::bp_Lon] - body1.prop[BodyProps::bp_Lon]);
 	BOOST_FOREACH(const AspectPropsMap::value_type value, aspectProps_) {
 		if (fabs(angle_delta - value.second->angle()) < value.second->orb()) {
-			aspect.set (angle_delta, NULL, NULL, value.second, value.second);
+			aspect.set (angle_delta, body0, body1, value.second, value.second);
 			return true;
 		}
 	}
 	return false;
+}
+
+const AspectProps* AspectManager::getAspect(int id) const
+{
+	AspectPropsMap::const_iterator it = aspectProps_.find (id);
+	if (it == aspectProps_.end())
+		return NULL;
+	else
+		return it->second;
 }

@@ -1,8 +1,10 @@
 #include "SpeculumView.h"
 #include "../utils/BodyProps.h"
+#include "../utils/AspectProps.h"
 #include "../labels/AstroLabelContainer.h"
 #include "../labels/LabelFactory.h"
 #include "../utils/SettingsManager.h"
+#include "../utils/AspectManager.h"
 #include "../utils/DMS.h"
 #include "items/SpeculumCell.h"
 #include "items/SpeculumVertHeader.h"
@@ -197,14 +199,18 @@ AstroLabel* SpeculumView::insertLabel(int chart_id, const BodyProps& props, bool
 
 void SpeculumView::addAspects (AstroLabel* parentLabel)
 {
-	static const double ASPECT_ANGLES[] = {
-		180, 120, 90, 60,
+	static const double ASPECT_IDS[] = {
+		1, 2, 3, 4,
 	};
 	int column, row;
-	BOOST_FOREACH(const double& angle, ASPECT_ANGLES) {
+	BOOST_FOREACH(int id, ASPECT_IDS) {
+		const AspectProps* aprops = AspectManager::get_const_instance().getAspect(id);
+		if (aprops == NULL)
+			continue;
+		double angle = aprops->angle();
 		BodyProps props;
 		props.type = TYPE_ASPECT;
-		props.userData = (int)angle;
+		props.userData = aprops->id();
 		props.prop[BodyProps::bp_AspectAngle] = angle;
 		// positive angle
 		int checksumArray[] = {parentLabel->id(), parentLabel->id(), (int)angle};

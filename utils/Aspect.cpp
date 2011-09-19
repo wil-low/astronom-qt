@@ -1,26 +1,28 @@
 #include "Aspect.h"
+#include "AspectProps.h"
+#include "BodyProps.h"
 
 Aspect::Aspect()
 : angle_(-1)
-, body0_(NULL)
-, body1_(NULL)
+, bodyId0_(-1)
+, bodyId1_(-1)
 , angleProps_(NULL)
 , signProps_(NULL)
 {
 }
 
-Aspect::Aspect(double angle, BodyProps* body0, BodyProps* body1,
+Aspect::Aspect(double angle, const BodyProps& body0, const BodyProps& body1,
 	   AspectProps* angleProps, AspectProps* signProps)
 {
 	set (angle, body0, body1, angleProps, signProps);
 }
 
-void Aspect::set (double angle, BodyProps* body0, BodyProps* body1,
+void Aspect::set (double angle, const BodyProps& body0, const BodyProps& body1,
 	   AspectProps* angleProps, AspectProps* signProps)
 {
 	angle_ = angle;
-	body0_ = body0;
-	body1_ = body1;
+	bodyId0_ = body0.id;
+	bodyId1_ = body1.id;
 	angleProps_ = angleProps;
 	signProps_ = signProps;
 }
@@ -28,7 +30,7 @@ void Aspect::set (double angle, BodyProps* body0, BodyProps* body1,
 QString Aspect::toString() const
 {
 	QString s;
-	s.sprintf ("Aspect %X angle %.2f, body0 %X, body1 %X, angleProps %X, signProps %X",
-			   this, angle_, body0_, body1_, angleProps_, signProps_);
+	s.sprintf ("Aspect %X angle %.2f, body0 %d, body1 %d, angleProps %d, signProps %d",
+			   this, angle_, bodyId0_, bodyId1_, angleProps_->angleChar(), signProps_->signChar());
 	return s;
 }

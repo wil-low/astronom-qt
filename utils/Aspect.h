@@ -10,18 +10,17 @@ class Aspect
 {
 public:
 	Aspect();
-	Aspect(double angle, BodyProps* body0, BodyProps* body1,
+	Aspect(double angle, const BodyProps& body0, const BodyProps& body1,
 		   AspectProps* angleProps, AspectProps* signProps);
 
-	void set(double angle, BodyProps* body0, BodyProps* body1,
+	void set(double angle, const BodyProps& body0, const BodyProps& body1,
 		   AspectProps* angleProps, AspectProps* signProps);
 
 	QString toString() const;
 
 private:
 	double angle_;
-	BodyProps* body0_;
-	BodyProps* body1_;
+	int bodyId0_, bodyId1_;
 	AspectProps* angleProps_;
 	AspectProps* signProps_;
 };

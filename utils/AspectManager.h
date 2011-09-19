@@ -15,7 +15,7 @@ public:
 	void registerProps (int id, double angle, double orb, int signDifference,
 						 char angleChar, char signChar);
 	bool makeAspect (Aspect& aspect, const BodyProps& body0, const BodyProps& body1) const;
-
+	const AspectProps* getAspect(int id) const;
 private:
 	int maxAspectId_;
 	typedef std::map<int, AspectProps*> AspectPropsMap;
