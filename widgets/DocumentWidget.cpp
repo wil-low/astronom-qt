@@ -32,6 +32,7 @@ DocumentWidget::DocumentWidget(const QObject* manager, doc_mode_t viewType,
 	switch (viewType_) {
 	case doc_Ocular: {
 		OcularView* itemView = new OcularView(this);
+		itemView->setAspectModel(aspectModel);
 		//connect(manager, SIGNAL(updateCentralView()), itemView, SLOT(invalidateView()));
 		view_ = itemView;
 		break; }

@@ -1,6 +1,7 @@
 #include "OcularView.h"
 #include "../utils/DrawHelper.h"
 #include "../utils/constants.h"
+#include "../utils/Aspect.h"
 #include "../labels/AstroLabelContainer.h"
 #include "../labels/LabelFactory.h"
 #include "../utils/SettingsManager.h"
@@ -16,6 +17,7 @@ OcularView::OcularView(QWidget *parent)
 : CentralView(parent, doc_Ocular)
 , cursorMode_(cm_None)
 , mousePressed_(false)
+, aspectModel_(NULL)
 {
 	setSelectionMode(QAbstractItemView::SingleSelection);
 	setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -473,6 +475,27 @@ void OcularView::drawAspects(QPainter* painter)
 			painter->drawLines(pt, 1);
 		}
 	}
+
+	pen.setWidth(1);
+	painter->setPen(pen);
+	Aspect aspect;
+	for (int row = 0; row < aspectModel_->rowCount(); ++row) {
+		QModelIndex index = aspectModel_->index(row, 0);
+		if (index.data(Qt::VisibilityRole).toBool()) {
+			aspect = aspectModel_->data(index).value<Aspect>();
+			AstroLabel* al[2];
+			bool isVisible = true;
+			for (int idx = 0; idx < 2; ++idx) {
+				al[idx] = labels_->find_by_chart_id(aspect.body_[idx].chart_, aspect.body_[idx].id_);
+				if (al[idx]->visible())
+					pt[idx] = DrawHelper::getXYdeg(al[idx]->angle() + zeroAngle_, dimensions_[ODIM_aspectR]);
+				else
+					isVisible = false;
+			}
+			if (isVisible)
+				painter->drawLines(pt, 1);
+		}
+	}
 	painter->restore();
 }
 
@@ -630,4 +653,9 @@ void OcularView::saveState(QSettings& settings)
 	settings.endGroup();
 	settings.endGroup();
 
+}
+
+void OcularView::setAspectModel(QAbstractItemModel* aspectModel)
+{
+	aspectModel_ = aspectModel;
 }

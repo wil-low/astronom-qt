@@ -7,8 +7,6 @@
 #include "PersonsForm.h"
 #include "ImportForm.h"
 
-#include "../models/OcularDelegate.h"
-
 #include "../utils/BodyProps.h"
 #include "../utils/Ephemeris.h"
 #include "../utils/TimeLoc.h"

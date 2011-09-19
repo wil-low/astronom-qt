@@ -35,14 +35,14 @@ bool AspectManager::makeAspect (Aspect& aspect, int chart0, const BodyProps& bod
 	double angle_delta = fabs(body0.prop[BodyProps::bp_Lon] - body1.prop[BodyProps::bp_Lon]);
 	if (angle_delta > 180)
 		angle_delta = 360 - angle_delta;
-	if (body0.id == 3 && body1.id ==7)
-		qDebug() << angle_delta;
+
 	int sign_delta = (int)(body0.prop[BodyProps::bp_Lon] / DEG_PER_SIGN) -
 					 (int)(body1.prop[BodyProps::bp_Lon] / DEG_PER_SIGN);
 	if (sign_delta < 0)
 		sign_delta = -sign_delta;
 	if (sign_delta > 6)
 		sign_delta = 12 - sign_delta;
+
 	Aspect::Body bodies[2];
 	BOOST_FOREACH(const AspectPropsMap::value_type& value0, aspectProps_) {
 		AspectProps* angleProp = value0.second;
@@ -61,7 +61,7 @@ bool AspectManager::makeAspect (Aspect& aspect, int chart0, const BodyProps& bod
 					break;
 				}
 			}
-			qDebug() << angle_delta << body0.id << body1.id << angle_delta << sign_delta;
+			//qDebug() << angle_delta << body0.id << body1.id << angle_delta << sign_delta;
 			aspect.set (angle_delta, bodies, angleProp, signProp);
 			return true;
 		}

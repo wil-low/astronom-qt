@@ -21,7 +21,6 @@ SOURCES += \
     labels/AstroLabel.cpp \
     labels/ZodiacLabel.cpp \
     CircleSpread/CircleSpread.cpp \
-    models/OcularDelegate.cpp \
     labels/PlanetLabel.cpp \
     labels/LabelFactory.cpp \
     widgets/PlanetSelector.cpp \
@@ -87,7 +86,6 @@ HEADERS += \
     labels/AstroLabel.h \
     labels/ZodiacLabel.h \
     CircleSpread/CircleSpread.h \
-    models/OcularDelegate.h \
     labels/PlanetLabel.h \
     labels/LabelFactory.h \
     widgets/PlanetSelector.h \
