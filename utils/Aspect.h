@@ -3,24 +3,22 @@
 
 #include <QMetaType>
 
-class BodyProps;
 class AspectProps;
 
 class Aspect
 {
 public:
+	struct Body {
+		int chart_;
+		int id_;
+		QString label_;
+		Body() : chart_(-1), id_(-1) {}
+	};
 	Aspect();
-	Aspect(double angle, const BodyProps& body0, const BodyProps& body1,
-		   AspectProps* angleProps, AspectProps* signProps);
-
-	void set(double angle, const BodyProps& body0, const BodyProps& body1,
-		   AspectProps* angleProps, AspectProps* signProps);
-
-	QString toString() const;
-
-private:
+	Aspect(double angle, const Body* bodies, AspectProps* angleProps, AspectProps* signProps);
+	void set(double angle, const Body* bodies, AspectProps* angleProps, AspectProps* signProps);
 	double angle_;
-	int bodyId0_, bodyId1_;
+	Body body_[2];
 	AspectProps* angleProps_;
 	AspectProps* signProps_;
 };

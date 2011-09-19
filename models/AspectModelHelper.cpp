@@ -28,13 +28,14 @@ void AspectModelHelper::insertAspects(const QAbstractItemModel* source_model,
 			index = source_model->index(row1, chart_index1);
 			body1 = source_model->data(index).value<BodyProps>();
 			if (body0.type == TYPE_PLANET && body1.type == TYPE_PLANET) {
-				if (AspectManager::get_const_instance().makeAspect(aspect, body0, body1)) {
+				if (AspectManager::get_const_instance().makeAspect(
+						aspect, chart_index0, body0, chart_index1, body1)) {
 					qDebug() << "makeAspect " << body0.id << ", " << body1.id;
 					int row = model_->rowCount();
 					model_->insertRows(row, 1, QModelIndex());
 					index = model_->index(row, 0, QModelIndex());
-					//model_->setData (index, qVariantFromValue(aspect));
-					model_->setData (index, aspect.toString());
+					model_->setData (index, qVariantFromValue(aspect));
+					model_->setData (index, true, Qt::VisibilityRole);
 				}
 			}
 		}

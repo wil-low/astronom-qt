@@ -80,7 +80,7 @@ void SettingsManager::init()
 		bp.userData = id;
 		char angleChar = label(bp).toAscii()[0];
 		AspectManager::get_mutable_instance().registerProps(
-				id,angle, orb, signDifference, angleChar, 0);
+				id,angle, orb, signDifference, angleChar, angleChar);
 
 	}
 	settings_->endGroup();
