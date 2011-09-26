@@ -9,6 +9,7 @@ CentralView::CentralView(QWidget *parent, doc_mode_t type)
 : QAbstractItemView(parent)
 , labels_(new AstroLabelContainer)
 , type_(type)
+, aspectModel_(NULL)
 {
 	setProperty(CSS::MarineBackground, true);
 }
@@ -79,4 +80,9 @@ AstroLabel* CentralView::findByIndex (const QModelIndex & index) const
 	int chart_id = index.column();
 	BodyProps props = model()->data(index).value<BodyProps>();
 	return labels_->find_by_chart_id(chart_id, props.id);
+}
+
+void CentralView::setAspectModel(QAbstractItemModel* aspectModel)
+{
+	aspectModel_ = aspectModel;
 }

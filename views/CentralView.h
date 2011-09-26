@@ -22,6 +22,8 @@ public:
 	virtual void saveState(QSettings& settings) = 0;
 	virtual void reconfigure() = 0;
 
+	void setAspectModel(QAbstractItemModel* aspectModel);
+
 signals:
 
 public slots:
@@ -40,6 +42,8 @@ protected:
 
 	AstroLabelContainer* labels_;
 	QString colorScheme_;
+	QAbstractItemModel* aspectModel_;
+
 private:
 	doc_mode_t type_;
 };

@@ -14,7 +14,7 @@ public:
     AspectManager();
 	void registerProps (int id, double angle, double orb, int signDifference,
 						 char angleChar, char signChar);
-	bool makeAspect (Aspect& aspect, int chart0, const BodyProps& body0, int chart1, const BodyProps& body1) const;
+	void makeAspect (Aspect& aspect, int chart0, const BodyProps& body0, int chart1, const BodyProps& body1) const;
 	const AspectProps* getAspect(int id) const;
 private:
 	int maxAspectId_;

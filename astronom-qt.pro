@@ -70,7 +70,8 @@ SOURCES += \
     models/AspectModelHelper.cpp \
     utils/AspectManager.cpp \
     widgets/Aspectarium.cpp \
-    widgets/AspectariumDelegate.cpp
+    widgets/AspectariumDelegate.cpp \
+    models/AspectariumProxyModel.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -141,7 +142,8 @@ HEADERS += \
     models/AspectModelHelper.h \
     utils/AspectManager.h \
     widgets/Aspectarium.h \
-    widgets/AspectariumDelegate.h
+    widgets/AspectariumDelegate.h \
+    models/AspectariumProxyModel.h
 
 FORMS += \
     forms/MainForm.ui \

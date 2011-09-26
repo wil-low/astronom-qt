@@ -2,6 +2,7 @@
 #define ASPECTARIUM_H
 
 #include <QTableView>
+class AspectariumProxyModel;
 
 class Aspectarium : public QTableView
 {
@@ -14,6 +15,12 @@ signals:
 
 public slots:
 	void tablePressed(const QModelIndex& index);
+
+protected:
+	virtual void resizeEvent(QResizeEvent* event);
+
+private:
+	AspectariumProxyModel* proxyModel_;
 };
 
 #endif // ASPECTARIUM_H

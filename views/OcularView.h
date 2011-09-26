@@ -50,8 +50,6 @@ public:
 	virtual void saveState(QSettings& settings);
 	virtual void reconfigure();
 
-	void setAspectModel(QAbstractItemModel* aspectModel);
-
 signals:
 public slots:
 	void invalidateView();
@@ -83,7 +81,6 @@ private:
 	};
 	cursor_mode_t cursorMode_;
 	bool mousePressed_;
-	QAbstractItemModel* aspectModel_;
 };
 
 #endif // OCULARWHEEL_H

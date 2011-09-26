@@ -7,39 +7,43 @@
 #include <QPainter>
 #include <QDebug>
 
+const int AspectariumDelegate::MARGIN = 10;
+
 AspectariumDelegate::AspectariumDelegate(QObject *parent)
 : QStyledItemDelegate(parent)
 {
-	restyle(12);
+	restyle(10, 20);
 }
 
 void AspectariumDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 		   const QModelIndex &index) const
 {
+	if (!index.isValid())
+		return;
 	painter->save();
 	painter->setBrush(option.palette.foreground());
 	painter->setClipRect(option.rect);
-	QString text[3];
+	QString text[4];
 	Aspect aspect = qVariantValue<Aspect>(index.data());
 
 	const SettingsManager& sm = SettingsManager::get_const_instance();
 	text[0] = aspect.body_[0].label_ + aspect.body_[1].label_;
 
+	text[1].sprintf("%c", aspect.angleProps_ ? aspect.angleProps_->angleChar() : ' ');
+	text[2].sprintf("%c", aspect.signProps_ ? aspect.signProps_->signChar() : ' ');
+
 	DMS dms;
 	dms.fromCoord(aspect.angle_);
-	text[1].sprintf("%2d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-	SettingsManager::fromBackTick(text[1]);
-
-	text[2].sprintf("%c%c", aspect.angleProps_->angleChar(),
-					aspect.signProps_ ? aspect.signProps_->signChar() : '-');
+	text[3].sprintf("%2d%c%02d\'", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min());
+	SettingsManager::fromBackTick(text[3]);
 
 	QFont& astroFont = *sm.font(fontSize_, FF_ASTRO);
 	QFont& textFont = *sm.font(fontSize_, FF_ARIAL);
 
 	bool isVisible = index.data(Qt::VisibilityRole).toBool();
-	QPalette::ColorGroup cg = isVisible ? QPalette::Active : QPalette::Disabled;
+	QPalette::ColorGroup cg = QPalette::Active; //isVisible ? QPalette::Active : QPalette::Disabled;
 
-	if (isVisible) {
+	if (1 && isVisible) {
 		if ((option.state & QStyle::State_Selected)) {
 			painter->fillRect(option.rect, option.palette.brush(cg, QPalette::Highlight));
 			painter->setPen(option.palette.color(cg, QPalette::HighlightedText));
@@ -66,23 +70,37 @@ void AspectariumDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	rect.setRight(rect.x() + width_[0]);
 	painter->drawText(rect, Qt::AlignRight | Qt::AlignCenter, text[0]);
 
-	painter->setFont(textFont);
 	rect.setRight(rect.right() + width_[1]);
 	painter->drawText(rect, Qt::AlignRight | Qt::AlignCenter, text[1]);
-
-	painter->setFont(astroFont);
 	rect.setRight(rect.right() + width_[2]);
 	painter->drawText(rect, Qt::AlignRight | Qt::AlignCenter, text[2]);
+
+	painter->setFont(textFont);
+	rect.setRight(rect.right() + width_[3]);
+	painter->drawText(rect, Qt::AlignRight | Qt::AlignCenter, text[3]);
 
 	painter->restore();
 }
 
-void AspectariumDelegate::restyle(int fontSize)
+void AspectariumDelegate::restyle(int fontSize, int height)
 {
 	fontSize_ = fontSize;
+	height_ = height;
 	const SettingsManager& sm = SettingsManager::get_const_instance();
 	QFontMetrics astroFM(*sm.font(fontSize_, FF_ASTRO));
-	width_[0] = width_[2] = astroFM.width("0000");
+	width_[0] = astroFM.width("0000");
+	width_[1] = width_[2] = astroFM.width("00");
 	QFontMetrics textFM(*sm.font(fontSize_, FF_ARIAL));
-	width_[1] = textFM.width("0000`00'`00\"");
+	width_[3] = textFM.width("0000`00'`");
 }
+
+QSize AspectariumDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
+{
+	return QSize(width_[0] + width_[1] + width_[2] + width_[3] + MARGIN, height_);
+}
+
+int AspectariumDelegate::height() const
+{
+	return height_;
+}
+

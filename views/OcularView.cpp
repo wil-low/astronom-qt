@@ -17,7 +17,6 @@ OcularView::OcularView(QWidget *parent)
 : CentralView(parent, doc_Ocular)
 , cursorMode_(cm_None)
 , mousePressed_(false)
-, aspectModel_(NULL)
 {
 	setSelectionMode(QAbstractItemView::SingleSelection);
 	setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -655,7 +654,3 @@ void OcularView::saveState(QSettings& settings)
 
 }
 
-void OcularView::setAspectModel(QAbstractItemModel* aspectModel)
-{
-	aspectModel_ = aspectModel;
-}
