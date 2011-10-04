@@ -2,7 +2,9 @@
 #define ASPECTARIUM_H
 
 #include <QTableView>
+
 class AspectariumProxyModel;
+class AspectariumMenu;
 
 class Aspectarium : public QTableView
 {
@@ -21,6 +23,7 @@ protected:
 
 private:
 	AspectariumProxyModel* proxyModel_;
+    AspectariumMenu* popupMenu_;
 };
 
 #endif // ASPECTARIUM_H

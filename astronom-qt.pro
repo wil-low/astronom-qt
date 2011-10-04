@@ -71,7 +71,8 @@ SOURCES += \
     utils/AspectManager.cpp \
     widgets/Aspectarium.cpp \
     widgets/AspectariumDelegate.cpp \
-    models/AspectariumProxyModel.cpp
+    models/AspectariumProxyModel.cpp \
+    menus/AspectariumMenu.cpp
 
 HEADERS += \
     forms/MainForm.h \
@@ -143,7 +144,8 @@ HEADERS += \
     utils/AspectManager.h \
     widgets/Aspectarium.h \
     widgets/AspectariumDelegate.h \
-    models/AspectariumProxyModel.h
+    models/AspectariumProxyModel.h \
+    menus/AspectariumMenu.h
 
 FORMS += \
     forms/MainForm.ui \
@@ -155,3 +157,5 @@ FORMS += \
     forms/ImportForm.ui
 
 OTHER_FILES +=
+
+
