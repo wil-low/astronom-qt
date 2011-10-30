@@ -9,7 +9,11 @@
 class NatalConvertor : public BaseConvertor
 {
 public:
-	NatalConvertor(const QString& input, convert_mode_t mode);
+	NatalConvertor(convert_mode_t mode);
+	NatalConvertor(convert_mode_t mode, const QString& input);
+	
+	virtual bool setString(string_val_t type, const QString& str);
+	
 	virtual bool getString(string_val_t type, QString& result);
 	virtual bool getDate(datetime_val_t type, QDate& result);
 	virtual bool getTime(datetime_val_t type, QTime& result);

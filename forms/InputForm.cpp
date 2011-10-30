@@ -127,7 +127,7 @@ void InputForm::on_btnPaste_clicked()
 
 void InputForm::import(const QString& str)
 {
-	NatalConvertor convertor(str, BaseConvertor::MODE_ASTROZET);
+	NatalConvertor convertor(BaseConvertor::MODE_FROM_ASTROZET, str);
 	if (convertor.isValid()) {
 		QString str;
 		if (convertor.getString(BaseConvertor::STR_NAME, str))

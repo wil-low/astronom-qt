@@ -9,8 +9,9 @@ class BaseConvertor
 {
 public:
 	enum convert_mode_t {
-		MODE_ASTROZET = 0,
-		MODE_INPUT_FORM = 1,
+		MODE_UNDEF = 0,
+		MODE_FROM_ASTROZET = 1,
+		MODE_TO_ASTROZET = 2,
 	};
 
 	enum string_val_t {
@@ -20,6 +21,7 @@ public:
 		STR_LONGITUDE,
 		STR_TZ,
 		STR_DATE_TIME,
+		STR_TO_ASTROZET,
 		STR_LAST,
 	};
 
@@ -37,6 +39,9 @@ public:
 	};
 
 	BaseConvertor();
+	BaseConvertor(convert_mode_t mode);
+	
+	virtual bool setString(string_val_t type, const QString& str) {return false;}
 
 	virtual bool getString(string_val_t type, QString& result) {return false;}
 	virtual bool getDate(datetime_val_t type, QDate& result) {return false;}
@@ -47,6 +52,7 @@ public:
 
 protected:
 	bool isValid_;
+	convert_mode_t mode_;
 };
 
 #endif // BASECONVERTOR_H

@@ -47,7 +47,7 @@ void ImportForm::on_btnOpenFile_clicked()
 				if (counter % 10 == 0)
 					QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 				QString line = in.readLine();
-				NatalConvertor convertor(line, BaseConvertor::MODE_ASTROZET);
+				NatalConvertor convertor(BaseConvertor::MODE_FROM_ASTROZET, line);
 				TimeLoc tl(convertor.getString(BaseConvertor::STR_NAME),
 						   convertor.getString(BaseConvertor::STR_DATE_TIME),
 						   convertor.getString(BaseConvertor::STR_TZ),

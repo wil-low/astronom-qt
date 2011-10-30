@@ -4,11 +4,20 @@
 #include <QStringList>
 #include <QDebug>
 
-NatalConvertor::NatalConvertor(const QString& input, BaseConvertor::convert_mode_t mode)
-: BaseConvertor()
+NatalConvertor::NatalConvertor(BaseConvertor::convert_mode_t mode)
+: BaseConvertor(mode)
 {
-	switch (mode) {
-	case MODE_ASTROZET:
+	switch (mode_) {
+	case MODE_TO_ASTROZET:
+		break;
+	}
+}
+
+NatalConvertor::NatalConvertor(BaseConvertor::convert_mode_t mode, const QString& input)
+: BaseConvertor(mode)
+{
+	switch (mode_) {
+	case MODE_FROM_ASTROZET:
 		QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
 		QString decodedStr = codec->toUnicode(input.toAscii());
 		//QMessageBox::warning(this, "Has text", decodedStr);
@@ -42,7 +51,7 @@ NatalConvertor::NatalConvertor(const QString& input, BaseConvertor::convert_mode
 		else {
 			qDebug() << "Cannot match " << values[5];
 		}
-		rx.setPattern("(\\d+)°(\\d+)'(\\d+)\"([EW])");
+		rx.setPattern("(\\d+)°(\\d+)'(\\+)\"([EW])d");
 		if (rx.indexIn(values[6]) != -1) {
 			lonStr_.sprintf("%03d%02d%02d",
 							rx.cap(1).toInt(), rx.cap(2).toInt(), rx.cap(3).toInt());
@@ -113,3 +122,7 @@ bool NatalConvertor::getTime(datetime_val_t type, QTime& result)
 	return isSet;
 }
 
+bool NatalConvertor::setString(string_val_t type, const QString& str)
+{
+	
+}
