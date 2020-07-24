@@ -19,7 +19,7 @@ NatalConvertor::NatalConvertor(BaseConvertor::convert_mode_t mode, const QString
 	switch (mode_) {
 	case MODE_FROM_ASTROZET:
 		QTextCodec* codec = QTextCodec::codecForName("Windows-1251");
-		QString decodedStr = codec->toUnicode(input.toAscii());
+        QString decodedStr = codec->toUnicode(input.toLatin1());
 		//QMessageBox::warning(this, "Has text", decodedStr);
 		QStringList values = decodedStr.split(';');
 		if (values.size() < 7)

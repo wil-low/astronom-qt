@@ -514,7 +514,7 @@ bool OcularView::viewportEvent (QEvent* event)
 			return true;
 		}
 		if (!mousePressed_) {
-			qreal distance = DrawHelper::distance(centerPoint_, mouseEvent->posF());
+            qreal distance = DrawHelper::distance(centerPoint_, mouseEvent->localPos());
 			if (distance < dimensions_[ODIM_centerGripR]) {
 				setCursor(QCursor(Qt::OpenHandCursor));
 				cursorMode_ = cm_Pan;
@@ -529,11 +529,11 @@ bool OcularView::viewportEvent (QEvent* event)
 			}
 		}
 		else if (cursorMode_ == cm_Pan) {
-			centerPoint_ = mouseEvent->posF();
+            centerPoint_ = mouseEvent->localPos();
 			viewport()->update();
 		}
 		else if (cursorMode_ == cm_Resize) {
-			qreal r = DrawHelper::distance(centerPoint_, mouseEvent->posF());
+            qreal r = DrawHelper::distance(centerPoint_, mouseEvent->localPos());
 			if (r > MIN_RADIUS) {
 				radius_ = r;
 				recalcDimensions(radius_);

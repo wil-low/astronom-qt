@@ -88,7 +88,7 @@ long calc_body (BodyProps& props, int body, long flags, const TimeLoc& time_loc)
 
 long calc_house (HouseProps& props, const TimeLoc& time_loc)
 {
-	char method = time_loc.method_[0].toAscii();
+    char method = time_loc.method_[0].toLatin1();
 	switch (method) {
 	case 'A':
 	case 'C':

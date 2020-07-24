@@ -2,6 +2,7 @@
 #define ASPECT_H
 
 #include <QMetaType>
+#include <QString>
 
 class AspectProps;
 

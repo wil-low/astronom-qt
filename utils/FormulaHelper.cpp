@@ -23,7 +23,7 @@ QString FormulaHelper::evaluate (const QString& str)
 {
 	QString result;
 	result = "__result__=(" + str + ")";
-	int error = luaL_dostring(luaState_, result.toAscii().data());
+    int error = luaL_dostring(luaState_, result.toLatin1().data());
 	if (error) {
 		result = "Lua error: ";
 		result += lua_tostring(luaState_, -1);
@@ -40,5 +40,5 @@ QString FormulaHelper::evaluate (const QString& str)
 void FormulaHelper::setVariable (const QString& name, double val)
 {
 	lua_pushnumber(luaState_, val);
-	lua_setglobal(luaState_, name.toAscii().data());
+    lua_setglobal(luaState_, name.toLatin1().data());
 }

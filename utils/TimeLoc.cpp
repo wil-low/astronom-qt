@@ -19,7 +19,7 @@ void TimeLoc::clear()
 		data_[i] = 0;
 		str_[i].clear();
 	}
-
+    method_ = "P";
 }
 
 TimeLoc::TimeLoc(const QString& name, const QString& dateTime, const QString& timezoneOffset,

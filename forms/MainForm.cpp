@@ -89,7 +89,7 @@ void MainForm::loadHouseMenu()
 	const SettingsManager::StringPairVector& houses = SettingsManager::get_const_instance().houseMethodVec();
 	QString hm = SettingsManager::get_const_instance().houseMethod();
 	for (int i = 0; i < houses.size(); ++i) {
-		QAction* action = new QAction(tr(houses[i].second.toAscii()), this);
+        QAction* action = new QAction(tr(houses[i].second.toLatin1()), this);
 		action->setCheckable(true);
 		action->setShortcut(QKeySequence(houses[i].first));
 		action->setData(houses[i].first);

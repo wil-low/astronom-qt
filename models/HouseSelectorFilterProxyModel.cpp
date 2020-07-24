@@ -12,7 +12,7 @@ HouseSelectorMainFilterModel::HouseSelectorMainFilterModel(QObject *parent, QAbs
 bool HouseSelectorMainFilterModel::filterAcceptsRow (int sourceRow, const QModelIndex & sourceParent) const
 {
 	QModelIndex index0 = sourceModel()->index(sourceRow, 0, sourceParent);
-	BodyProps props = qVariantValue<BodyProps>(index0.data());
+    BodyProps props = index0.data().value<BodyProps>();
 	return (props.type == TYPE_HOUSE);
 }
 
@@ -27,6 +27,6 @@ HouseSelectorSecondaryFilterModel::HouseSelectorSecondaryFilterModel(QObject *pa
 bool HouseSelectorSecondaryFilterModel::filterAcceptsRow (int sourceRow, const QModelIndex & sourceParent) const
 {
 	QModelIndex index0 = sourceModel()->index(sourceRow, 0, sourceParent);
-	BodyProps props = qVariantValue<BodyProps>(index0.data());
+    BodyProps props = index0.data().value<BodyProps>();
 	return (props.type == TYPE_HOUSE);
 }

@@ -2,13 +2,13 @@
 #include "utils/SettingsManager.h"
 #include <QApplication>
 #include <QSettings>
-#include <QCleanlooksStyle>
+//#include <QCleanlooksStyle>
 
 int main(int argc,char *argv[])
 {
 	// Make application
 	QApplication app(argc, argv);
-	app.setStyle(new QCleanlooksStyle);
+	//app.setStyle(new QCleanlooksStyle);
 	QCoreApplication::setApplicationName("Astronom");
 	QCoreApplication::setOrganizationName("S&W Axis");
 	QSettings::setDefaultFormat(QSettings::IniFormat);

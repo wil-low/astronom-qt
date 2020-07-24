@@ -12,7 +12,7 @@ PlanetSelectorMainFilterModel::PlanetSelectorMainFilterModel(QObject *parent, QA
 bool PlanetSelectorMainFilterModel::filterAcceptsRow (int sourceRow, const QModelIndex & sourceParent) const
 {
 	QModelIndex index0 = sourceModel()->index(sourceRow, 0, sourceParent);
-	BodyProps props = qVariantValue<BodyProps>(index0.data());
+    BodyProps props = index0.data().value<BodyProps>();
 	return (props.type == TYPE_PLANET && props.id <= LAST_MAIN_PLANET);
 }
 
@@ -27,6 +27,6 @@ PlanetSelectorSecondaryFilterModel::PlanetSelectorSecondaryFilterModel(QObject *
 bool PlanetSelectorSecondaryFilterModel::filterAcceptsRow (int sourceRow, const QModelIndex & sourceParent) const
 {
 	QModelIndex index0 = sourceModel()->index(sourceRow, 0, sourceParent);
-	BodyProps props = qVariantValue<BodyProps>(index0.data());
+    BodyProps props = index0.data().value<BodyProps>();
 	return (props.type == TYPE_PLANET && props.id > LAST_MAIN_PLANET);
 }

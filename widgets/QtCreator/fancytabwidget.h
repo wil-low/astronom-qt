@@ -34,7 +34,7 @@
 #define FANCYTABWIDGET_H
 
 #include <QtGui/QIcon>
-#include <QtGui/QWidget>
+#include <QWidget>
 
 #include <QtCore/QTimer>
 #include <QtCore/QPropertyAnimation>

@@ -12,6 +12,7 @@
 Aspectarium::Aspectarium(QWidget *parent, QAbstractItemModel* model)
 : QTableView(parent)
 {
+	setEditTriggers(NoEditTriggers);
     proxyModel_ = new AspectariumProxyModel(this, model);
     setModel(proxyModel_);
     setItemDelegate(new AspectariumDelegate(this));
@@ -24,7 +25,7 @@ Aspectarium::Aspectarium(QWidget *parent, QAbstractItemModel* model)
 void Aspectarium::tablePressed(const QModelIndex& index)
 {
     if (QApplication::mouseButtons() == Qt::RightButton) {
-		popupMenu_->init(qVariantValue<Aspect>(index.data()));
+        popupMenu_->init(index.data().value<Aspect>());
 		if (!popupMenu_->isEmpty())
 			popupMenu_->popup(QCursor::pos());
     }

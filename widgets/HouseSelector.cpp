@@ -45,7 +45,7 @@ HouseSelector::HouseSelector(QWidget *parent, QAbstractItemModel* model)
 	SettingsManager::StringPairVector houses = SettingsManager::get_const_instance().houseMethodVec();
 	for (int i = 0; i < houses.size(); ++i) {
 		tabHouseMode_->addTab(houses[i].first);
-		tabHouseMode_->setTabToolTip(i, houses[i].second.toAscii());
+        tabHouseMode_->setTabToolTip(i, houses[i].second.toLatin1());
 	}
 	connect(tabHouseMode_, SIGNAL(currentChanged(int)), SLOT(houseModeChanged(int)));
 	layout->addWidget(tabHouseMode_);
@@ -66,8 +66,10 @@ HouseSelector::~HouseSelector()
 
 void HouseSelector::houseModeChanged(int index)
 {
-	TimeLoc tl = qVariantValue<TimeLoc>(model_->headerData(0, Qt::Horizontal, Qt::UserRole));
+    TimeLoc tl = model_->headerData(0, Qt::Horizontal, Qt::UserRole).value<TimeLoc>();
 	tl.method_ = tabHouseMode_->tabText(index);
+    if (tl.method_.isEmpty())
+        tl.method_ = "P";
 	alternateHouseModel_->setHeaderData(0, Qt::Horizontal, qVariantFromValue(tl), Qt::UserRole);
 	ModelHelper modelHelper(tl, alternateHouseModel_, 0, true);
 	modelHelper.insertHouses();
@@ -76,7 +78,7 @@ void HouseSelector::houseModeChanged(int index)
 
 void HouseSelector::timeloc_changed()
 {
-	TimeLoc tl = qVariantValue<TimeLoc>(model_->headerData(0, Qt::Horizontal, Qt::UserRole));
+    TimeLoc tl = model_->headerData(0, Qt::Horizontal, Qt::UserRole).value<TimeLoc>();
 	const SettingsManager::StringPairVector& houses = SettingsManager::get_const_instance().houseMethodVec();
 	QString houseModeStr;
 	QString hm;
@@ -84,7 +86,7 @@ void HouseSelector::timeloc_changed()
 		hm = houses[i].first;
 		if (hm == tl.method_) {
 			houseModeStr = houses[i].first;
-			tabBar_->setTabText(0, tr(houses[i].second.toAscii().data()));
+            tabBar_->setTabText(0, tr(houses[i].second.toLatin1().data()));
 			tabBar_->setTabToolTip(0, houseModeStr);
 			break;
 		}

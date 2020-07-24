@@ -1,7 +1,7 @@
 THD_PARTY = $$PWD/../3d_party
-QT += sql
-INCLUDEPATH += $$THD_PARTY/sweph/src $$THD_PARTY/boost_1_42_0 $$THD_PARTY/lua-5.1.4/src
-LIBS += -L$$THD_PARTY/sweph/src -lswe -L$$THD_PARTY/lua-5.1.4/src -llua
+QT += widgets sql
+INCLUDEPATH += $$THD_PARTY/sweph/src $$THD_PARTY/lua-5.1.4/src
+LIBS += -L$$THD_PARTY/sweph/src -lswe -L$$THD_PARTY/lua-5.1.4/src -llua -lboost_serialization
 
 TRANSLATIONS = \
 	astronom_ru.ts \

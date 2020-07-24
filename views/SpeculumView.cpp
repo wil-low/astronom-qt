@@ -65,17 +65,17 @@ void SpeculumView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bo
 		bool isVisible = index.data(Qt::VisibilityRole).toBool();
 		DMS dms(props.prop[BodyProps::bp_Lon], DMS::COORD_LON);
 		int column = dms.zodiac() + 1;
-		int row = dms.zod_deg() + 1;
+		int row1 = dms.zod_deg() + 1;
 		if (props.type == TYPE_HOUSE) {
 			props.flags |= FLG_ARABIC;
 			AstroLabel* label = insertLabel(chart_id, props, isVisible,
-											column, row, speculum::cat_First,
+											column, row1, speculum::cat_First,
 											colors_.houseColor);
 			//addReference(label);
 		}
 		else if (props.type == TYPE_PLANET) {
 			AstroLabel* label = insertLabel(chart_id, props, isVisible,
-											column, row, speculum::cat_First,
+											column, row1, speculum::cat_First,
 											colors_.planetColor);
 			addAspects(label);
 			addReference(label);
@@ -247,7 +247,8 @@ void SpeculumView::addReference (AstroLabel* parentLabel)
 {
 	BodyProps props(parentLabel->props());
 	props.type = TYPE_REFERENCE;
-	int checksumArray[] = {(int)parentLabel};
+	int checksumArray[2];
+	memcpy(checksumArray, parentLabel, sizeof(parentLabel));
 	props.id = Crc32((const unsigned char*)checksumArray, sizeof(checksumArray));
 	DMS dms(props.prop[BodyProps::bp_Lon], DMS::COORD_LON);
 	int column = 0;

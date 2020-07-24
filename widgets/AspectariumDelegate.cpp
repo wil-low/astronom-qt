@@ -24,7 +24,7 @@ void AspectariumDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	painter->setBrush(option.palette.foreground());
 	painter->setClipRect(option.rect);
 	QString text[4];
-	Aspect aspect = qVariantValue<Aspect>(index.data());
+    Aspect aspect = index.data().value<Aspect>();
 
 	const SettingsManager& sm = SettingsManager::get_const_instance();
 	text[0] = aspect.body_[0].label_ + aspect.body_[1].label_;

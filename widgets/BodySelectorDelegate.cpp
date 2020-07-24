@@ -18,7 +18,7 @@ void BodySelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	painter->setBrush(option.palette.foreground());
 
 	QString text[3];
-	BodyProps props = qVariantValue<BodyProps>(index.data());
+    BodyProps props = index.data().value<BodyProps>();
 
 	const SettingsManager& sm = SettingsManager::get_const_instance();
 	text[0] = sm.label(props);

@@ -12,7 +12,7 @@ AsteroidSelectorMainFilterModel::AsteroidSelectorMainFilterModel(QObject *parent
 bool AsteroidSelectorMainFilterModel::filterAcceptsRow (int sourceRow, const QModelIndex & sourceParent) const
 {
 	QModelIndex index0 = sourceModel()->index(sourceRow, 0, sourceParent);
-	BodyProps props = qVariantValue<BodyProps>(index0.data());
+    BodyProps props = index0.data().value<BodyProps>();
 	return (props.type == TYPE_ASTEROID);
 }
 
@@ -27,6 +27,6 @@ AsteroidSelectorSecondaryFilterModel::AsteroidSelectorSecondaryFilterModel(QObje
 bool AsteroidSelectorSecondaryFilterModel::filterAcceptsRow (int sourceRow, const QModelIndex & sourceParent) const
 {
 	QModelIndex index0 = sourceModel()->index(sourceRow, 0, sourceParent);
-	BodyProps props = qVariantValue<BodyProps>(index0.data());
+    BodyProps props = index0.data().value<BodyProps>();
 	return false; //(props.type == TYPE_ASTEROID);
 }

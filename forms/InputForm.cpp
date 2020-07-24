@@ -92,7 +92,7 @@ const TimeLoc& InputForm::toTimeLoc ()
 void InputForm::setDateTime()
 {
 	int y, m, d, h, min, s;
-	if (sscanf(tl_.str_[TL_DATETIME].toAscii().constData(), "%d-%02d-%02dT%02d:%02d:%02d", &y, &m, &d, &h, &min, &s) == 6) {
+    if (sscanf(tl_.str_[TL_DATETIME].toLatin1().constData(), "%d-%02d-%02dT%02d:%02d:%02d", &y, &m, &d, &h, &min, &s) == 6) {
 		ui->editDate->setDate(QDate(y, m, d));
 		ui->editTime->setTime(QTime(h, min, s));
 	}

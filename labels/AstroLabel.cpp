@@ -142,7 +142,7 @@ QString AstroLabel::toString() const
 {
 	QString s;
 	s.sprintf ("AstroLabel %X type %d, id %d, angle %.2f, visible angle %.2f, text '%s'",
-			   this, type(), id(), angle(), visibleAngle(), text().toAscii().data());
+               this, type(), id(), angle(), visibleAngle(), text().toLatin1().data());
 	return s;
 }
 
