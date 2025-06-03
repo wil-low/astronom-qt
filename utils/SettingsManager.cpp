@@ -142,7 +142,7 @@ QString SettingsManager::label(const BodyProps& bp) const
     QString s(QString::number(bp.type) + "?");
     switch (bp.type) {
         case TYPE_ZODIAC:
-            s.sprintf("%c", astrofont_.zodiac_signs_[bp.id]);
+            s.append(QChar(astrofont_.zodiac_signs_[bp.id]));
             break;
         case TYPE_PLANET: {
             std::map<int, QString>::const_iterator it = id2planet_.find(bp.id);
@@ -150,7 +150,7 @@ QString SettingsManager::label(const BodyProps& bp) const
                 std::map<QString, int>::const_iterator it1 = astrofont_.glyphs_.find((*it).second);
                 if (it1 != astrofont_.glyphs_.end()) {
                     char c = (*it1).second;
-                    s.sprintf("%c", c);
+                    s.append(QChar(c));
                 }
             } }
             break;
@@ -159,7 +159,7 @@ QString SettingsManager::label(const BodyProps& bp) const
                     ASPECT_PREFIX + QString::number(bp.userData));
             if (it1 != astrofont_.glyphs_.end()) {
                 char c = (*it1).second;
-                s.sprintf("%c", c);
+                s.append(QChar(c));
             } }
             break;
         case TYPE_HOUSE:
@@ -194,7 +194,7 @@ QString SettingsManager::formulaVariable(const BodyProps& bp) const
             } }
             break;
         case TYPE_HOUSE:
-            s.sprintf("H%d", bp.id - HOUSE_ID_FIRST + 1);
+            s = QString("H%1").arg(bp.id - HOUSE_ID_FIRST + 1);
             break;
     }
     return s;

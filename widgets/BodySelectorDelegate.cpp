@@ -15,7 +15,7 @@ void BodySelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 {
 	const int SIDE_MARGIN = 10;
 	painter->save();
-	painter->setBrush(option.palette.foreground());
+	painter->setBrush(option.palette.brush(QPalette::Text));
 
 	QString text[3];
     BodyProps props = index.data().value<BodyProps>();
@@ -25,32 +25,64 @@ void BodySelectorDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	text[1] = text[2] = "";
 
 	DMS dms;
-	switch (degree_mode_) {
-	case dm_Absolute:
-		dms.fromCoord(props.prop[BodyProps::bp_Lon]);
-		text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-		break;
-	case dm_Longitude: {
-		dms.fromCoord(props.prop[BodyProps::bp_Lon]);
-		text[1].sprintf("%2d%c%02d\'%02d\"", dms.zod_deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-		BodyProps bp(TYPE_ZODIAC, dms.zodiac());
-		text[2] = sm.label(bp);
-		break; }
-	case dm_RectAsc:
-		dms.fromCoord(props.prop[BodyProps::bp_RectAsc]);
-		text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-		break;
-	case dm_OblAsc:
-		dms.fromCoord(props.prop[BodyProps::bp_OblAsc]);
-		text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-		break;
-	case dm_LatDecl:
-		dms.fromCoord(props.prop[BodyProps::bp_Lat]);
-		text[1].sprintf("%3d%c%02d\'%02d\"", dms.deg(), sm.degreeSign(FF_ARIAL), dms.min(), dms.sec());
-		break;
-	default:
-		assert (false && "Unknown degree mode");
-	}
+    switch (degree_mode_) {
+    case dm_Absolute: {
+        dms.fromCoord(props.prop[BodyProps::bp_Lon]);
+        QChar degreeSign = sm.degreeSign(FF_ARIAL);
+        text[1] = QString("%1%2%3'%4\"")
+            .arg(dms.deg(), 3, 10, QLatin1Char(' '))    // ширина 3, заповнювач пробіл
+            .arg(degreeSign)
+            .arg(dms.min(), 2, 10, QLatin1Char('0'))    // ширина 2, заповнювач 0
+            .arg(dms.sec(), 2, 10, QLatin1Char('0'));   // ширина 2, заповнювач 0
+        break;
+    }
+    case dm_Longitude: {
+        dms.fromCoord(props.prop[BodyProps::bp_Lon]);
+        QChar degreeSign = sm.degreeSign(FF_ARIAL);
+        text[1] = QString("%1%2%3'%4\"")
+            .arg(dms.zod_deg(), 2, 10, QLatin1Char(' '))  // ширина 2, заповнювач пробіл
+            .arg(degreeSign)
+            .arg(dms.min(), 2, 10, QLatin1Char('0'))
+            .arg(dms.sec(), 2, 10, QLatin1Char('0'));
+
+        BodyProps bp(TYPE_ZODIAC, dms.zodiac());
+        text[2] = sm.label(bp);
+        break;
+    }
+    case dm_RectAsc: {
+        dms.fromCoord(props.prop[BodyProps::bp_RectAsc]);
+        QChar degreeSign = sm.degreeSign(FF_ARIAL);
+        text[1] = QString("%1%2%3'%4\"")
+            .arg(dms.deg(), 3, 10, QLatin1Char(' '))
+            .arg(degreeSign)
+            .arg(dms.min(), 2, 10, QLatin1Char('0'))
+            .arg(dms.sec(), 2, 10, QLatin1Char('0'));
+        break;
+    }
+    case dm_OblAsc: {
+        dms.fromCoord(props.prop[BodyProps::bp_OblAsc]);
+        QChar degreeSign = sm.degreeSign(FF_ARIAL);
+        text[1] = QString("%1%2%3'%4\"")
+            .arg(dms.deg(), 3, 10, QLatin1Char(' '))
+            .arg(degreeSign)
+            .arg(dms.min(), 2, 10, QLatin1Char('0'))
+            .arg(dms.sec(), 2, 10, QLatin1Char('0'));
+        break;
+    }
+    case dm_LatDecl: {
+        dms.fromCoord(props.prop[BodyProps::bp_Lat]);
+        QChar degreeSign = sm.degreeSign(FF_ARIAL);
+        text[1] = QString("%1%2%3'%4\"")
+            .arg(dms.deg(), 3, 10, QLatin1Char(' '))
+            .arg(degreeSign)
+            .arg(dms.min(), 2, 10, QLatin1Char('0'))
+            .arg(dms.sec(), 2, 10, QLatin1Char('0'));
+        break;
+    }
+    default:
+        assert(false && "Unknown degree mode");
+    }
+
 	SettingsManager::fromBackTick(text[1]);
 
 	bool isVisible = index.data(Qt::VisibilityRole).toBool();

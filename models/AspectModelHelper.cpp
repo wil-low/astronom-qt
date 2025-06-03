@@ -34,7 +34,7 @@ void AspectModelHelper::insertAspects(const QAbstractItemModel* source_model,
 				int row = model_->rowCount();
 				model_->insertRows(row, 1, QModelIndex());
 				index = model_->index(row, 0, QModelIndex());
-				model_->setData (index, qVariantFromValue(aspect));
+				model_->setData (index, QVariant::fromValue(aspect));
 				model_->setData (index, aspect.angleProps_ != NULL, Qt::VisibilityRole);
 			}
 		}

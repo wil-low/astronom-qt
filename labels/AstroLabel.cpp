@@ -140,10 +140,14 @@ const QRectF& AstroLabel::rect() const
 
 QString AstroLabel::toString() const
 {
-	QString s;
-	s.sprintf ("AstroLabel %X type %d, id %d, angle %.2f, visible angle %.2f, text '%s'",
-               this, type(), id(), angle(), visibleAngle(), text().toLatin1().data());
-	return s;
+    QString s = QString("AstroLabel %1 type %2, id %3, angle %4, visible angle %5, text '%6'")
+                    .arg(reinterpret_cast<qulonglong>(this), 0, 16)  // 64-бітний в hex
+                    .arg(type())
+                    .arg(id())
+                    .arg(angle(), 0, 'f', 2)
+                    .arg(visibleAngle(), 0, 'f', 2)
+                    .arg(text());
+    return s;
 }
 
 unsigned int AstroLabel::identity() const

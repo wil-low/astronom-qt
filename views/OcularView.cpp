@@ -33,7 +33,7 @@ OcularView::OcularView(QWidget *parent)
 
 void OcularView::reconfigure()
 {
-	zeroPoint_ = ZERO_ASC;
+    zeroPoint_ = ZERO_ARIES;//ZERO_ASC;
 
 	BOOST_FOREACH (AstroLabel* label, *labels_) {
 		qDebug() << label->toString();
@@ -346,7 +346,12 @@ void OcularView::drawPlanetLines(QPainter* painter)
 
 			painter->setPen(Qt::black);
 			painter->setFont(*dgrFont);
-			strDegree.sprintf("%02d%c", ((int)al->angle() % DEG_PER_SIGN) + 1, SettingsManager::get_const_instance().degreeSign(FF_ASTRO));
+            int degreePart = ((int)al->angle() % DEG_PER_SIGN) + 1;
+            QChar degreeSign = SettingsManager::get_const_instance().degreeSign(FF_ASTRO);
+
+            QString strDegree = QString("%1%2")
+                .arg(degreePart, 2, 10, QLatin1Char('0'))
+                .arg(degreeSign);
 			pt[1] = DrawHelper::getXYdeg(angv, zdegree);
 			DrawHelper::drawCenteredText(painter, pt[1], strDegree);
 			if (al->flags() & af_Retrograde) {
@@ -395,26 +400,37 @@ void OcularView::drawHouseLines(QPainter* painter)
 						painter->drawLines(pt, 1);
 						painter->setPen(Qt::black);
 						painter->setFont(*dgrFont);
-						if (af == af_Asc) {
-							pt[1] = DrawHelper::getXYdeg(ang, r_ascmc * 0.98);
-							QRectF rect(pt[1], pt[1]);
-							strDegree.sprintf("%02d%c",
-								(int)al->angle() % DEG_PER_SIGN + 1,
-								SettingsManager::get_const_instance().degreeSign(FF_ASTRO));
-							painter->drawText(rect, Qt::AlignBottom | Qt::TextDontClip, strDegree);
-							strDegree.sprintf("%02d'",
-								(int)(al->angle() - (int)al->angle()) * 60 + 1);
-							painter->drawText(rect, Qt::AlignTop | Qt::TextDontClip, strDegree);
-						}
-						else {
-							pt[1] = DrawHelper::getXYdeg(ang, r_ascmc * 0.96);
-							QRectF rect(pt[1], pt[1]);
-							strDegree.sprintf("%02d%c%02d'",
-								(int)al->angle() % DEG_PER_SIGN + 1,
-								SettingsManager::get_const_instance().degreeSign(FF_ASTRO),
-								(int)(al->angle() - (int)al->angle()) * 60 + 1);
-							painter->drawText(rect, Qt::AlignHCenter | Qt::TextDontClip, strDegree);
-						}
+                        if (af == af_Asc) {
+                            pt[1] = DrawHelper::getXYdeg(ang, r_ascmc * 0.98);
+                            QRectF rect(pt[1], pt[1]);
+
+                            int degPart = ((int)al->angle() % DEG_PER_SIGN) + 1;
+                            QChar degreeSign = SettingsManager::get_const_instance().degreeSign(FF_ASTRO);
+                            int minPart = (int)((al->angle() - (int)al->angle()) * 60) + 1;
+
+                            QString strDegree = QString("%1%2")
+                                .arg(degPart, 2, 10, QLatin1Char('0'))
+                                .arg(degreeSign);
+                            painter->drawText(rect, Qt::AlignBottom | Qt::TextDontClip, strDegree);
+
+                            strDegree = QString("%1'")
+                                .arg(minPart, 2, 10, QLatin1Char('0'));
+                            painter->drawText(rect, Qt::AlignTop | Qt::TextDontClip, strDegree);
+                        }
+                        else {
+                            pt[1] = DrawHelper::getXYdeg(ang, r_ascmc * 0.96);
+                            QRectF rect(pt[1], pt[1]);
+
+                            int degPart = ((int)al->angle() % DEG_PER_SIGN) + 1;
+                            QChar degreeSign = SettingsManager::get_const_instance().degreeSign(FF_ASTRO);
+                            int minPart = (int)((al->angle() - (int)al->angle()) * 60) + 1;
+
+                            QString strDegree = QString("%1%2%3'")
+                                .arg(degPart, 2, 10, QLatin1Char('0'))
+                                .arg(degreeSign)
+                                .arg(minPart, 2, 10, QLatin1Char('0'));
+                            painter->drawText(rect, Qt::AlignHCenter | Qt::TextDontClip, strDegree);
+                        }
 						}
 						break;
 					case af_Dsc: {

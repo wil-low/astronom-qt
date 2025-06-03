@@ -22,7 +22,7 @@ void ModelHelper::insertPlanet(int planet_id, bool isVisible)
 	props.id = planet_id;
 	props.type = TYPE_PLANET;
 	QModelIndex index = model_->index(row, chart_index_, QModelIndex());
-	model_->setData (index, qVariantFromValue(props));
+	model_->setData (index, QVariant::fromValue(props));
 	model_->setData (index, isVisible, Qt::VisibilityRole);
 }
 
@@ -49,7 +49,7 @@ void ModelHelper::addHouse (int id, const HouseProps& props, int cusp_count)
 									 props.cusps[id - HOUSE_ID_FIRST + 1] :
 									 props.ascmc[id - HOUSE_ID_ASC];
 	QModelIndex index = model_->index(row, chart_index_, QModelIndex());
-	model_->setData (index, qVariantFromValue(hprops));
+	model_->setData (index, QVariant::fromValue(hprops));
 	model_->setData (index, true, Qt::VisibilityRole);
 }
 

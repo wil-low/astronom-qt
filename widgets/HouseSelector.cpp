@@ -70,7 +70,7 @@ void HouseSelector::houseModeChanged(int index)
 	tl.method_ = tabHouseMode_->tabText(index);
     if (tl.method_.isEmpty())
         tl.method_ = "P";
-	alternateHouseModel_->setHeaderData(0, Qt::Horizontal, qVariantFromValue(tl), Qt::UserRole);
+	alternateHouseModel_->setHeaderData(0, Qt::Horizontal, QVariant::fromValue(tl), Qt::UserRole);
 	ModelHelper modelHelper(tl, alternateHouseModel_, 0, true);
 	modelHelper.insertHouses();
 	emit invalidateViews();

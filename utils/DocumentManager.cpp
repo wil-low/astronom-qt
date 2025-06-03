@@ -52,7 +52,7 @@ DocumentManager::~DocumentManager()
 void DocumentManager::setTimeLoc(int chart_index, const TimeLoc& tl)
 {
 	timeLoc[chart_index] = tl;
-	bodyModel_->setHeaderData(chart_index, Qt::Horizontal, qVariantFromValue(tl), Qt::UserRole);
+    bodyModel_->setHeaderData(chart_index, Qt::Horizontal, QVariant::fromValue(tl), Qt::UserRole);
 
 	ModelHelper modelHelper(timeLoc[chart_index], bodyModel_, chart_index, true);
 	int bodies[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18};

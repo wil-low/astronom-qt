@@ -103,19 +103,30 @@ double DMS::angle() const
 
 QString DMS::toMaskedString() const
 {
-	QString s;
-	switch (coord_type_) {
-	case COORD_LAT:
-		s.sprintf ("%03d%02d%02d%c", abs(deg_), min_, sec_, deg_ >= 0 ? 'N' : 'S');
-		break;
-	case COORD_LON:
-		s.sprintf ("%03d%02d%02d%c", abs(deg_), min_, sec_, deg_ >= 0 ? 'E' : 'W');
-		break;
-	case COORD_TZ:
-		s.sprintf ("%c%02d%02d%02d", (deg_ >= 0 ? '+' : '-'), abs(deg_), min_, sec_);
-		break;
-	}
-
+    QString s;
+    switch (coord_type_) {
+    case COORD_LAT:
+        s = QString("%1%2%3%4")
+                .arg(qAbs(deg_), 3, 10, QLatin1Char('0'))
+                .arg(min_, 2, 10, QLatin1Char('0'))
+                .arg(sec_, 2, 10, QLatin1Char('0'))
+                .arg(deg_ >= 0 ? QLatin1Char('N') : QLatin1Char('S'));
+        break;
+    case COORD_LON:
+        s = QString("%1%2%3%4")
+                .arg(qAbs(deg_), 3, 10, QLatin1Char('0'))
+                .arg(min_, 2, 10, QLatin1Char('0'))
+                .arg(sec_, 2, 10, QLatin1Char('0'))
+                .arg(deg_ >= 0 ? QLatin1Char('E') : QLatin1Char('W'));
+        break;
+    case COORD_TZ:
+        s = QString("%1%2%3%4")
+                .arg(deg_ >= 0 ? QLatin1Char('+') : QLatin1Char('-'))
+                .arg(qAbs(deg_), 2, 10, QLatin1Char('0'))
+                .arg(min_, 2, 10, QLatin1Char('0'))
+                .arg(sec_, 2, 10, QLatin1Char('0'));
+        break;
+    }
 	return s;
 }
 

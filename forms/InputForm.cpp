@@ -81,8 +81,8 @@ const TimeLoc& InputForm::toTimeLoc ()
 
 	tl_.recalculate(true);
 	titleStr_ = ui->editName->text() + ", " + ui->cboLocationName->currentText() + ", " +
-				date.toString(Qt::SystemLocaleShortDate) + " " +
-				time.toString(Qt::SystemLocaleShortDate) + ", " +
+				QLocale().toString(date, QLocale::ShortFormat) + " " +
+				QLocale().toString(time, QLocale::ShortFormat) + ", " +
 				ui->editUTCOffset->text() + ", " +
 				ui->editLat->text() + " " + ui->editLon->text() + " julday " +
 				QString::number(tl_.data_[TL_DATETIME], 'f');
